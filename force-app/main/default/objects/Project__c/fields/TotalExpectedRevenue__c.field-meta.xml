@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TotalExpectedRevenue__c</fullName>
+    <label>Total Expected Revenue</label>
+    <summarizedField>RevenueManagement__c.Target__c</summarizedField>
+    <summaryForeignKey>RevenueManagement__c.Project__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

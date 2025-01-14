@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckCancelReason</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+AND(
+ISPICKVAL(  Status  , &quot;Cancel&quot; )
+),
+   ISBLANK(CancelReason__c)
+
+)</errorConditionFormula>
+    <errorDisplayField>CancelReason__c</errorDisplayField>
+    <errorMessage>Before changing the stage to &quot;Cancel&quot;, please enter Cancel Reason first.</errorMessage>
+</ValidationRule>

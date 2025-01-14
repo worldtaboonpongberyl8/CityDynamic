@@ -1,0 +1,14 @@
+<template>
+    <lightning-modal-header>
+        <h2 style="font-weight: bold;">{title}</h2>
+    </lightning-modal-header>
+    <lightning-modal-body>
+        <p>{message}</p>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="button-container">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+            <lightning-button variant="brand" label="Confirm" onclick={handleConfirm}></lightning-button>
+        </div>
+    </lightning-modal-footer>
+</template>

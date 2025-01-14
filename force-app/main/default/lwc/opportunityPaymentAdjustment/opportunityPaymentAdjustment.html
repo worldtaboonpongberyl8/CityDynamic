@@ -1,0 +1,227 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <template if:true={hasNoOpportunityPayment}>
+        <div class="slds-p-vertical_medium" style="text-align: center">
+            There is no Opportunity Payment generated in this Opportunity
+        </div>
+    </template>
+    <template if:false={hasNoOpportunityPayment}>
+        <template if:false={isHideHeader}>
+            <div class="slds-p-vertical_medium" style="display: flex; justify-content: space-between">
+                <div style="width: 75%">
+                    <div style="font-weight: bold">Payment Term Master Information</div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Payment Term:&nbsp;</p>
+                            <p>{paymentTermRecord.name}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Type:&nbsp;</p>
+                            <p>{paymentTermRecord.type}</p>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Effective Date:&nbsp;</p>
+                            <p>Every {paymentTermRecord.dueDate} of Each Month</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">No. of Installment:&nbsp;</p>
+                            <p>{paymentTermRecord.noOfInstallment}</p>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Reservation Amount:&nbsp;</p>
+                            <p>
+                                <lightning-formatted-number
+                                    value={initialReservationAmount}
+                                    format-style="decimal"
+                                    minimum-fraction-digits="2"
+                                    maximum-fraction-digits="2"
+                                ></lightning-formatted-number>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Contract Amount:&nbsp;</p>
+                            <p>
+                                <lightning-formatted-number
+                                    value={initialContractAmount}
+                                    format-style="decimal"
+                                    minimum-fraction-digits="2"
+                                    maximum-fraction-digits="2"
+                                ></lightning-formatted-number>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Total Installment Amount:&nbsp;</p>
+                            <p>
+                                <lightning-formatted-number
+                                    value={initialInstallmentAmount}
+                                    format-style="decimal"
+                                    minimum-fraction-digits="2"
+                                    maximum-fraction-digits="2"
+                                ></lightning-formatted-number>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2" style="display: inline-flex">
+                            <p style="font-weight: bold">Transfer Amount:&nbsp;</p>
+                            <p>
+                                <lightning-formatted-number
+                                    value={initialTransferAmount}
+                                    format-style="decimal"
+                                    minimum-fraction-digits="2"
+                                    maximum-fraction-digits="2"
+                                ></lightning-formatted-number>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <template if:true={isCRMProfile}>
+                        <template if:true={canSplitContract}>
+                            <lightning-button label="Split Contract" onclick={handleSplitContract}></lightning-button>
+                        </template>
+                        <template if:true={isViewMode}>
+                            <lightning-button label="Edit" onclick={handleToggleEditMode}></lightning-button>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <div class="table-container slds-p-vertical_medium">
+            <table class="bordered-table" style="font-size: 11px">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Item</td>
+                        <td style="width: 120px">Term</td>
+                        <td style="width: 200px">Due Date</td>
+                        <td style="width: 180px">Amount</td>
+                        <!-- <td style="width: 100px">Received Date</td> -->
+                        <td style="width: 180px">Received Amount</td>
+                        <td style="width: 180px">Remaining</td>
+                        <td style="width: 80px">Status</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={opportunityPaymentData} for:item="item">
+                        <tr key={item.order} class={item.cssClass}>
+                            <!-- Icon -->
+                            <template if:false={isViewMode}>
+                                <template if:true={item.canDeleteSplittedContract}>
+                                    <td>
+                                        <lightning-icon
+                                            icon-name="utility:delete"
+                                            size="xx-small"
+                                            alternative-text="delete"
+                                            title="delete"
+                                            data-id={item.term}
+                                            onclick={handleDeleteSplittedContract}
+                                        ></lightning-icon>
+                                    </td>
+                                </template>
+                                <template if:false={item.canDeleteSplittedContract}>
+                                    <td></td>
+                                </template>
+                            </template>
+                            <template if:true={isViewMode}>
+                                <td></td>
+                            </template>
+
+                            <!-- Item -->
+                            <td>{item.order}</td>
+                            <!-- Term -->
+                            <td>{item.term}</td>
+                            <!-- Due Date -->
+                            <template if:false={isViewMode}>
+                                <td>
+                                    <lightning-input
+                                        label=" "
+                                        class="date-format-hide"
+                                        value={item.dueDate}
+                                        onchange={handleAdjustDueDate}
+                                        data-id={item.term}
+                                        name="dueDate"
+                                        type="date"
+                                        variant="label-hidden"
+                                        disabled={item.isDisabled}
+                                    ></lightning-input>
+                                </td>
+                            </template>
+                            <template if:true={isViewMode}>
+                                <td>
+                                    <lightning-formatted-date-time value={item.dueDate}></lightning-formatted-date-time>
+                                </td>
+                            </template>
+                            <!-- Amount -->
+                            <template if:false={isViewMode}>
+                                <td>
+                                    <lightning-input
+                                        label=" "
+                                        value={item.amount}
+                                        onchange={handleAdjustAmount}
+                                        data-id={item.term}
+                                        name="amount"
+                                        type="number"
+                                        step="0.01"
+                                        variant="label-hidden"
+                                        class="number-input"
+                                        disabled={item.isDisabled}
+                                    ></lightning-input>
+                                </td>
+                            </template>
+                            <template if:true={isViewMode}>
+                                <td style="text-align: right">
+                                    <lightning-formatted-number
+                                        value={item.amount}
+                                        format-style="decimal"
+                                        minimum-fraction-digits="2"
+                                        maximum-fraction-digits="2"
+                                    ></lightning-formatted-number>
+                                </td>
+                            </template>
+                            <!-- Received Date -->
+                            <!-- <td>
+                                <lightning-formatted-date-time
+                                    value={item.receivedDate}
+                                ></lightning-formatted-date-time>
+                            </td> -->
+                            <!-- Received Amount -->
+                            <td style="text-align: right">
+                                <lightning-formatted-number
+                                    value={item.receivedAmount}
+                                    format-style="decimal"
+                                    minimum-fraction-digits="2"
+                                    maximum-fraction-digits="2"
+                                ></lightning-formatted-number>
+                            </td>
+                            <!-- Remaining -->
+                            <td style="text-align: right">
+                                <lightning-formatted-number
+                                    value={item.remaining}
+                                    format-style="decimal"
+                                    minimum-fraction-digits="2"
+                                    maximum-fraction-digits="2"
+                                ></lightning-formatted-number>
+                            </td>
+                            <!-- Status -->
+                            <td>{item.status}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        <template if:false={isHideFooter}>
+            <div class="button-container">
+                <template if:false={isViewMode}>
+                    <lightning-button label="Save" variant="brand" onclick={handleSaveOppPayment}></lightning-button>
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                </template>
+            </div>
+        </template>
+    </template>
+</template>

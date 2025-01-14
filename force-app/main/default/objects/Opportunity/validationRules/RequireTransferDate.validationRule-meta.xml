@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RequireTransferDate</fullName>
+    <active>true</active>
+    <description>To ensure the Transfer due date is filled out before update Opportunity stage to &apos;Transferred&apos;</description>
+    <errorConditionFormula>AND(
+    ISPICKVAL(StageName, &quot;Transferred&quot;),
+    OR(
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Open&quot;),
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Quotation&quot;),
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Negotiation&quot;),
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Reservation&quot;),
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Contract&quot;)
+    ),
+    ISBLANK(  TransferredDate__c )
+)</errorConditionFormula>
+    <errorDisplayField>TransferredDate__c</errorDisplayField>
+    <errorMessage>Please fill in the Transfer Due Date.</errorMessage>
+</ValidationRule>

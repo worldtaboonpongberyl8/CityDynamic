@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TotalInstallmentAmount__c</fullName>
+    <externalId>false</externalId>
+    <formula>BLANKVALUE(PaymentTerm__r.NoofInstallment__c, 0) * 
+(
+	CEILING(
+		(
+			UnitPrice__c * 
+			ROUND(
+				(BLANKVALUE(PaymentTerm__r.InstallmentPercent__c, 0) * 100) / BLANKVALUE(NoofInstallment__c, 0),
+				2
+			)
+		) / 100
+	)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Total Installment Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

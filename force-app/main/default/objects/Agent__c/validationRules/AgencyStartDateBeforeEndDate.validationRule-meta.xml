@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AgencyStartDateBeforeEndDate</fullName>
+    <active>true</active>
+    <description>Agency Contract Start Date must be less than End Date. Please correct the dates.</description>
+    <errorConditionFormula>ContractStartDate__c &gt;= ContractEndDate__c</errorConditionFormula>
+    <errorMessage>Agency Contract Start Date must be less than End Date. Please correct the dates.</errorMessage>
+</ValidationRule>

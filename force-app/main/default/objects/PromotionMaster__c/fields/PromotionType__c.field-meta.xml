@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PromotionType__c</fullName>
+    <label>Promotion Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Discount (ส่วนลด)</fullName>
+                <default>false</default>
+                <label>Discount (ส่วนลด)</label>
+            </value>
+            <value>
+                <fullName>Marketing Campaign</fullName>
+                <default>false</default>
+                <label>Marketing Campaign</label>
+            </value>
+            <value>
+                <fullName>Premium (ของแถม)</fullName>
+                <default>false</default>
+                <label>Premium (ของแถม)</label>
+            </value>
+            <value>
+                <fullName>Voucher</fullName>
+                <default>false</default>
+                <label>Voucher</label>
+            </value>
+            <value>
+                <fullName>Personal Discount (ส่วนลดส่วนตัวของ Sales)</fullName>
+                <default>false</default>
+                <label>Personal Discount (ส่วนลดส่วนตัวของ Sales)</label>
+            </value>
+            <value>
+                <fullName>Promotion on Transferred day</fullName>
+                <default>false</default>
+                <label>Promotion on Transferred day</label>
+            </value>
+            <value>
+                <fullName>A</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>A</label>
+            </value>
+            <value>
+                <fullName>B</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>B</label>
+            </value>
+            <value>
+                <fullName>C</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>C</label>
+            </value>
+            <value>
+                <fullName>Promotion on Transferred day (ส่วนลดวันโอน)</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Promotion on Transferred day (ส่วนลดวันโอน)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

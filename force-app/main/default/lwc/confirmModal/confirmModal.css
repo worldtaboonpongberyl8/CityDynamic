@@ -1,0 +1,5 @@
+.button-container {
+    display: flex;
+    gap: 4px;
+    justify-content: end; /* Right-align the button */
+}

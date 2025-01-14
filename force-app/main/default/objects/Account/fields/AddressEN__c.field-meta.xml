@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AddressEN__c</fullName>
+    <externalId>false</externalId>
+    <formula>TRIM(
+  IF(NOT(ISBLANK(AddressNoEN__c)), AddressNoEN__c &amp; &quot;, &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(SubDistrictEN__c)), SubDistrictEN__c &amp; &quot;, &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(DistrictEN__c)), DistrictEN__c &amp; &quot;, &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(ProvinceEN__c)), ProvinceEN__c &amp; &quot; &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(ZipCodeEN__c)), ZipCodeEN__c &amp; &quot; &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(TEXT(CountryEN__c))), TEXT(CountryEN__c), &quot;&quot;)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Address EN</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

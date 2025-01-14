@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AgentCompactLayout</fullName>
+    <fields>Name</fields>
+    <fields>AgencyType__c</fields>
+    <fields>ContractStartDate__c</fields>
+    <fields>ContractEndDate__c</fields>
+    <fields>ContractStatus__c</fields>
+    <fields>OwnerId</fields>
+    <label>Agent Compact Layout</label>
+</CompactLayout>

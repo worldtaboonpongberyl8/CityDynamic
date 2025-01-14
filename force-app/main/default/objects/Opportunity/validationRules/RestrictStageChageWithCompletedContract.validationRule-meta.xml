@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RestrictStageChageWithCompletedContract</fullName>
+    <active>true</active>
+    <description>To ensures that users can only change the stage from &quot;Reservation&quot; to &quot;Contract&quot; if the &quot;Completed Contract&quot; field is set to true.</description>
+    <errorConditionFormula>AND(
+    ISCHANGED(StageName),
+    ISPICKVAL(PRIORVALUE(StageName), &quot;Reservation&quot;),
+    ISPICKVAL(StageName, &quot;Contract&quot;),
+    NOT( IsCompletedContract__c ) 
+)</errorConditionFormula>
+    <errorMessage>Please update contract status before update opportunity stage.</errorMessage>
+</ValidationRule>

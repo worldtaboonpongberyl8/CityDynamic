@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Accounts_Today</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>AccountNameTH__c</columns>
+    <columns>AccountCode__c</columns>
+    <columns>ACCOUNT.RECORDTYPE</columns>
+    <columns>Nationality__c</columns>
+    <columns>Active__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>Accounts Today</label>
+</ListView>

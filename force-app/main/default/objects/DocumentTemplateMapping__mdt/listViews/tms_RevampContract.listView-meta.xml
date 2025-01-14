@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>tms_RevampContract</fullName>
+    <columns>MasterLabel</columns>
+    <columns>IsActive__c</columns>
+    <columns>DocumentTemplateName__c</columns>
+    <columns>DeveloperName</columns>
+    <columns>ObjectName__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>TemplateMappingType__c</field>
+        <operation>equals</operation>
+        <value>Contract</value>
+    </filters>
+    <filters>
+        <field>DocumentTemplateName__c</field>
+        <operation>contains</operation>
+        <value>Agreement</value>
+    </filters>
+    <label>Revamp Contract</label>
+    <language>en_US</language>
+</ListView>

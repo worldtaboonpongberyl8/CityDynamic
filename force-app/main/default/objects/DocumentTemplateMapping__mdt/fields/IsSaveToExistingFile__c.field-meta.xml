@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsSaveToExistingFile__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>ต้องการสร้างไฟล์ใหม่ หรือ save ทับไฟล์เดิม ถ้าต้องการสร้างไฟล์ทับไฟล์เดิมให้ set เป็น true</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Is Save To Existing File</label>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EndDateIsInvalid</fullName>
+    <active>true</active>
+    <description>End Date Cannot Less Than Start Date</description>
+    <errorConditionFormula>IF(ExpectedRevenueEndDate__c &lt; ExpectedRevenueStartDate__c , True,False)</errorConditionFormula>
+    <errorMessage>End Date cannot less than start date</errorMessage>
+</ValidationRule>

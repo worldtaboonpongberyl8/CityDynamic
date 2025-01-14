@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Save_to_Existing_rule</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF(
+    IsSaveToExistingFile__c, 
+    ISBLANK( FieldAPINameSaveToExistingFile__c ),
+    false
+)</errorConditionFormula>
+    <errorMessage>Please Filled In FieldAPINameSaveToExistingFile__c  when you set IsSaveToExistingFile__c = true</errorMessage>
+</ValidationRule>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>StartDateCompletionDateValidation</fullName>
+    <active>true</active>
+    <description>the Project Start Date cannot be later than the Completion Date</description>
+    <errorConditionFormula>ProjectStartDate__c &gt;  CompletionDate__c</errorConditionFormula>
+    <errorMessage>Project Start Date cannot be later than Completion Date.</errorMessage>
+</ValidationRule>

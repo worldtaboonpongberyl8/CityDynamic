@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckLeadRejected</fullName>
+    <active>true</active>
+    <description>If status is Rejected, Reject Reason must not be blank</description>
+    <errorConditionFormula>AND(
+ISPICKVAL(  Status  ,&quot;Rejected&quot;),
+ISBLANK( Text( RejectReason__c)  )
+)</errorConditionFormula>
+    <errorDisplayField>RejectReason__c</errorDisplayField>
+    <errorMessage>Please input Reject Reason</errorMessage>
+</ValidationRule>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HouseAddLandPriceEqualAskingPrice</fullName>
+    <active>true</active>
+    <description>Asking price = House price+Land price</description>
+    <errorConditionFormula>AskingPriceBaht__c != HousePrice__c + LandPrice__c</errorConditionFormula>
+    <errorMessage>House Price + Land Price must be equal Asking Price</errorMessage>
+</ValidationRule>

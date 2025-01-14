@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DoNotEditWhenClosedWon</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND
+(
+ISPICKVAL(PRIORVALUE(  StageName  ), &quot;Closed Won&quot;)
+
+
+
+)</errorConditionFormula>
+    <errorMessage>Cannot edit all information when the opportunity is closed won</errorMessage>
+</ValidationRule>

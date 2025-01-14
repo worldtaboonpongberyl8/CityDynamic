@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RestrictStageChangeFromTransferred</fullName>
+    <active>true</active>
+    <description>restrict changes from Transferred to any other stage except Closed Won or Closed Lost.</description>
+    <errorConditionFormula>AND(
+    ISCHANGED(StageName),
+    ISPICKVAL(PRIORVALUE(StageName), &quot;Transferred&quot;),
+    NOT(
+        OR(
+            ISPICKVAL(StageName, &quot;Closed Won&quot;),
+            ISPICKVAL(StageName, &quot;Closed Lost&quot;)
+        )
+    )
+)</errorConditionFormula>
+    <errorMessage>Unit has been transferred. Please contact your administrator for help.</errorMessage>
+</ValidationRule>

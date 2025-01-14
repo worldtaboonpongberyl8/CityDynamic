@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Budget__c</fullName>
+    <description>วงเงินที่ตั้งไว้</description>
+    <label>Budget</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Less 7 MB.</fullName>
+                <default>false</default>
+                <label>Less 7 MB.</label>
+            </value>
+            <value>
+                <fullName>9 - 10 MB.</fullName>
+                <default>false</default>
+                <label>9 - 10 MB.</label>
+            </value>
+            <value>
+                <fullName>11 - 15 MB.</fullName>
+                <default>false</default>
+                <label>11 - 15 MB.</label>
+            </value>
+            <value>
+                <fullName>16 - 20 MB.</fullName>
+                <default>false</default>
+                <label>16 - 20 MB.</label>
+            </value>
+            <value>
+                <fullName>20 - 30 MB.</fullName>
+                <default>false</default>
+                <label>20 - 30 MB.</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

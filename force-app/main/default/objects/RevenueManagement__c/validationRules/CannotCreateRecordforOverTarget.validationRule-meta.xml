@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CannotCreateRecordforOverTarget</fullName>
+    <active>true</active>
+    <description>If the expected revenue is greater than the project target then cannot create the new record.</description>
+    <errorConditionFormula>Project__r.TotalExpectedRevenue__c &gt;= Project__r.TargetRevenue__c &amp;&amp; ISNEW()</errorConditionFormula>
+    <errorDisplayField>Target__c</errorDisplayField>
+    <errorMessage>The total expected revenue is greater than target revenue. This record cannot save.</errorMessage>
+</ValidationRule>

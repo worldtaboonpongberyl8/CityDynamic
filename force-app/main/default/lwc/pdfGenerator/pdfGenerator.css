@@ -1,0 +1,15 @@
+.spins::after {
+    position: absolute;
+    content: 'Documents are generating, Please wait...';
+    width: 100%;
+    text-align: center;
+    top: calc(50% + 3em);
+    font-size: 13px;
+    font-weight: 500;
+}
+.progressBar{
+	padding: 5%;
+}
+.slds-progress-bar__value{
+    background: #14A44D !important;
+}

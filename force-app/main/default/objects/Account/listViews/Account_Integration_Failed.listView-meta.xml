@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Integration_Failed</fullName>
+    <booleanFilter>(1 OR 2 ) AND 3 AND 4 AND 5</booleanFilter>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>AccountNameTH__c</columns>
+    <columns>AccountCode__c</columns>
+    <columns>Nationality__c</columns>
+    <columns>ResponseCode__c</columns>
+    <columns>Active__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ResponseCode__c</field>
+        <operation>notEqual</operation>
+        <value>SC</value>
+    </filters>
+    <filters>
+        <field>LastContactIntegrationStatus__c</field>
+        <operation>equals</operation>
+        <value>Fail</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Account.Co_Owner_Corporate,Account.Co_Owner_Individual</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>notEqual</operation>
+        <value>Dummy for send Email</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.RECORDTYPE</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>Account Integration Failed</label>
+</ListView>

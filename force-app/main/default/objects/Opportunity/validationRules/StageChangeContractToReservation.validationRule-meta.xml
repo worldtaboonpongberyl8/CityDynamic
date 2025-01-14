@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>StageChangeContractToReservation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    ISPICKVAL(StageName, &quot;Reservation&quot;),
+    ISPICKVAL(PRIORVALUE(StageName), &quot;Contract&quot;),
+    ISPICKVAL( Contract.Status , &quot;Signed Contract&quot;)
+)</errorConditionFormula>
+    <errorMessage>You cannot change the stage when the contract status is &apos;Signed.</errorMessage>
+</ValidationRule>

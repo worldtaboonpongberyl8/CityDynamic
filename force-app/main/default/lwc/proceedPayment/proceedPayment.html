@@ -1,0 +1,163 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <lightning-quick-action-panel class="slds-is-relative" header="Make a Payment">
+        <div class="content-container">
+            <div class="slds-p-around_medium">
+                <lightning-button
+                    label="Add Payment Method"
+                    onclick={handleAddSection}
+                    class="slds-m-bottom_medium"
+                    variant="brand"
+                ></lightning-button>
+
+                <template for:each={paymentMethodSections} for:item="section">
+                    <!-- Payment method section -->
+                    <div key={section.id} class="slds-card slds-m-bottom_medium">
+                        <div class="slds-card__body slds-p-around_small">
+                            <!-- Payment method and remove button -->
+                            <div class="slds-grid slds-wrap slds-m-bottom_small">
+                                <!-- Payment Method Combobox -->
+                                <div class="slds-col slds-size_1-of-2 slds-p-right_small">
+                                    <lightning-combobox
+                                        label="Payment Method"
+                                        value={section.selectedPaymentMethod}
+                                        placeholder="Select an option"
+                                        options={paymentMethodOptions}
+                                        data-id={section.id}
+                                        onchange={handleSelectPaymentMethod}
+                                        class="full-width"
+                                    ></lightning-combobox>
+                                </div>
+
+                                <!-- Delete Icon -->
+                                <div class="slds-col slds-size_1-of-2 slds-text-align_right slds-p-left_small">
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        alternative-text="Delete Payment Method"
+                                        size="medium"
+                                        variant="bare"
+                                        data-id={section.id}
+                                        onclick={handleRemoveSection}
+                                    ></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-wrap slds-m-bottom_small">
+                                <!-- Dynamic fields -->
+                                <template for:each={section.fields} for:item="field">
+                                    <template if:true={field.isText}>
+                                        <div
+                                            key={field.apiName}
+                                            class="slds-col slds-size_1-of-2 slds-p-bottom_small slds-p-right_small"
+                                        >
+                                            <lightning-input
+                                                label={field.label}
+                                                value={field.value}
+                                                data-id={section.id}
+                                                data-field={field.apiName}
+                                                onchange={handleInputChange}
+                                                max-length={field.maxLength}
+                                                class="full-width"
+                                                required={field.required}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+
+                                    <template if:true={field.isDecimal}>
+                                        <div
+                                            key={field.apiName}
+                                            class="slds-col slds-size_1-of-2 slds-p-bottom_small slds-p-right_small"
+                                        >
+                                            <lightning-input
+                                                class="full-width number-input"
+                                                label={field.label}
+                                                type="number"
+                                                step={field.maxDecimalDigits}
+                                                value={field.value}
+                                                data-id={section.id}
+                                                data-field={field.apiName}
+                                                onchange={handleInputChange}
+                                                required={field.requried}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+                                    <template if:true={field.isDate}>
+                                        <div
+                                            key={field.apiName}
+                                            class="slds-col slds-size_1-of-2 slds-p-bottom_small slds-p-right_small"
+                                        >
+                                            <lightning-input
+                                                label={field.label}
+                                                type="date"
+                                                value={field.value}
+                                                data-id={section.id}
+                                                data-field={field.apiName}
+                                                onchange={handleInputChange}
+                                                class="full-width"
+                                                required={field.required}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+
+                                    <template if:true={field.isPicklist}>
+                                        <div
+                                            key={field.apiName}
+                                            class="slds-col slds-size_1-of-2 slds-p-bottom_small slds-p-right_small"
+                                        >
+                                            <lightning-combobox
+                                                label={field.label}
+                                                value={field.value}
+                                                options={field.picklistValues}
+                                                data-id={section.id}
+                                                data-field={field.apiName}
+                                                onchange={handleInputChange}
+                                                class="full-width"
+                                                required={field.required}
+                                            ></lightning-combobox>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Separator -->
+                        <div class="slds-border_top slds-p-top_small"></div>
+                    </div>
+                </template>
+            </div>
+            <div class="slds-grid slds-grid_align-space slds-p-vertical_small">
+                <div class="body-flex">
+                    <strong class="slds-p-right_medium">Total Amount</strong>
+                    <div>
+                        <lightning-input
+                            class="number-input"
+                            label=""
+                            type="number"
+                            step="0.01"
+                            value={totalReceivedAmount}
+                            variant="label-hidden"
+                            disabled="true"
+                        >
+                        </lightning-input>
+                    </div>
+                </div>
+                <div>
+                    <lightning-button label="Apply Amount to Table" onclick={handleApplyAmount}> </lightning-button>
+                </div>
+            </div>
+
+            <c-opportunity-payment-adjustment is-hide-header="true" record-id={recordId}>
+            </c-opportunity-payment-adjustment>
+        </div>
+    </lightning-quick-action-panel>
+    <div class="slds-modal__footer">
+        <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+        <lightning-button
+            variant="brand"
+            label="Confirm"
+            class="slds-m-left_x-small"
+            onclick={handleConfirm}
+        ></lightning-button>
+    </div>
+</template>

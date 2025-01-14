@@ -1,0 +1,134 @@
+@isTest
+public with sharing class PaymentReceiptSelectorTest {
+	@TestSetup
+	static void makeData(){
+		DataMaker dataMaker = DataMaker.getInstance();
+		// Create Project
+		Project__c testProject = dataMaker.createProject('Test Project', 'AA01', 'CD');
+		insert testProject;
+		// Craete Floor
+		Floor__c testFloor = dataMaker.createFloor('Test Floor', 'FF01', testProject.Id);
+		insert testFloor;
+		// Create Unit Type
+		UnitType__c unitType = dataMaker.createUnitType('Test Unit Type', testProject.Id);
+		insert unitType;
+		// Create Unit
+		Product2 testProduct = dataMaker.createUnit(
+			'Test Product',
+			'PP01',
+			testProject.Id,
+			testFloor.Id,
+			'Available',
+			unitType.Id
+		);
+		insert testProduct;
+		// Create Pricebook Entry
+		Id pricebookId = Test.getStandardPricebookId();
+		PricebookEntry testPricebookEntry1 = dataMaker.createPricebookEntries(testProduct.Id, 15000000, 20000000,10000000);
+		testPricebookEntry1.Pricebook2Id = pricebookId;
+		testPricebookEntry1.UseStandardPrice = false;
+		insert testPricebookEntry1;
+		// Creat Account
+		Id recordTypeId = Schema.getGlobalDescribe()
+			.get('Account')
+			.getDescribe()
+			.getRecordTypeInfosByName()
+			.get('Co-Owner - Corporate')
+			.getRecordTypeId();
+		Account account = dataMaker.createAccount(recordTypeId, 'Test Account');
+		insert account;
+		// Create Opportunity
+		Opportunity opportunity = dataMaker.createOpportunity(
+			account.Id,
+			'Omitted',
+			'Test Opp',
+			Date.today(),
+			'Open',
+			testProduct.Id,
+			'Thai',
+			null,
+			testProject.Id
+		);
+		insert opportunity;
+		// Create Opp Payments
+		OpportunityPayment__c reservationOppPayment = dataMaker.createOpportunityPayment(
+			opportunity.Id,
+			'Reservation',
+			50000,
+			Date.newInstance(2024, 10, 15),
+			1
+		);
+		OpportunityPayment__c contractOppPayment = dataMaker.createOpportunityPayment(
+			opportunity.Id,
+			'Contract',
+			100000,
+			Date.newInstance(2024, 10, 27),
+			2
+		);
+		OpportunityPayment__c installmentOppPayment = dataMaker.createOpportunityPayment(
+			opportunity.Id,
+			'Installment 1',
+			10000000,
+			Date.newInstance(2024, 10, 27),
+			3
+		);
+		OpportunityPayment__c transferOppPayment = dataMaker.createOpportunityPayment(
+			opportunity.Id,
+			'Transfer',
+			4850000,
+			Date.newInstance(2025, 10, 27),
+			4
+		);
+		List<OpportunityPayment__c> oppPayments = new List<OpportunityPayment__c>{
+			reservationOppPayment,
+			contractOppPayment,
+			installmentOppPayment,
+			transferOppPayment
+		};
+		insert oppPayments;
+		// Create Invoice
+		Invoice__c invoice = dataMaker.createInvoice(opportunity.Id, Date.newInstance(2024, 10, 6), Date.newInstance(2024, 10, 1), true, 'Address');
+		List<Invoice__c> invoices = new List<Invoice__c>{ invoice };
+		insert invoices;
+		// Create Invoice Line Item
+		InvoiceLineItem__c invoiceLineItem1 = dataMaker.createInvoiceLineItem(invoice.Id,reservationOppPayment.Id,50000,Date.newInstance(2024, 12, 1),'');
+		List<InvoiceLineItem__c> invoiceLineItems = new List<InvoiceLineItem__c>{ invoiceLineItem1 };
+		insert invoiceLineItems;
+		// Create Receipt
+		PaymentReceipt__c receipt = dataMaker.craeteReceipt(opportunity.Id , Date.newInstance(2024, 10, 10));
+		List<PaymentReceipt__c> receipts = new List<PaymentReceipt__c>{receipt};
+		insert receipts;
+		// Create Receipt Line Item
+		PaymentReceiptLineItem__c receiptItemReservation = dataMaker.createReceiptLineItem(receipt.Id,reservationOppPayment.Id,invoiceLineItem1.Id,50000,'Fully Paid');
+		PaymentReceiptLineItem__c receiptItemContract = dataMaker.createReceiptLineItem(receipt.Id,contractOppPayment.Id,null,50000,'Partially Paid');
+		List<PaymentReceiptLineItem__c> receiptItems = new List<PaymentReceiptLineItem__c>{receiptItemReservation,receiptItemContract};
+		insert receiptItems;
+		// Create Name Formatting
+		NameFormattingMasterData__c format = dataMaker.createNameFormattingMasterData(
+			'PaymentReceipt__c', 'Format', 'Object', 'RV-{Opportunity__r.Project__r.ProjectCode__c}{{CreatedDate:FORMATDATETIME:yyMM}{RUNNINGNUMBER:000}', 1, null
+		);
+		insert format;
+	}
+
+	@isTest
+	static void getPaymentReceiptWithLineItemMapByIdTest(){
+		Test.startTest();
+		PaymentReceiptSelector selector = PaymentReceiptSelector.getInstance();
+		PaymentReceipt__c receipt = [SELECT Id FROM PaymentReceipt__c LIMIT 1];
+		Map<Id, PaymentReceipt__c> receiptMapById = selector.getPaymentReceiptWithLineItemMapById(new Set<Id>{receipt.Id});
+		PaymentReceipt__c targetPaymentReceipt = receiptMapById.get(receipt.Id);
+		System.assertNotEquals(null, targetPaymentReceipt);
+		System.assertEquals(2, targetPaymentReceipt.Payment_Transactions__r.size());
+		Test.stopTest();
+	}
+	@isTest
+	static void getByOppIdSetTest(){
+		Test.startTest();
+		PaymentReceiptSelector selector = PaymentReceiptSelector.getInstance();
+		Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+		List<PaymentReceipt__c> resultPaymentReceipt = selector.getByOppIdSet(new Set<Id>{opp.Id});
+		System.assertNotEquals(null, resultPaymentReceipt);
+		System.assertEquals(1,resultPaymentReceipt.size());
+		Test.stopTest();
+	}
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ElectricityMeterReaderInstallFee__c</fullName>
+    <description>Electricity Meter Reader Install. Fee - งวดที่เกี่ยวข้องกับค่าใช้จ่ายวันโอน</description>
+    <label>Electricity Meter Reader Install. Fee</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

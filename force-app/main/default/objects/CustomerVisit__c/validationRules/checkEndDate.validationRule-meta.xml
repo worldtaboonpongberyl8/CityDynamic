@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>checkEndDate</fullName>
+    <active>true</active>
+    <description>End Date &lt; Start Date</description>
+    <errorConditionFormula>EndDate__c &lt; StartDate__c</errorConditionFormula>
+    <errorDisplayField>EndDate__c</errorDisplayField>
+    <errorMessage>End Date cannot be later than Start Date.</errorMessage>
+</ValidationRule>

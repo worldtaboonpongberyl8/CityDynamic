@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckChangeOpentoRejected</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+AND(
+ISCHANGED( Status__c ),
+ISPICKVAL( Status__c , &quot;Rejected&quot; )
+),
+ ApproveStatus__c  != &quot;Rejected&quot;
+
+)</errorConditionFormula>
+    <errorMessage>Please click the &quot;Submit for Approval&quot; button.</errorMessage>
+</ValidationRule>

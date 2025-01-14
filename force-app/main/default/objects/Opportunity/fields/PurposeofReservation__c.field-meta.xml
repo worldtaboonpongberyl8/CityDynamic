@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PurposeofReservation__c</fullName>
+    <description>วัตถุประสงค์ในการจองซื้อโครงการ</description>
+    <label>Purpose of Reservation</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Living</fullName>
+                <default>false</default>
+                <label>Living</label>
+            </value>
+            <value>
+                <fullName>Long-term Investment</fullName>
+                <default>false</default>
+                <label>Long-term Investment</label>
+            </value>
+            <value>
+                <fullName>Short-Term Investment</fullName>
+                <default>false</default>
+                <label>Short-Term Investment</label>
+            </value>
+            <value>
+                <fullName>Resales</fullName>
+                <default>false</default>
+                <label>Resales</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

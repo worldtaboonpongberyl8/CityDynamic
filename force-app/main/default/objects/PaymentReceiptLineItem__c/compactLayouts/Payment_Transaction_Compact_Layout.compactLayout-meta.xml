@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Transaction_Compact_Layout</fullName>
+    <fields>Name</fields>
+    <fields>TransactionDateTime__c</fields>
+    <fields>PJMDocumentNo__c</fields>
+    <label>Payment Transaction Compact Layout</label>
+</CompactLayout>

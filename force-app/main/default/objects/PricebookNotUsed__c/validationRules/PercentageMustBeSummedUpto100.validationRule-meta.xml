@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PercentageMustBeSummedUpto100</fullName>
+    <active>false</active>
+    <errorConditionFormula>ReservationandContractPercentage__c + DownPaymentPercentage__c  + TransferOwnershipPercentage__c !=1</errorConditionFormula>
+    <errorMessage>The total percentage must equal to 100%
+(Reservation, Contract, DownPayment, TransferOwnership)</errorMessage>
+</ValidationRule>

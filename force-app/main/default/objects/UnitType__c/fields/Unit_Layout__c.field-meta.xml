@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_Layout__c</fullName>
+    <label>Unit Layout</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Main Entrance</fullName>
+                <default>false</default>
+                <label>Main Entrance</label>
+            </value>
+            <value>
+                <fullName>Living Room</fullName>
+                <default>false</default>
+                <label>Living Room</label>
+            </value>
+            <value>
+                <fullName>Master Bedroom</fullName>
+                <default>false</default>
+                <label>Master Bedroom</label>
+            </value>
+            <value>
+                <fullName>Bedroom 2</fullName>
+                <default>false</default>
+                <label>Bedroom 2</label>
+            </value>
+            <value>
+                <fullName>Bedroom 3</fullName>
+                <default>false</default>
+                <label>Bedroom 3</label>
+            </value>
+            <value>
+                <fullName>Bedroom 4</fullName>
+                <default>false</default>
+                <label>Bedroom 4</label>
+            </value>
+            <value>
+                <fullName>Master Bathroom</fullName>
+                <default>false</default>
+                <label>Master Bathroom</label>
+            </value>
+            <value>
+                <fullName>Bathroom 2</fullName>
+                <default>false</default>
+                <label>Bathroom 2</label>
+            </value>
+            <value>
+                <fullName>Bathroom 3</fullName>
+                <default>false</default>
+                <label>Bathroom 3</label>
+            </value>
+            <value>
+                <fullName>Bathroom 4</fullName>
+                <default>false</default>
+                <label>Bathroom 4</label>
+            </value>
+            <value>
+                <fullName>Kitchenette</fullName>
+                <default>false</default>
+                <label>Kitchenette</label>
+            </value>
+            <value>
+                <fullName>Storage</fullName>
+                <default>false</default>
+                <label>Storage</label>
+            </value>
+            <value>
+                <fullName>Terrace/Balcony</fullName>
+                <default>false</default>
+                <label>Terrace/Balcony</label>
+            </value>
+            <value>
+                <fullName>Staircase</fullName>
+                <default>false</default>
+                <label>Staircase</label>
+            </value>
+            <value>
+                <fullName>Mezzanine</fullName>
+                <default>false</default>
+                <label>Mezzanine</label>
+            </value>
+            <value>
+                <fullName>Open Space (Bareshell)</fullName>
+                <default>false</default>
+                <label>Open Space (Bareshell)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>6</visibleLines>
+</CustomField>

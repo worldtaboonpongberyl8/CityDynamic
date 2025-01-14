@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Interest_is_Other</fullName>
+    <active>true</active>
+    <description>If Interest is selected as Other, interest Others must not be blank</description>
+    <errorConditionFormula>AND(
+ISPICKVAL( Interest__c ,&quot;Other&quot;),
+ISBLANK( InterestOther__c )
+)</errorConditionFormula>
+    <errorDisplayField>InterestOther__c</errorDisplayField>
+    <errorMessage>Please input Interest Other for Other</errorMessage>
+</ValidationRule>

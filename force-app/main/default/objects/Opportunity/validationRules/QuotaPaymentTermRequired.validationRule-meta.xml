@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>QuotaPaymentTermRequired</fullName>
+    <active>true</active>
+    <description>Quota and Payment Term Master fields cannot be blank when the stage is set to Quotation.</description>
+    <errorConditionFormula>AND(
+    OR(
+        ISPICKVAL(StageName, &quot;Quotation&quot;),
+        ISPICKVAL(StageName, &quot;Negotiation&quot;),
+        ISPICKVAL(StageName, &quot;Reservation&quot;),
+        ISPICKVAL(StageName, &quot;Contract&quot;),
+        ISPICKVAL(StageName, &quot;Transferred&quot;),
+        ISPICKVAL(StageName, &quot;Closed Won&quot;)
+    ),
+    OR(
+        ISPICKVAL(Quota__c, &quot;&quot;),
+        ISBLANK(PaymentTermMaster__c)
+    )
+)</errorConditionFormula>
+    <errorMessage>Quota and Payment Term Master must be filled out before setting the stage to Quotation.</errorMessage>
+</ValidationRule>

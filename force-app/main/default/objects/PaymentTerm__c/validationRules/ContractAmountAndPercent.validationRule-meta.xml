@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ContractAmountAndPercent</fullName>
+    <active>true</active>
+    <description>If Contract Amount is entered, Contract Percent must be empty</description>
+    <errorConditionFormula>AND(
+NOT(ISBLANK( ContractAmount__c )),
+NOT(ISBLANK( ContractPercent__c ))
+)</errorConditionFormula>
+    <errorMessage>If Contract Amount is entered, Contract Percent must be empty.</errorMessage>
+</ValidationRule>

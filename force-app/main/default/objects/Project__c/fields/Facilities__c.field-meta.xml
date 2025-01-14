@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Facilities__c</fullName>
+    <label>Facilities</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>24-Hour Security &amp; CCTV</fullName>
+                <default>false</default>
+                <label>24-Hour Security &amp; CCTV</label>
+            </value>
+            <value>
+                <fullName>Concierge Service</fullName>
+                <default>false</default>
+                <label>Concierge Service</label>
+            </value>
+            <value>
+                <fullName>Co-Working Space</fullName>
+                <default>false</default>
+                <label>Co-Working Space</label>
+            </value>
+            <value>
+                <fullName>Fitness Center/Gym</fullName>
+                <default>false</default>
+                <label>Fitness Center/Gym</label>
+            </value>
+            <value>
+                <fullName>Garden &amp; Green Spaces</fullName>
+                <default>false</default>
+                <label>Garden &amp; Green Spaces</label>
+            </value>
+            <value>
+                <fullName>Pet-friendly Areas or Pet Services</fullName>
+                <default>false</default>
+                <label>Pet-friendly Areas or Pet Services</label>
+            </value>
+            <value>
+                <fullName>Playground</fullName>
+                <default>false</default>
+                <label>Playground</label>
+            </value>
+            <value>
+                <fullName>Private Cinema/Theater Room</fullName>
+                <default>false</default>
+                <label>Private Cinema/Theater Room</label>
+            </value>
+            <value>
+                <fullName>Private Elevator Access</fullName>
+                <default>false</default>
+                <label>Private Elevator Access</label>
+            </value>
+            <value>
+                <fullName>Private Lounge or Clubhouse</fullName>
+                <default>false</default>
+                <label>Private Lounge or Clubhouse</label>
+            </value>
+            <value>
+                <fullName>Spa &amp; Sauna</fullName>
+                <default>false</default>
+                <label>Spa &amp; Sauna</label>
+            </value>
+            <value>
+                <fullName>Swimming Pool</fullName>
+                <default>false</default>
+                <label>Swimming Pool</label>
+            </value>
+            <value>
+                <fullName>Tennis Courts</fullName>
+                <default>false</default>
+                <label>Tennis Courts</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>5</visibleLines>
+</CustomField>

@@ -1,0 +1,13 @@
+<template>
+	<template lwc:if={spinner}>
+		<lightning-spinner class="spins" size="large" alternative-text="Documents are generating, Please wait...">
+		</lightning-spinner>
+    </template>
+
+	<div class="progressBar">
+        <div class="slds-text-align_right">
+            <strong>{progress}% Complete</strong>
+        </div>
+		<lightning-progress-bar value={progress} size="large" variant="circular"></lightning-progress-bar>
+    </div>
+</template>

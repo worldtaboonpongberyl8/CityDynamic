@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Installment_of_Bullet</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ISPICKVAL(  Type__c  ,&quot;Bullet&quot;),
+ NoofInstallment__c &gt;0
+)</errorConditionFormula>
+    <errorDisplayField>NoofInstallment__c</errorDisplayField>
+    <errorMessage>Please remove No. of installment for Type is &quot;bullet&quot;.</errorMessage>
+</ValidationRule>

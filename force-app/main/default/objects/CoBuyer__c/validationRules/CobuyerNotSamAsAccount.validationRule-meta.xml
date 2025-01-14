@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CobuyerNotSamAsAccount</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+NOT(ISBLANK( Customer__c )),
+Customer__c = Opportunity__r.AccountId
+)</errorConditionFormula>
+    <errorDisplayField>Customer__c</errorDisplayField>
+    <errorMessage>Co-Buyer cannot be the same as Account Name. Please select a different value.</errorMessage>
+</ValidationRule>

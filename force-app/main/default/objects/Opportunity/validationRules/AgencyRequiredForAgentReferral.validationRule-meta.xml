@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AgencyRequiredForAgentReferral</fullName>
+    <active>true</active>
+    <description>Ensures that if the Lead Source is &apos;Agent Referral&apos;, the Channel field must be populated. If the Lead Source is not &apos;Agent Referral&apos;, the Channel field must be empty.</description>
+    <errorConditionFormula>AND(
+        NOT(ISPICKVAL(LeadSource, &quot;Agent Referral&quot;)),
+        NOT(ISBLANK(Channel__c))
+    )</errorConditionFormula>
+    <errorMessage>Please check Lead Source information.</errorMessage>
+</ValidationRule>

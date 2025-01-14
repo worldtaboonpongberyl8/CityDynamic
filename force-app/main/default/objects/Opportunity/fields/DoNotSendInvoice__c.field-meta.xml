@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DoNotSendInvoice__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>ใช้เพื่อบอกว่า Opportunity นี้จะส่ง Invoice ให้ลูกค้าหรือไม่
+ถ้า field นี้ เป็น True จะไม่มีการ Generate เอกสาร Invoice
+ถ้า field นี้ เป็น False จะมีการ Generate เอกสาร Invoice และส่ง email ไปให้ลูกค้า
+แต่ไม่ว่า field นี้จะเป็น True หรือ Fales จะมีการสร้าง record ที่ Object Invoice เสมอ</description>
+    <label>Do Not Send Invoice</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

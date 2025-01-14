@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RequiredOtherLostRejectReason</fullName>
+    <active>true</active>
+    <description>To ensure that the &apos;Other Lost/Reject Reason&apos; field is required when the &apos;Loss Reason&apos; is Other</description>
+    <errorConditionFormula>OR(
+    AND(
+        ISPICKVAL(LossReason__c, &quot;Other&quot;),
+        ISBLANK(OtherLostRejectReason__c)
+    ),
+    AND(
+        NOT(ISPICKVAL(LossReason__c, &quot;Other&quot;)),
+        NOT(ISBLANK(OtherLostRejectReason__c))
+    )
+)</errorConditionFormula>
+    <errorDisplayField>OtherLostRejectReason__c</errorDisplayField>
+    <errorMessage>Please provide the &apos;Other Lost/Reject Reason&apos; when Lost Reason is &apos;Other&apos;.</errorMessage>
+</ValidationRule>

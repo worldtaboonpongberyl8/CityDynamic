@@ -1,0 +1,187 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <!-- Setup Form -->
+    <template if:true={isNewPaymentTerm}>
+        <!-- Header row -->
+        <div class="slds-p-vertical_medium">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-3">
+                    <span></span>
+                </div>
+                <div class="slds-col slds-size_1-of-3" style="text-align: center; padding-right: 3px; font-weight: bold;">
+                    <span>Amount</span>
+                </div>
+                <div class="slds-col slds-size_1-of-3" style="text-align: center; padding-left: 3px; font-weight: bold;">
+                    <span>Percent</span>
+                </div>
+            </div>
+        </div>
+        <!-- Contract row -->
+        <div class="slds-p-bottom_medium">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-3" style="align-self: center">
+                    <span>Contract</span>
+                </div>
+                <div class="slds-col slds-size_1-of-3" style="align-self: center; padding-right: 3px">
+                    <lightning-input
+                        label=" "
+                        value={allAmountAndPercent.contractAmount}
+                        onchange={handleContractAmountChange}
+                        data-id="contract-amount"
+                        name="contractAmount"
+                        type="number"
+                        step="0.01"
+                        variant="label-hidden"
+                        class="number-input"
+                    >
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-3" style="align-self: center; padding-left: 3px">
+                    <lightning-input
+                        label=" "
+                        value={allAmountAndPercent.contractPercent}
+                        onchange={handleContractPercentChange}
+                        data-id="contract-percent"
+                        name="contractPercent"
+                        type="number"
+                        step="0.01"
+                        formatter="percent-fixed"
+                        variant="label-hidden"
+                        class="number-input"
+                    >
+                    </lightning-input>
+                </div>
+            </div>
+        </div>
+        <!-- Total Installment row -->
+        <div class="slds-p-bottom_medium">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-3" style="align-self: center">
+                    <span>Total Installment</span>
+                </div>
+                <template if:true={isBulletPayment}>
+                    <div class="slds-col slds-size_2-of-3" style="height: 40px; background-color: #f0f0f0">
+                        <span>&nbsp;</span>
+                    </div>
+                </template>
+                <template if:false={isBulletPayment}>
+                    <div class="slds-col slds-size_1-of-3" style="align-self: center; padding-right: 3px">
+                        <lightning-input
+                            label=" "
+                            value={allAmountAndPercent.totalInstallmentAmount}
+                            onchange={handleInstallmentAmountChange}
+                            data-id="installment-amount"
+                            name="totalInstallmentAmount"
+                            type="number"
+                            step="0.01"
+                            variant="label-hidden"
+                            class="number-input"
+                        >
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3" style="align-self: center; padding-left: 3px">
+                        <lightning-input
+                            label=" "
+                            value={allAmountAndPercent.totalInstallmentPercent}
+                            onchange={handleInstallmentPercentChange}
+                            data-id="installment-percent"
+                            name="totalInstallmentPercent"
+                            type="number"
+                            step="0.01"
+                            formatter="percent-fixed"
+                            variant="label-hidden"
+                            class="number-input"
+                        >
+                        </lightning-input>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <!-- Transfer row -->
+        <div class="slds-p-bottom_medium">
+            <div class="slds-grid slds-wrap" style="height: 40px">
+                <div class="slds-col slds-size_1-of-3" style="align-self: center">
+                    <span>Transfer</span>
+                </div>
+
+                <div
+                    class="slds-col slds-size_2-of-3"
+                    style="
+                        display: flex;
+                        height: 100%;
+                        justify-content: center;
+                        align-items: center;
+                        background-color: #f0f0f0;
+                    "
+                >
+                    <span>System Generated</span>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <lightning-button label="Generate" variant="brand" onclick={handleGenerateTableData}></lightning-button>
+            <lightning-button label="Cancel" onclick={handleClearData}></lightning-button>
+        </div>
+    </template>
+    <!-- Table -->
+    <template if:true={isEditPaymentTerm}>
+        <div class="slds-p-vertical_medium">
+            <table class="bordered-table">
+                <thead>
+                    <tr>
+                        <td>Order</td>
+                        <td>Term</td>
+                        <td>Amount</td>
+                        <td>Percent</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={paymentTermLineItemData} for:item="item">
+                        <tr key={item.term}>
+                            <td>{item.order}</td>
+                            <td>{item.term}</td>
+                            <template if:true={item.isTransfer}>
+                                <td colspan="2" style="background-color: #f0f0f0;">System Generated</td>
+                            </template>
+                            <template if:false={item.isTransfer}>
+                                <td>
+                                    <lightning-input
+                                        label=" "
+                                        value={item.amount}
+                                        onchange={handleAdjustAmount}
+                                        data-id={item.term}
+                                        name="amount"
+                                        type="number"
+                                        step="0.01"
+                                        variant="label-hidden"
+                                        class="number-input"
+                                    ></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input
+                                        label=" "
+                                        value={item.percent}
+                                        onchange={handleAdjustPercent}
+                                        data-id={item.term}
+                                        name="percent"
+                                        type="number"
+                                        step="0.01"
+                                        formatter="percent-fixed"
+                                        variant="label-hidden"
+                                        class="number-input"
+                                    ></lightning-input>
+                                </td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <lightning-button label="Save" variant="brand" onclick={handleSaveLineItem}></lightning-button>
+            <lightning-button label="Cancel" onclick={handleFetchData}></lightning-button>
+        </div>
+    </template>
+</template>

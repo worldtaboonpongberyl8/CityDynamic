@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DownPerMonth__c</fullName>
+    <description>Down Payment / Maximum Month 
+ราคาเงินดาวน์ต่อเดือน(คิดจากจำนวนงวดดาวน์สูงสุด)</description>
+    <formula>DownPayment__c / MaximumDownPeriod__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>CEILING(DownPayment__c*100/ MaximumDownPeriod__c)/100</inlineHelpText>
+    <label>DownPerMonth</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

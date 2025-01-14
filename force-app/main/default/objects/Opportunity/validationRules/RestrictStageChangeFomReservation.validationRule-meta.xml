@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RestrictStageChangeFomReservation</fullName>
+    <active>true</active>
+    <description>Prevents users from changing stage from &quot;Reservation&quot; back to &quot;Open&quot;, &quot;Negotiation&quot;, or &quot;Quotation&quot;.</description>
+    <errorConditionFormula>AND(
+  ISPICKVAL(PRIORVALUE(StageName), &quot;Reservation&quot;),
+  OR(
+    ISPICKVAL(StageName, &quot;Open&quot;),
+    ISPICKVAL(StageName, &quot;Negotiation&quot;),
+    ISPICKVAL(StageName, &quot;Quotation&quot;)
+  )
+)</errorConditionFormula>
+    <errorMessage>Contact your administrator for help.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,5 @@
+.sfdx
+node_modules
+*.log
+*.json
+*.txt

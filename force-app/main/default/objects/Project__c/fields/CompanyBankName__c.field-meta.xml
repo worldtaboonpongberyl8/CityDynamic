@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CompanyBankName__c</fullName>
+    <label>Company Bank Name for Invoice</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bangkok Bank</fullName>
+                <default>false</default>
+                <label>Bangkok Bank</label>
+            </value>
+            <value>
+                <fullName>Bank of Ayudhya</fullName>
+                <default>false</default>
+                <label>Bank of Ayudhya</label>
+            </value>
+            <value>
+                <fullName>Kasikorn Bank</fullName>
+                <default>false</default>
+                <label>Kasikorn Bank</label>
+            </value>
+            <value>
+                <fullName>Krungthai Bank</fullName>
+                <default>false</default>
+                <label>Krungthai Bank</label>
+            </value>
+            <value>
+                <fullName>Siam Commercial Bank</fullName>
+                <default>false</default>
+                <label>Siam Commercial Bank</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

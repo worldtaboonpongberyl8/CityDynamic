@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Configuring information to be displayed when the &apos;Make a Payment&apos; button is pressed on the Opportunity, ensuring that relevant payment details are shown on the screen.</description>
+    <label>Make a Payment Config</label>
+    <pluralLabel>Make a Payment Configs</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

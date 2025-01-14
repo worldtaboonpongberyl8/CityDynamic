@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SumOfPercentage__c</fullName>
+    <description>Sum of Reservation and Contract Percentage, Down Payment Percentage and Transfer Ownership Percentage</description>
+    <externalId>false</externalId>
+    <formula>(ReservationandContractPercentage__c*100)+(DownPaymentPercentage__c*100) + (TransferOwnershipPercentage__c*100)</formula>
+    <label>Sum Of Percentage</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

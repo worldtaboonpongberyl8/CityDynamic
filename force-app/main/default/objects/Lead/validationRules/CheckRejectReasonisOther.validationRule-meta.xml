@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckRejectReasonisOther</fullName>
+    <active>true</active>
+    <description>If status is Rejected and Reject Reason is Other, Reject Reason Other must not be blank</description>
+    <errorConditionFormula>AND(
+ISPICKVAL(RejectReason__c,&quot;Others&quot;),
+ISBLANK(  RejectReasonOther__c   )
+)</errorConditionFormula>
+    <errorDisplayField>RejectReasonOther__c</errorDisplayField>
+    <errorMessage>Please input Reject Reason Other</errorMessage>
+</ValidationRule>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DiscountPercentOfAmount__c</fullName>
+    <description>Converts the discount amount into a percentage relative to the unit price. [Hide this field from Page Layout]</description>
+    <formula>BLANKVALUE(DiscountAmount__c, 0) / UnitPrice__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Discount Percent Of Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Percent</type>
+</CustomField>

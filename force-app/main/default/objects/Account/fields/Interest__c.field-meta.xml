@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Interest__c</fullName>
+    <label>Interest</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Gourmet Cooking Classes with Celebrity Chefs</fullName>
+                <default>false</default>
+                <label>Gourmet Cooking Classes with Celebrity Chefs</label>
+            </value>
+            <value>
+                <fullName>Private Wine Tasting</fullName>
+                <default>false</default>
+                <label>Private Wine Tasting</label>
+            </value>
+            <value>
+                <fullName>Luxury Travel and Bespoke Holidays</fullName>
+                <default>false</default>
+                <label>Luxury Travel and Bespoke Holidays</label>
+            </value>
+            <value>
+                <fullName>Art Collecting and Private Gallery Tours</fullName>
+                <default>false</default>
+                <label>Art Collecting and Private Gallery Tours</label>
+            </value>
+            <value>
+                <fullName>Philanthropy and Social Impact Investing</fullName>
+                <default>false</default>
+                <label>Philanthropy and Social Impact Investing</label>
+            </value>
+            <value>
+                <fullName>Private Aviation (Owning Jets, Helicopters, Chartering Services)</fullName>
+                <default>false</default>
+                <label>Private Aviation (Owning Jets, Helicopters, Chartering Services)</label>
+            </value>
+            <value>
+                <fullName>Yacht Ownership and Sailing Regattas</fullName>
+                <default>false</default>
+                <label>Yacht Ownership and Sailing Regattas</label>
+            </value>
+            <value>
+                <fullName>Golf Club Membership and Exclusive Golf Tournaments</fullName>
+                <default>false</default>
+                <label>Golf Club Membership and Exclusive Golf Tournaments</label>
+            </value>
+            <value>
+                <fullName>Polo and Equestrian Sports</fullName>
+                <default>false</default>
+                <label>Polo and Equestrian Sports</label>
+            </value>
+            <value>
+                <fullName>High-End Jewelry and Watch Collecting</fullName>
+                <default>false</default>
+                <label>High-End Jewelry and Watch Collecting</label>
+            </value>
+            <value>
+                <fullName>Exclusive Fashion Shows and Haute Couture</fullName>
+                <default>false</default>
+                <label>Exclusive Fashion Shows and Haute Couture</label>
+            </value>
+            <value>
+                <fullName>Rare Vintage Car Collecting and Racing Events</fullName>
+                <default>false</default>
+                <label>Rare Vintage Car Collecting and Racing Events</label>
+            </value>
+            <value>
+                <fullName>Luxury Real Estate Investment and Property Development</fullName>
+                <default>false</default>
+                <label>Luxury Real Estate Investment and Property Development</label>
+            </value>
+            <value>
+                <fullName>Private Members’ Clubs and Networking Societies</fullName>
+                <default>false</default>
+                <label>Private Members’ Clubs and Networking Societies</label>
+            </value>
+            <value>
+                <fullName>Private Concerts and Cultural Events</fullName>
+                <default>false</default>
+                <label>Private Concerts and Cultural Events</label>
+            </value>
+            <value>
+                <fullName>Health and Wellness Retreats with Renowned Practitioners</fullName>
+                <default>false</default>
+                <label>Health and Wellness Retreats with Renowned Practitioners</label>
+            </value>
+            <value>
+                <fullName>Exclusive Culinary Experiences (Michelin-starred Dining)</fullName>
+                <default>false</default>
+                <label>Exclusive Culinary Experiences (Michelin-starred Dining)</label>
+            </value>
+            <value>
+                <fullName>Adventure Travel</fullName>
+                <default>false</default>
+                <label>Adventure Travel</label>
+            </value>
+            <value>
+                <fullName>Collecting Rare Books and Manuscripts</fullName>
+                <default>false</default>
+                <label>Collecting Rare Books and Manuscripts</label>
+            </value>
+            <value>
+                <fullName>Antique Furniture and Decorative Arts</fullName>
+                <default>false</default>
+                <label>Antique Furniture and Decorative Arts</label>
+            </value>
+            <value>
+                <fullName>Luxury Sustainable Living and Off-Grid Properties</fullName>
+                <default>false</default>
+                <label>Luxury Sustainable Living and Off-Grid Properties</label>
+            </value>
+            <value>
+                <fullName>Scuba Diving in Remote and Unexplored Locations</fullName>
+                <default>false</default>
+                <label>Scuba Diving in Remote and Unexplored Locations</label>
+            </value>
+            <value>
+                <fullName>Exclusive VIP Access to Fashion Week Events</fullName>
+                <default>false</default>
+                <label>Exclusive VIP Access to Fashion Week Events</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

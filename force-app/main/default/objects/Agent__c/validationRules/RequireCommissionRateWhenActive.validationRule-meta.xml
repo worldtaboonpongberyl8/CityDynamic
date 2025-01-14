@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RequireCommissionRateWhenActive</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISPICKVAL( ContractStatus__c , &quot;Contract Signed&quot;) &amp;&amp; ISBLANK( CommissionRate__c )</errorConditionFormula>
+    <errorDisplayField>CommissionRate__c</errorDisplayField>
+    <errorMessage>Please enter a Commission Rate when the Contract Status is &apos;Contract Signed&apos;.</errorMessage>
+</ValidationRule>

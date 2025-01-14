@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AllowStageChangeWhenQuoteSynced</fullName>
+    <active>true</active>
+    <description>Allow Stage Change to Reservation When Quote Is Synced</description>
+    <errorConditionFormula>AND(
+    ISCHANGED(StageName),
+    ISPICKVAL(StageName, &quot;Reservation&quot;),
+    NOT( IsQuoteSynced__c ), 
+    OR(
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Quotation&quot;),
+        ISPICKVAL(PRIORVALUE(StageName), &quot;Negotiation&quot;)
+    )
+)</errorConditionFormula>
+    <errorMessage>Please sync quote before changing the stage.</errorMessage>
+</ValidationRule>

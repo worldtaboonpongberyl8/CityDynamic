@@ -1,0 +1,14 @@
+<template>
+    <template lwc:if={spinner}>
+        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+    </template>
+    
+    <lightning-quick-action-panel header="Generate Supplementary Agreement">
+
+        <template lwc:if={isGenerateSupplementary}>
+            <c-word-generator current-record-id={currentRecordId} selected-language={language} template-mapping-type={templateMappingType}>
+
+            </c-word-generator>
+        </template>
+    </lightning-quick-action-panel>
+</template>

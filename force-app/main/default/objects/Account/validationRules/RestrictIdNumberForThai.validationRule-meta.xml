@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RestrictIdNumberForThai</fullName>
+    <active>true</active>
+    <description>If nationality = Thai, the Id number must not be blank. Only Record Type &apos;Co Owner - Individual&apos;.</description>
+    <errorConditionFormula>AND(
+        ISPICKVAL(Nationality__c , &quot;Thai&quot;),
+        ISBLANK(IDCardNumber__c ),
+        RecordType.Name = &quot;Co-Owner - Individual&quot;
+)</errorConditionFormula>
+    <errorDisplayField>IDCardNumber__c</errorDisplayField>
+    <errorMessage>Please fill in ID Number.</errorMessage>
+</ValidationRule>

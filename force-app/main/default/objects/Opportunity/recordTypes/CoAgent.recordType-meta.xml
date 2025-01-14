@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CoAgent</fullName>
+    <active>true</active>
+    <businessProcess>Co-Agent</businessProcess>
+    <label>Co-Agent</label>
+    <picklistValues>
+        <picklist>ApprovalStatus__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending for approve</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Budget__c</picklist>
+        <values>
+            <fullName>100%2E1 - 120 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>120%2E1 - 150 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>150%2E1 - 180 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>20%2E1 - 40 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>41%2E1 - 60 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>60%2E1 - 80 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>80%2E1 - 100 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Below 20 MB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>More than 180 MB</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>DeliveryInstallationStatus__c</picklist>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yet to begin</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>ForecastCategoryName</picklist>
+        <values>
+            <fullName>Best Case</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Omitted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pipeline</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LeadSource</picklist>
+        <values>
+            <fullName>Advertisement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Agent Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Billboard%2FSignage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Director Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Employee Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facebook</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Friend %26 Family Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>IG</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Landlord</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Owner Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Partner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pass by</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Search Engine</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Staff Purchase</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TikTok</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>You Tube</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LockedPeriod__c</picklist>
+        <values>
+            <fullName>1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>7</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LossReason__c</picklist>
+        <values>
+            <fullName>Budget Constraints</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Changed Requirements</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chose competitor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extended Decision-Making Time</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Interest</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Qualified</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Outdated Opportunities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unreachable</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>PurposeofPurchase__c</picklist>
+        <values>
+            <fullName>Both own stay %2F Investment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Long-term Investment %28Rental%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Permanent Residneces</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Resort Home</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Retirement Home</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Second Home</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Short-term Investment</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>PurposeofReservation__c</picklist>
+        <values>
+            <fullName>Living</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Long-term Investment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Resales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Short-Term Investment</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Quota__c</picklist>
+        <values>
+            <fullName>Foreign</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Thai</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Ratio__c</picklist>
+        <values>
+            <fullName>100</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>50%3A50</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>60%3A40</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>70%3A30</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>80%3A20</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>SoldBy2__c</picklist>
+        <values>
+            <fullName>Agency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BE8 Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive A</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive B</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive C</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive D</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive E</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>SoldBy__c</picklist>
+        <values>
+            <fullName>Agency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BE8 Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive A</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive B</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive C</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive D</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Executive E</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Existing Business</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Business</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>UnitsofInterest__c</picklist>
+        <values>
+            <fullName>1 Bedroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>1-2 Bedroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2 Bedroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2-3 Bedroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3 Bedroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3-4 Bedroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Penthouse</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

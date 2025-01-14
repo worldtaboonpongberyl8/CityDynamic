@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ConsentDateNotBeFuture</fullName>
+    <active>true</active>
+    <description>To ensures that the consent date field contains a past date, preventing users from entering a future date.</description>
+    <errorConditionFormula>ConsentDate__c &gt; TODAY()</errorConditionFormula>
+    <errorDisplayField>ConsentDate__c</errorDisplayField>
+    <errorMessage>Please enter a valid consent date.</errorMessage>
+</ValidationRule>

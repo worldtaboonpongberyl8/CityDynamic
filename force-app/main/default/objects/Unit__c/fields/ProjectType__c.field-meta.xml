@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ProjectType__c</fullName>
+    <description>ประเภทของ Project
+CD = คอนโด
+-CD = จำนงจอง คอนโด
+FB = อาคารสำนักงาน
+FD = อาคารชุดสำนักงาน
+HF = โฮม ออฟฟิศ
+HM = ทาวน์โฮม
+HS = ทาวน์เฮ้าส์
+KN = ไซมิส คิน
+-KN = จำนงจอง บ้านคิน
+LA = ที่ดินเปล่า
+SH = อาคารพาณิชย์
+SP = อาคารชุดพาณิชย์</description>
+    <label>Project Type</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>คอนโด</fullName>
+                <default>false</default>
+                <label>คอนโด</label>
+            </value>
+            <value>
+                <fullName>จำนงจอง คอนโด</fullName>
+                <default>false</default>
+                <label>จำนงจอง คอนโด</label>
+            </value>
+            <value>
+                <fullName>อาคารสำนักงาน</fullName>
+                <default>false</default>
+                <label>อาคารสำนักงาน</label>
+            </value>
+            <value>
+                <fullName>อาคารชุดสำนักงาน</fullName>
+                <default>false</default>
+                <label>อาคารชุดสำนักงาน</label>
+            </value>
+            <value>
+                <fullName>โฮม ออฟฟิศ</fullName>
+                <default>false</default>
+                <label>โฮม ออฟฟิศ</label>
+            </value>
+            <value>
+                <fullName>ทาวน์โฮม</fullName>
+                <default>false</default>
+                <label>ทาวน์โฮม</label>
+            </value>
+            <value>
+                <fullName>ทาวน์เฮ้าส์</fullName>
+                <default>false</default>
+                <label>ทาวน์เฮ้าส์</label>
+            </value>
+            <value>
+                <fullName>ไซมิส คิน</fullName>
+                <default>false</default>
+                <label>ไซมิส คิน</label>
+            </value>
+            <value>
+                <fullName>จำนงจอง บ้านคิน</fullName>
+                <default>false</default>
+                <label>จำนงจอง บ้านคิน</label>
+            </value>
+            <value>
+                <fullName>ที่ดินเปล่า</fullName>
+                <default>false</default>
+                <label>ที่ดินเปล่า</label>
+            </value>
+            <value>
+                <fullName>อาคารพาณิชย์</fullName>
+                <default>false</default>
+                <label>อาคารพาณิชย์</label>
+            </value>
+            <value>
+                <fullName>อาคารชุดพาณิชย์</fullName>
+                <default>false</default>
+                <label>อาคารชุดพาณิชย์</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

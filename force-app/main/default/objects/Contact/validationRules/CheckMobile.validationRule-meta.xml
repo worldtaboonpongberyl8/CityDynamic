@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckMobile</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+NOT(
+ISBLANK( MobilePhone)
+),
+OR(
+NOT(
+REGEX(MobilePhone, &quot;^(\\+?\\(?[0-9]+\\)?[0-9]{8,9})$&quot;)
+),
+AND(
+LEFT(MobilePhone, 1) = &quot;0&quot;,
+NOT(
+OR(
+LEN(MobilePhone) = 9,
+LEN(MobilePhone) = 10
+)
+)
+)
+)
+)</errorConditionFormula>
+    <errorDisplayField>MobilePhone</errorDisplayField>
+    <errorMessage>Please check a valid Mobile Number.</errorMessage>
+</ValidationRule>

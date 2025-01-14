@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PaymentReceipt__c</fullName>
+    <description>การชำระเงินนี้อยู่ใต้ใบเสร็จใด</description>
+    <label>Payment Receipt</label>
+    <referenceTo>PaymentReceipt__c</referenceTo>
+    <relationshipName>Payment_Transactions</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

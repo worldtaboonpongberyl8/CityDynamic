@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TaxIDValidation</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(
+   REGEX(CompanyTaxID__c, &quot;^[0-9]{10,13}$&quot;)
+)</errorConditionFormula>
+    <errorDisplayField>CompanyTaxID__c</errorDisplayField>
+    <errorMessage>Tax ID must be a number between 10 and 13 digits.</errorMessage>
+</ValidationRule>

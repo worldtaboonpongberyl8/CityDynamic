@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MailingAddressEN__c</fullName>
+    <externalId>false</externalId>
+    <formula>TRIM(
+  IF(NOT(ISBLANK(MailingAddressNoEN__c)), MailingAddressNoEN__c &amp; &quot;, &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(MaillingSubDistrictEN__c)), MaillingSubDistrictEN__c &amp; &quot;, &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(MailingDistrictEN__c)), MailingDistrictEN__c &amp; &quot;, &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(MailingProvinceEN__c)), MailingProvinceEN__c &amp; &quot; &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(MailingZipCodeEN__c)), MailingZipCodeEN__c &amp; &quot;  &quot;, &quot;&quot;) +
+  IF(NOT(ISBLANK(TEXT(MailingCountryEN__c))), TEXT(MailingCountryEN__c), &quot;&quot;)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Mailing Address EN</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

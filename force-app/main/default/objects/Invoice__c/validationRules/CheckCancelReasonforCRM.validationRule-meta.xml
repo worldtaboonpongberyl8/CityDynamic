@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CheckCancelReasonforCRM</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ISPICKVAL( CancelReason__c ,&quot;Cancel by CRM&quot;),
+ISBLANK(  CancelReasonforCRM__c  )
+)</errorConditionFormula>
+    <errorDisplayField>CancelReasonforCRM__c</errorDisplayField>
+    <errorMessage>Please input Cancel Reason</errorMessage>
+</ValidationRule>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>StartOpportunityonStageOpen</fullName>
+    <active>true</active>
+    <description>Users must select stage Open when they create new opportunities.</description>
+    <errorConditionFormula>AND(ISNEW(),NOT(ISPICKVAL( StageName , &quot;Open&quot;)))</errorConditionFormula>
+    <errorDisplayField>StageName</errorDisplayField>
+    <errorMessage>Please Select Opportunity Stage is Open</errorMessage>
+</ValidationRule>

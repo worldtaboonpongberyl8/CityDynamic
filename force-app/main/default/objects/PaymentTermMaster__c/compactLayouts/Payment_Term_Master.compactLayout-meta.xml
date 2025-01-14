@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Term_Master</fullName>
+    <fields>Name</fields>
+    <fields>Project__c</fields>
+    <fields>Type__c</fields>
+    <fields>DueDate__c</fields>
+    <fields>NoofInstallment__c</fields>
+    <label>Payment Term Master</label>
+</CompactLayout>

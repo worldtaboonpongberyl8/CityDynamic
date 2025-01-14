@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RestrictPassportforNotThai</fullName>
+    <active>true</active>
+    <description>If nationality &lt;&gt; Thai, the Passport Number must not be blank. Only Record Type &apos;Co Owner - Individual&apos;.</description>
+    <errorConditionFormula>AND(
+        NOT(ISPICKVAL(Nationality__c , &quot;Thai&quot;)),
+        ISBLANK( PassportNo__c ),
+        RecordType.Name = &quot;Co-Owner - Individual&quot;
+    )</errorConditionFormula>
+    <errorDisplayField>PassportNo__c</errorDisplayField>
+    <errorMessage>Please fill in Passport Number.</errorMessage>
+</ValidationRule>

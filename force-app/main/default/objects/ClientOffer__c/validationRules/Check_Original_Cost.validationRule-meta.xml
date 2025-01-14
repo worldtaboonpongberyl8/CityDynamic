@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Original_Cost</fullName>
+    <active>true</active>
+    <description>if Original Cost &gt; 0, Cannot input cost.</description>
+    <errorConditionFormula>AND(
+  OriginalCost__c != 0,
+   Not ISNULL(Cost__c) 
+)</errorConditionFormula>
+    <errorDisplayField>Cost__c</errorDisplayField>
+    <errorMessage>Please remove value from Cost.</errorMessage>
+</ValidationRule>

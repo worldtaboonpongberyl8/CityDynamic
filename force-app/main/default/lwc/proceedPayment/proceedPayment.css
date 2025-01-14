@@ -1,0 +1,15 @@
+.header-flex{
+    display: flex; 
+    justify-content: space-between;
+}
+
+.body-flex{
+    display: flex;
+    /* justify-content: space-between; */
+    flex: 1;
+}
+
+.content-container {
+    max-height: 100%; /* Prevents excessive height that may cause internal scrolling */
+    overflow: hidden; /* Ensures no inner scrollbar */
+}

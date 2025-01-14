@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecheckIsActive</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND ( 
+  IsDefault__c = true,
+  IsActive__c = false 
+)</errorConditionFormula>
+    <errorDisplayField>IsDefault__c</errorDisplayField>
+    <errorMessage>If set as the default, this record must be active.</errorMessage>
+</ValidationRule>

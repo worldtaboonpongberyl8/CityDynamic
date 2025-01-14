@@ -1,0 +1,28 @@
+<template>
+    <template lwc:if={spinner}>
+        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+    </template>
+    
+    <lightning-quick-action-panel header="Generate Reservation">
+
+        <template lwc:if={isGenerateReservation}>
+            <c-word-generator current-record-id={currentRecordId} selected-language={language} template-mapping-type={templateMappingType}>
+
+            </c-word-generator>
+        </template>
+        <!-- <template lwc:else>
+            <div class="slds-col slds-size_1-of-3 slds-m-vertical_small">
+            </div>
+            <div class="slds-col slds-size_1-of-3 slds-m-vertical_small">
+                <lightning-combobox name="Language" label="Language" value={language}
+                    placeholder="Please Select Language" options={languages}>
+                </lightning-combobox>
+            </div>
+
+            <div slot="footer">
+                <lightning-button variant="brand" label="Generate" title="Generate" onclick={onGenerate}
+                    class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </template> -->
+    </lightning-quick-action-panel>
+</template>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DueDate__c</fullName>
+    <externalId>false</externalId>
+    <formula>TEXT(PaymentTerm__r.DueDate__c) &amp; 
+CASE(
+  MOD(PaymentTerm__r.DueDate__c, 10),
+  1, IF(PaymentTerm__r.DueDate__c = 11, &quot;th&quot;, &quot;st&quot;),
+  2, IF(PaymentTerm__r.DueDate__c = 12, &quot;th&quot;, &quot;nd&quot;),
+  3, IF(PaymentTerm__r.DueDate__c = 13, &quot;th&quot;, &quot;rd&quot;),
+  &quot;th&quot;
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Due Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

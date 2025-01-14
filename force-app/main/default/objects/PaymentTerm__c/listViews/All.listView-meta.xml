@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>PaymentTermMaster__c</columns>
+    <columns>PaymentTermMasterType__c</columns>
+    <columns>ProjectName__c</columns>
+    <columns>Term__c</columns>
+    <columns>DueDate__c</columns>
+    <columns>NoofInstallment__c</columns>
+    <columns>ContractAmount__c</columns>
+    <columns>ContractPercent__c</columns>
+    <columns>TotalInstallmentAmount__c</columns>
+    <columns>TotalInstallmentPercent__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

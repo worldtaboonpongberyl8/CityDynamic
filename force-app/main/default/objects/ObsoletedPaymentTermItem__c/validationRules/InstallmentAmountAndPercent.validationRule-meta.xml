@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>InstallmentAmountAndPercent</fullName>
+    <active>true</active>
+    <description>If Installment Amount is entered, Installment Percent must be empty</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(  Total_Installment_Amount__c )),
+    NOT(ISBLANK(  Total_Installment_Percent__c ))
+)</errorConditionFormula>
+    <errorMessage>If Installment Amount is entered, Installment  Percent must be empty.</errorMessage>
+</ValidationRule>

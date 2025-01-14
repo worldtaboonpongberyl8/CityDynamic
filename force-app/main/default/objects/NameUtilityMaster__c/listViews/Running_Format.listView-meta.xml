@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Running_Format</fullName>
+    <columns>NAME</columns>
+    <columns>RunningFormat__c</columns>
+    <columns>ObjectName__c</columns>
+    <columns>RunningPurpose__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Type__c</field>
+        <operation>equals</operation>
+        <value>Format</value>
+    </filters>
+    <label>Running Format</label>
+</ListView>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EducationLevel__c</fullName>
+    <description>ระดับการศึกษา</description>
+    <label>Education Level</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>High Vocational Certificate</fullName>
+                <default>false</default>
+                <label>High Vocational Certificate</label>
+            </value>
+            <value>
+                <fullName>Vocational Certificate</fullName>
+                <default>false</default>
+                <label>Vocational Certificate</label>
+            </value>
+            <value>
+                <fullName>Doctor of philosophy degree</fullName>
+                <default>false</default>
+                <label>Doctor of philosophy degree</label>
+            </value>
+            <value>
+                <fullName>Master&apos;s degree</fullName>
+                <default>false</default>
+                <label>Master&apos;s degree</label>
+            </value>
+            <value>
+                <fullName>Bachaelor&apos;s degree</fullName>
+                <default>false</default>
+                <label>Bachaelor&apos;s degree</label>
+            </value>
+            <value>
+                <fullName>High School</fullName>
+                <default>false</default>
+                <label>High School</label>
+            </value>
+            <value>
+                <fullName>Secondary School</fullName>
+                <default>false</default>
+                <label>Secondary School</label>
+            </value>
+            <value>
+                <fullName>Primary School</fullName>
+                <default>false</default>
+                <label>Primary School</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

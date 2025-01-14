@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Channel__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Store the name of the agent responsible for handling a customer or an opportunity.</description>
+    <label>Channel</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Agent__c.ContractStatus__c</field>
+            <operation>equals</operation>
+            <value>New, Negotiating, Pending Signed, Contract Signed</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Agent__c</referenceTo>
+    <relationshipLabel>Opportunities</relationshipLabel>
+    <relationshipName>Opportunities</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

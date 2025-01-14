@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UnavailableFrom__c</fullName>
+    <description>Sales คนนี้ไม่สะดวกรับงานตั้งแต่วันเวลา</description>
+    <formula>SalesTeam__r.UnavailableFrom__c</formula>
+    <label>Unavailable From</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

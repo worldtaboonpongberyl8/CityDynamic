@@ -1,0 +1,6 @@
+.THIS .oneRecordActionWrapper {
+    width: 70% !important;
+    max-width: 1025px !important;
+    margin: auto !important;
+    min-width: var(--lwc-sizeXLarge, 40rem) !important;
+}

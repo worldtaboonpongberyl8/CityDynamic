@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RequireBankDetails</fullName>
+    <active>false</active>
+    <description>To ensure that users provide the Bank details when Bank Name is not blank.</description>
+    <errorConditionFormula>AND (  NOT(ISPICKVAL( CompanyBankName__c  , &quot;&quot;)),
+       OR(
+          ISBLANK( BankAddress__c ),
+          ISBLANK( SWIFTCode__c ),
+          ISBLANK( BankBranch__c ),
+          ISBLANK( CompanyAccountName__c )
+        )
+)</errorConditionFormula>
+    <errorMessage>Please provide the Bank Information.</errorMessage>
+</ValidationRule>

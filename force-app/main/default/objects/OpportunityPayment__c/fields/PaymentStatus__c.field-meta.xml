@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PaymentStatus__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(
+  Remaining__c == 0,
+  &quot;Fully Paid&quot;,
+  IF(
+    AND(DueDate__c &lt; TODAY(), ISBLANK(ReceivedAmount__c)),
+    &quot;Overdue&quot;,
+    IF(
+      ReceivedAmount__c &gt; 0,
+      &quot;Partially Paid&quot;,
+      &quot;&quot;
+    )
+  )
+)</formula>
+    <label>Payment Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

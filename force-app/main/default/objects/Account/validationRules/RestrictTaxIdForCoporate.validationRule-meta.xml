@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RestrictTaxIdForCoporate</fullName>
+    <active>true</active>
+    <description>Record Type &apos;Co Owner - Corporate&apos; and Nationality is not blank user have to fill in &apos;Tax ID&apos;</description>
+    <errorConditionFormula>AND(
+        NOT(ISBLANK(TEXT(Nationality__c))),
+        ISBLANK( TaxID__c ),
+        RecordType.Name = &quot;Co-Owner - Corporate&quot;
+)</errorConditionFormula>
+    <errorDisplayField>TaxID__c</errorDisplayField>
+    <errorMessage>Please fill in Company Tax ID.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,15 @@
+<template>
+	<lightning-quick-action-panel header="Generate Payment Summary">
+		<template lwc:if={isGeneratePaymentSummary}>
+			<c-pdf-generator
+				current-record-id={currentRecordId}
+				pdf-page-name={pdfPageName}
+				purpose={purpose}
+				template-mapping-type={templateMappingType}
+				field-api-save-to-existing={fieldApiSaveToExisting}
+			>
+
+			</c-pdf-generator>
+		</template>
+	</lightning-quick-action-panel>
+</template>

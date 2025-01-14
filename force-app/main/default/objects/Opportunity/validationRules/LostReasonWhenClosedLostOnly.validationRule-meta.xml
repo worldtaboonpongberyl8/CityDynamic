@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LostReasonWhenClosedLostOnly</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISPICKVAL(StageName, &quot;Closed Lost&quot;)),
+    OR(
+        NOT(ISBLANK(text( LossReason__c ))),
+        NOT(ISBLANK( OtherLostRejectReason__c ))
+    )
+)</errorConditionFormula>
+    <errorMessage>You cannot input &apos;Lost Reason&apos; and &apos;Other Lost Reason&apos;, please check opportunity stage.</errorMessage>
+</ValidationRule>

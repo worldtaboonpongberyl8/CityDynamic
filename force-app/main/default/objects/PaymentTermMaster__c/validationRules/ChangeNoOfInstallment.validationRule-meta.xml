@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ChangeNoOfInstallment</fullName>
+    <active>true</active>
+    <description>You cannot change the number of installments once a value has been set.</description>
+    <errorConditionFormula>AND(
+    NOT(ISNEW()), 
+    ISCHANGED( NoofInstallment__c ), 
+    NOT(ISBLANK(NoofInstallment__c )), 
+    $Profile.Name &lt;&gt; &quot;System Administrator&quot;
+)</errorConditionFormula>
+    <errorDisplayField>NoofInstallment__c</errorDisplayField>
+    <errorMessage>You cannot change the number of installments once a value has been set.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>InvoiceCompactLayout</fullName>
+    <fields>Name</fields>
+    <fields>Opportunity__c</fields>
+    <fields>AccountName__c</fields>
+    <fields>ProjectName__c</fields>
+    <fields>UnitName__c</fields>
+    <fields>DoNotSendInvoice__c</fields>
+    <label>Invoice Compact Layout</label>
+</CompactLayout>
