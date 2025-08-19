@@ -2,6 +2,14 @@ public with sharing class CreateReceiptApiCalloutBatch implements Database.Batch
 	public CreateReceiptApiCalloutBatch() {
 	}
 	public Database.QueryLocator start(Database.BatchableContext bc) {
+		/**
+		 * Filter receipts which cancle reason not
+		 * 1. Upgrade
+		 * 2. Downgrade
+		 * 3. Move Payment
+		 * 4. Refund/Forfeit
+		 * And Receipt Type is not Refund/Forfeit
+		 */
 		return Database.getQueryLocator(
 			[
 				SELECT
@@ -19,10 +27,15 @@ public with sharing class CreateReceiptApiCalloutBatch implements Database.Batch
 					ResponseCode__c,
 					ResponseMessage__c,
 					TotalReceiveAmount__c,
+					CustomGLKey__c,
+					CustomGLDate__c,
 					GLKey__c,
 					GLDate__c,
+					PreviousCustomerCode__c,
 					Opportunity__r.Account.AccountCode__c,
 					Opportunity__r.Project__r.ProjectCode__c,
+					CoBuyerAccountCode__c,
+					ReceiptType__c,
 					(
 						SELECT
 							Id,
@@ -44,7 +57,8 @@ public with sharing class CreateReceiptApiCalloutBatch implements Database.Batch
 							PaymentReceipt__r.Opportunity__r.Unit__r.ProductCode,
 							ResponseCode__c,
 							ResponseMessage__c,
-							LastIntegrationDateTime__c
+							LastIntegrationDateTime__c,
+							ReceiptLineItemType__c
 						FROM Payment_Transactions__r
 						ORDER BY OpportunityPayment__r.Order__c, Name
 					),
@@ -71,7 +85,15 @@ public with sharing class CreateReceiptApiCalloutBatch implements Database.Batch
 				WHERE (LastModifiedDate = TODAY
 				OR LastCreatedStatusInPojjaman__c = null
 				OR LastCreatedStatusInPojjaman__c = 'Fail'
-				OR LastCancelledStatusInPojjaman__c = 'Fail')
+				OR LastCancelledStatusInPojjaman__c = 'Fail') AND
+				ReceiptType__c !=: GlobalConstants.RECEIPT_TYPE_REFUND_FORFEIT AND
+				(CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_UPGRADE AND
+				CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_DOWNGRADE AND
+				CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_MOVEPAYMENT AND
+				CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_CANCELREFUND AND
+				CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_TERMINATIONREFUND AND
+				CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_CANCELFORFEIT AND
+				CancelReason__c !=: GlobalConstants.RECEIPT_LOST_REASON_TERMINATIONFORFEIT)
 				ORDER BY CreatedDate ASC
 			]
 		);

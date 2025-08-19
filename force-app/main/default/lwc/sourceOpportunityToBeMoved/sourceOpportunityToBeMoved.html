@@ -1,0 +1,208 @@
+<template>
+	<template if:true={isLoading}>
+		<lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+	</template>
+	<div class="section-header slds-p-vertical_small slds-p-horizontal_medium slds-m-bottom_small">
+		Opportunity From
+	</div>
+	<!-- Select Opportunity From -->
+	<lightning-layout horizontal-align="spread">
+		<!-- Left: Label -->
+		<lightning-layout-item class="slds-text-title_bold" style="min-width: auto;">
+			<label class="slds-form-element__label slds-truncate">Opportuntiy (From) </label>
+		</lightning-layout-item>
+		<!-- Right: Record Picker -->
+		<lightning-layout-item style="min-width: 350px;" class="custom-picker">
+			<lightning-record-picker
+				required
+				label="Current Opportunity"
+				variant="label-hidden"
+				placeholder="Select Opportunity"
+				object-api-name="Opportunity"
+				filter={opportunityFilter}
+				matching-info={opportunityMatchingInfo}
+				onchange={handleCurrentOppChange}
+				data-id="currentOppPicker">
+			</lightning-record-picker>
+		</lightning-layout-item>
+	</lightning-layout>
+
+	<template if:true={currentOppDetails}>
+		<div class={detailWrapperClass}>
+			<!-- Current Opportuntiy Detail -->
+			<div class="slds-m-top_medium">
+				<lightning-layout horizontal-align="spread" class="slds-m-bottom_small">
+					<lightning-layout-item class="slds-text-title_bold">Project Name</lightning-layout-item>
+					<lightning-layout-item class="slds-text-align_right">{currentOppDetails.projectName}</lightning-layout-item>
+				</lightning-layout>
+				<lightning-layout horizontal-align="spread" class="slds-m-bottom_small">
+					<lightning-layout-item class="slds-text-title_bold">Unit Name</lightning-layout-item>
+					<lightning-layout-item class="slds-text-align_right">{currentOppDetails.unitName}</lightning-layout-item>
+				</lightning-layout>
+				<lightning-layout horizontal-align="spread" class="slds-m-bottom_small">
+					<lightning-layout-item class="slds-text-title_bold">Net Price</lightning-layout-item>
+					<lightning-layout-item class="slds-text-align_right">
+						<lightning-formatted-number
+							value={currentOppDetails.netPrice}
+							minimum-fraction-digits="2"
+							maximum-fraction-digits="2">
+						</lightning-formatted-number>
+					</lightning-layout-item>
+				</lightning-layout>
+				<lightning-layout horizontal-align="spread" class="slds-m-bottom_small">
+					<lightning-layout-item class="slds-text-title_bold">Total Paid Amount</lightning-layout-item>
+					<lightning-layout-item class="slds-text-align_right">
+						<lightning-formatted-number
+							value={currentOppDetails.totalPaidAmount}
+							minimum-fraction-digits="2"
+							maximum-fraction-digits="2">
+						</lightning-formatted-number>
+					</lightning-layout-item>
+				</lightning-layout>
+			</div>
+			<hr class="custom-hr slds-m-vertical_large" />
+			<!-- Current Opportunity Promotions -->
+			<template if:true={currentOppDetails.opportunityPromotions}>
+				<div class="slds-m-top_medium">
+					<div class="slds-text-title_bold slds-m-bottom_x-small">Opportunity Promotions</div>
+					<template if:true={hasOpportunityPromotion}>
+						<template for:each={currentOppDetails.opportunityPromotions} for:item="promo">
+							<template if:false={promo.isReceived}>
+								<div key={promo.id} class="slds-grid slds-p-vertical_x-small">
+									<lightning-input
+										type="checkbox"
+										label={promo.name}
+										data-id={promo.id}
+										onclick={handleSelectOpportunityPromotion}>
+									</lightning-input>
+								</div>
+							</template>
+						</template>
+					</template>
+					<template if:false={hasOpportunityPromotion}>
+						<div class="slds-align_absolute-center slds-m-around_medium">
+							<span class="slds-text-color_weak" style="font-size: x-small;">No Promotion Available</span>
+						</div>
+					</template>
+				</div>
+			</template>
+			<hr class="custom-hr slds-m-vertical_large" />
+			<!-- Current Client Offers -->
+			<template if:true={currentOppDetails.clientOffers}>
+				<div class="slds-m-top_medium">
+					<div class="slds-text-title_bold slds-m-bottom_x-small">Client Offers</div>
+					<template if:true={hasClientOffer}>
+						<template for:each={currentOppDetails.clientOffers} for:item="offer">
+							<template if:false={offer.isReceived}>
+								<div key={offer.id} class="slds-grid slds-p-vertical_x-small">
+									<lightning-input
+										type="checkbox"
+										label={offer.name}
+										data-id={offer.id}
+										onclick={handleSelectClientOffer}>>
+									</lightning-input>
+								</div>
+							</template>
+						</template>
+					</template>
+					<template if:false={hasClientOffer}>
+						<div class="slds-align_absolute-center slds-m-around_medium">
+							<span class="slds-text-color_weak" style="font-size: x-small;">No Client Offer Available</span>
+						</div>
+					</template>
+				</div>
+			</template>
+			<hr class="custom-hr slds-m-vertical_large" />
+			<!-- Current Received Promotions -->
+			<template if:true={currentOppDetails.receivedPromotions}>
+				<div class="slds-m-top_medium">
+					<div class="slds-text-title_bold slds-m-bottom_x-small">Received Promotions</div>
+					<template if:true={hasReceivedPromotion}>
+						<ul class="slds-list_dotted">
+							<template for:each={currentOppDetails.receivedPromotions} for:item="item">
+								<li key={item.id} class="slds-p-vertical_x-small green-bullets">
+									{item.name}
+								</li>
+							</template>
+						</ul>
+					</template>
+					<template if:false={hasReceivedPromotion}>
+						<div class="slds-align_absolute-center slds-m-around_medium">
+							<span class="slds-text-color_weak" style="font-size: x-small;">No Received Promotion</span>
+						</div>
+					</template>
+				</div>
+			</template>
+			<hr class="custom-hr slds-m-vertical_large" />
+			<!-- Operation Fee -->
+			 <template if:true={isShowOperationFee}>
+				<div class="slds-m-top_small">
+					<lightning-layout horizontal-align="spread">
+						<lightning-layout-item class="slds-text-title_bold">Operation Fee</lightning-layout-item>
+						<lightning-layout-item class="slds-text-align_right" style="min-width: 140px;">
+							<div class="custom-input-wrapper">
+								<lightning-input
+									type="number"
+									step="0.01"
+									min="0"
+									value={operationFee}
+									variant="label-hidden"
+									class="number-input with-icon"
+									onchange={handleOperationFeeChange}>
+								</lightning-input>
+								<lightning-icon
+									icon-name="utility:edit"
+									size="xx-small"
+									class="edit-icon">
+								</lightning-icon>
+							</div>
+						</lightning-layout-item>
+					</lightning-layout>
+				</div>
+			 </template>
+			<!-- Net Paid -->
+			<div class="slds-m-top_small">
+				<lightning-layout horizontal-align="spread">
+					<lightning-layout-item class="slds-text-title_bold">Net Paid Amount</lightning-layout-item>
+					<lightning-layout-item class="slds-text-align_right">
+						<lightning-formatted-number
+							value={netPaidAmount}
+							minimum-fraction-digits="2"
+							maximum-fraction-digits="2">
+						</lightning-formatted-number>
+					</lightning-layout-item>
+				</lightning-layout>
+			</div>
+			<!-- Reason -->
+			<div class="slds-m-top_large">
+				<lightning-layout horizontal-align="spread">
+					<lightning-layout-item class="slds-text-title_bold">{reasonLabel}</lightning-layout-item>
+					<lightning-layout-item style="min-width: 500px;">
+						<div class="custom-input-wrapper">
+							<lightning-input
+								maxlength="255"
+								class="text-input with-icon"
+								variant="label-hidden"
+								type="text"
+								value={moveReason}
+								data-id="moveReasonInput"
+								onchange={handleMoveReasonChange}>
+							</lightning-input>
+							<lightning-icon
+								icon-name="utility:edit"
+								size="xx-small"
+								class="edit-icon">
+							</lightning-icon>
+						</div>
+					</lightning-layout-item>
+				</lightning-layout>
+			</div>
+			<!-- Remark -->
+			<template if:true={hasReceivedPromotion}>
+				<div class="slds-text-body_small green slds-m-top_small slds-p-horizontal_medium fade-in fade-wrapper">
+					<strong>Remarks:</strong> Text in green font indicates that the customer has already received the promotion.
+				</div>
+			</template>
+		</div>
+	</template>
+</template>

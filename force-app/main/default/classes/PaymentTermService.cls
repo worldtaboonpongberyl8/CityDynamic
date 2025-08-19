@@ -22,6 +22,7 @@ public with sharing class PaymentTermService {
             paymentTermLineItem.Amount__c = wrapper.amount;
             paymentTermLineItem.Percent__c = wrapper.percent;
             paymentTermLineItem.Term__c = wrapper.term;
+            paymentTermLineItem.IsAllowedPaymentByGateway__c = wrapper.isAllowedPayment;
             paymentTermLineItem.PaymentTermMaster__c = wrapper.paymentTermMasterId;
             paymentTermLineItemsResult.add(paymentTermLineItem);
         }
@@ -34,6 +35,7 @@ public with sharing class PaymentTermService {
         public Decimal percent;
         public String term;
         public String id;
+        public Boolean isAllowedPayment;
         public String paymentTermMasterId;
     }
 }

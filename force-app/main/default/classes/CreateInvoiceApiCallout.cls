@@ -11,14 +11,16 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
         this.setClient(new CreateInvoiceApiClient());
         this.setContentType(b8int_BaseHttpRequest.ContentType.JSON);
         this.setEndpoint('api/CityDynamic/CreateFN_GL');
-        this.setRequestDataModelClass(RequestDataModel.class);
-        this.setResponseDataModelClass(ResponseDataModel.class);
+        // Phase2: change parameter to send to setRequestDataModelClass as PojjamanDataModel.FNGLDocRequest.class instead of RequestDataModel.class
+        this.setRequestDataModelClass(PojjamanDataModel.FNGLDocRequest.class);
+		// Phase2: change parameter to send to setResponseDataModelClass as PojjamanDataModel.ResponseDataModel.class instead of ResponseDataModel.class
+        this.setResponseDataModelClass(PojjamanDataModel.ResponseDataModel.class);
     }
 
 	public override Object buildRequestDataModel() {
-		List<RequestDataModel> requestDataModels = new List<RequestDataModel>();
+		List<PojjamanDataModel.FNGLDocRequest> requestDataModels = new List<PojjamanDataModel.FNGLDocRequest>();
 		for (Invoice__c invoice : this.invoices){
-			RequestDataModel requestDataModel = new RequestDataModel();
+			PojjamanDataModel.FNGLDocRequest requestDataModel = new PojjamanDataModel.FNGLDocRequest();
 			requestDataModel.CustomerCode = invoice.Opportunity__r.Account.AccountCode__c;
 			requestDataModel.ProjectCode = invoice.Opportunity__r.Project__r.ProjectCode__c;
 			requestDataModel.SFDocId = invoice.Id;
@@ -26,10 +28,11 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
 			requestDataModel.DocType = 'IV';
 			requestDataModel.InvoiceCode = invoice.InvoiceNo__c;
 			requestDataModel.Indicator = 0;
+			requestDataModel.CoBuyerCustomerCode = invoice.CoBuyerAccountCode__c == null ? null : invoice.CoBuyerAccountCode__c == 'x' ? new List<String>{''} : this.splitPreserveEmpty(invoice.CoBuyerAccountCode__c , ',');
 			List<InvoiceLineItem__c> invoiceLineItems = invoice.InvoiceLineItems__r;
-			List<InvoiceLineItemRequest> docLines = new List<InvoiceLineItemRequest>();
+			List<PojjamanDataModel.FNGLDocLineRequest> docLines = new List<PojjamanDataModel.FNGLDocLineRequest>();
 			for (InvoiceLineItem__c invoiceLineItem : invoiceLineItems){
-				InvoiceLineItemRequest docLine = new InvoiceLineItemRequest();
+				PojjamanDataModel.FNGLDocLineRequest docLine = new PojjamanDataModel.FNGLDocLineRequest();
 				docLine.LineNumber = 1;
 				docLine.UnitCode = invoiceLineItem.Invoice__r.Opportunity__r.Unit__r.ProductCode;
 				docLine.Type = invoiceLineItem.Term__c;
@@ -48,13 +51,11 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
 	public override Boolean processFailedResponse() {
 		b8int_BaseHttpRequest request = this.getRequestModel();
 		b8int_BaseHttpResponse response = this.getResponseModel();
-		System.debug('** test ** response: ' + response);
-		List<RequestDataModel> targetRequests = (List<RequestDataModel>)request.getRequestBody();
+		List<PojjamanDataModel.FNGLDocRequest> targetRequests = (List<PojjamanDataModel.FNGLDocRequest>)request.getRequestBody();
 		String errorDescription = response.getDescription();
 		List<Invoice__c> updatedInvoices = new List<Invoice__c>();
 		List<InvoiceLineItem__c> updatedInvoiceLineItems = new List<InvoiceLineItem__c>();
-		System.debug('** test ** targetRequests: ' + targetRequests);
-		for (RequestDataModel eachRequest : targetRequests){
+		for (PojjamanDataModel.FNGLDocRequest eachRequest : targetRequests){
 			Invoice__c updatedInvoice = new Invoice__c(
 				Id = eachRequest.SFDocId,
 				ResponseCode__c = 'ERR',
@@ -62,8 +63,8 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
 				LastIntegrationDateTime__c = System.now()
 			);
 			updatedInvoices.add(updatedInvoice);
-			List<InvoiceLineItemRequest> invoiceLineItemRequests = eachRequest.DocLine;
-			for (InvoiceLineItemRequest invoiceLineItemRequest : invoiceLineItemRequests){
+			List<PojjamanDataModel.FNGLDocLineRequest> invoiceLineItemRequests = eachRequest.DocLine;
+			for (PojjamanDataModel.FNGLDocLineRequest invoiceLineItemRequest : invoiceLineItemRequests){
 				InvoiceLineItem__c updatedInvoiceLineItem = new InvoiceLineItem__c(
 					Id = invoiceLineItemRequest.SFDocLineId,
 					ResponseCode__c = 'ERR',
@@ -84,12 +85,11 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
 
 	public override Boolean processSuccessResponse() {
 		b8int_BaseHttpResponse response = this.getResponseModel();
-		ResponseDataModel targetResponse = (ResponseDataModel)response.getResponseDataModel();
-		List<InvoiceResponse> invoiceResponses = targetResponse.responses;
-		System.debug('** test ** invoiceResponses: ' + invoiceResponses);
+		PojjamanDataModel.ResponseDataModel targetResponse = (PojjamanDataModel.ResponseDataModel)response.getResponseDataModel();
+		List<PojjamanDataModel.FNGLDocResponse> invoiceResponses = targetResponse.responses;
 		List<Invoice__c> updatedInvoices = new List<Invoice__c>();
 		List<InvoiceLineItem__c> updatedInvoiceLineItems = new List<InvoiceLineItem__c>();
-		for (InvoiceResponse invoiceRespone : invoiceResponses){
+		for (PojjamanDataModel.FNGLDocResponse invoiceRespone : invoiceResponses){
 			Invoice__c invoice = new Invoice__c(
 			Id = invoiceRespone.SFDocId,
 			ResponseCode__c = invoiceRespone.ResponseCode,
@@ -98,8 +98,8 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
 			LastCreatedStatusInPojjaman__c = invoiceRespone.ResponseCode == 'SC' ? 'Success' : 'Fail'
 			);
 			updatedInvoices.add(invoice);
-			List<InvoiceLineItemResponse> invoiceLineItemResponses = invoiceRespone.DocLine;
-			for (InvoiceLineItemResponse invoiceLineItemResponse : invoiceLineItemResponses) {
+			List<PojjamanDataModel.FNGLDocLineItemResponse> invoiceLineItemResponses = invoiceRespone.DocLine;
+			for (PojjamanDataModel.FNGLDocLineItemResponse invoiceLineItemResponse : invoiceLineItemResponses) {
 				InvoiceLineItem__c invoiceLineItem = new InvoiceLineItem__c(
 				Id = invoiceLineItemResponse.SFDocLineId,
 				ResponseCode__c = invoiceLineItemResponse.ResponseCode,
@@ -118,56 +118,23 @@ public with sharing class CreateInvoiceApiCallout extends b8int_BaseHttpCallout 
 		return true;
 	}
 
-	public class RequestDataModel extends b8int_BaseRequestDataModel {
-		public String CustomerCode;
-		public String ProjectCode;
-		public String SFDocId;
-		public Date DocDate;
-		public String DocType;
-		public String InvoiceCode;
-		public Integer Indicator;
-		public List<InvoiceLineItemRequest> DocLine;
-	}
+	private List<String> splitPreserveEmpty(String input, String delimiter) {
+		List<String> result = new List<String>();
+		Integer start = 0;
+		Integer delimLength = delimiter.length();
 
-	public class InvoiceLineItemRequest {
-		public Integer LineNumber;
-		public String UnitCode;
-		public String Type;
-		public Decimal Amount;
-		public String SFDocLineId;
-		public String Status;
-		public Date DueDate;
-	}
+		while (start <= input.length()) {
+			Integer index = input.indexOf(delimiter, start);
+			if (index == -1) {
+				// Add the last part (even if empty)
+				result.add(input.substring(start));
+				break;
+			}
+			result.add(input.substring(start, index));
+			start = index + delimLength;
+		}
 
-	public class ResponseDataModel extends b8int_BaseResponseDataModel {
-		public Boolean isSuccess;
-        public String description;
-		public List<InvoiceResponse> responses;
-
-        public override Boolean isValid() {
-            return isSuccess;
-        }
-
-        public override String getErrorDescription() {
-            return this.description;
-        }
-	}
-
-	public class InvoiceResponse{
-		public String SFDocId;
-		public Integer ResponseId;
-		public String ResponseCode;
-		public String Message;
-		public Datetime Timestamp;
-		public List<InvoiceLineItemResponse> DocLine;
-	}
-
-	public class InvoiceLineItemResponse{
-		public String SFDocLineId;
-		public Integer ResponseId;
-		public String ResponseCode;
-		public String Message;
-		public Datetime Timestamp;
+		return result;
 	}
 
 }

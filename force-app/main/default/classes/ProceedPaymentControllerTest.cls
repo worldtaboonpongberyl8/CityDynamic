@@ -149,7 +149,8 @@ public with sharing class ProceedPaymentControllerTest {
 			opportuntiy.Id,
 			50000,
 			paymentMethods,
-			null
+			null,
+			false
 		);
 		PaymentReceipt__c paymentReceipt = [SELECT Id, ReceiptNo__c FROM PaymentReceipt__c LIMIT 1];
 		System.assertEquals(paymentReceipt.Id, result.get('PaymentReceipt__c')[0].Id);
@@ -166,12 +167,114 @@ public with sharing class ProceedPaymentControllerTest {
 			LIMIT 1
 		];
 		System.assertEquals(1, paymentReceiptLineItems.size());
-		// System.assertEquals(paymentReceiptLineItems[0].Id, result.get(['PaymentReceiptLineItem__c'][0].Id);
-		// System.assertEquals(reservationInvoiceLine.Id, result.get('PaymentReceiptLineItem__c')[0].get('InvoiceLineItem__c'));
 		OpportunityPayment__c reservationOppPayment = [SELECT Id, ReceivedAmount__c, Remaining__c FROM OpportunityPayment__c WHERE Term__c = 'Reservation'];
-		// System.assertEquals(reservationOppPayment.Id, result.get('OpportunityPayment__c')[0].get('Id'));
 		System.assertEquals(0, reservationOppPayment.Remaining__c);
 		System.assertEquals(2, result.get('PaymentMethod__c').size());
 		Test.stopTest();
 	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add test method for getCompanyBanks
+	 */
+	@isTest
+	static void getCompanyBanksTest() {
+		Test.startTest();
+		Opportunity opportunity = [SELECT Id,IsPaidNovationFee__c FROM Opportunity LIMIT 1];
+		List<ComboboxModel> picklistValues = ProceedPaymentController.getCompanyBanks(opportunity.Id);
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add test method for proceedNovationPayment
+	 */
+	@isTest
+	static void proceedNovationPaymentTest() {
+		Test.startTest();
+		Opportunity opportunity = [SELECT Id,IsPaidNovationFee__c FROM Opportunity LIMIT 1];
+		System.assertEquals(false, opportunity.IsPaidNovationFee__c);
+		List<PaymentMethod__c> paymentMethods = new List<PaymentMethod__c>{
+			new PaymentMethod__c(PaymentType__c = 'Credit Card', ReceivedAmount__c = 50000)
+		};
+		Map<String, List<SObject>> result = ProceedPaymentController.proceedNovationPayment(
+			opportunity.Id,
+			50000,
+			paymentMethods
+		);
+		PaymentReceipt__c paymentReceipt = [SELECT Id, ReceiptNo__c,ReceiptType__c FROM PaymentReceipt__c LIMIT 1];
+		System.assertEquals(paymentReceipt.Id, result.get('PaymentReceipt__c')[0].Id);
+		System.assertEquals(paymentReceipt.ReceiptNo__c, result.get('PaymentReceipt__c')[0].get('ReceiptNo__c'));
+		System.assertEquals(GlobalConstants.RECEIPT_TYPE_NOVATION, paymentReceipt.ReceiptType__c);
+		List<PaymentReceiptLineItem__c> paymentReceiptLineItems = [
+			SELECT Id, ReceivedAmount__c, PaymentReceipt__c, Status__c, OpportunityPayment__c, InvoiceLineItem__c
+			FROM PaymentReceiptLineItem__c
+			WHERE PaymentReceipt__c = :paymentReceipt.Id
+		];
+		System.assertEquals(1, paymentReceiptLineItems.size());
+		System.assertEquals(50000, paymentReceiptLineItems[0].ReceivedAmount__c);
+		Opportunity updatedOpportunity = [SELECT Id,IsPaidNovationFee__c FROM Opportunity WHERE Id =: opportunity.Id LIMIT 1];
+		System.assertEquals(true, updatedOpportunity.IsPaidNovationFee__c);
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add test method for getAreaDetails
+	 */
+	@isTest
+	static void getAreaDetailsTest(){
+		Test.startTest();
+		Opportunity opportunity = [SELECT Id,Project__c FROM Opportunity LIMIT 1];
+		Map<String,Decimal> result = ProceedPaymentController.getAreaDetails(opportunity.Id);
+		System.assertEquals(0, result.get('areaBookedOrSoldAsFQQuota'));
+		Test.stopTest();
+	}
+
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add test method for proceedPaymentTest in case Recurring Payment
+	 */
+	@isTest
+	static void proceedPaymentRecurringTest() {
+		Test.startTest();
+		Opportunity opportuntiy = [SELECT Id FROM Opportunity LIMIT 1];
+		List<PaymentMethod__c> paymentMethods = new List<PaymentMethod__c>{
+			new PaymentMethod__c(PaymentType__c = 'Credit Card', ReceivedAmount__c = 10000),
+			new PaymentMethod__c(PaymentType__c = 'Credit Card', ReceivedAmount__c = 40000)
+		};
+		Map<String, List<SObject>> result = ProceedPaymentController.proceedPayment(
+			opportuntiy.Id,
+			50000,
+			paymentMethods,
+			null,
+			true
+		);
+		PaymentReceipt__c paymentReceipt = [SELECT Id, ReceiptNo__c,ReceiptType__c FROM PaymentReceipt__c LIMIT 1];
+		System.assertEquals(paymentReceipt.Id, result.get('PaymentReceipt__c')[0].Id);
+		System.assertEquals(paymentReceipt.ReceiptNo__c, result.get('PaymentReceipt__c')[0].get('ReceiptNo__c'));
+		System.assertEquals(paymentReceipt.ReceiptType__c, GlobalConstants.RECEIPT_TYPE_RECURRING);
+		List<PaymentReceiptLineItem__c> paymentReceiptLineItems = [
+			SELECT Id, ReceivedAmount__c, PaymentReceipt__c, Status__c, OpportunityPayment__c, InvoiceLineItem__c
+			FROM PaymentReceiptLineItem__c
+			WHERE PaymentReceipt__c = :paymentReceipt.Id
+		];
+		InvoiceLineItem__c reservationInvoiceLine = [
+			SELECT Id, PaymentReceiptLineItem__c
+			FROM InvoiceLineItem__c
+			WHERE OpportunityPayment__r.Term__c = 'Reservation'
+			LIMIT 1
+		];
+		System.assertEquals(1, paymentReceiptLineItems.size());
+		OpportunityPayment__c reservationOppPayment = [SELECT Id, ReceivedAmount__c, Remaining__c FROM OpportunityPayment__c WHERE Term__c = 'Reservation'];
+		System.assertEquals(0, reservationOppPayment.Remaining__c);
+		System.assertEquals(2, result.get('PaymentMethod__c').size());
+		Test.stopTest();
+	}
+
 }

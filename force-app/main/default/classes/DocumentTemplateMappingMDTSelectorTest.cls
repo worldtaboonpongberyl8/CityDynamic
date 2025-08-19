@@ -1,18 +1,18 @@
 @isTest
 public with sharing class DocumentTemplateMappingMDTSelectorTest {
-    @isTest 
+    @isTest
 	static void getByObjAPIAndLangAndTemplateMappingTypeTest(){
-		Test.startTest();
-		DocumentTemplateMappingMDTSelector selector = DocumentTemplateMappingMDTSelector.getInstance();
-		List<DocumentTemplateMapping__mdt> result = selector.getByObjAPIAndLangAndTemplateMappingType(null,null,null);
-		Test.stopTest();
+		List<DocumentTemplateMapping__mdt> results = DocumentTemplateMappingMDTSelector.getInstance().getByObjAPIAndLangAndTemplateMappingType(
+			'Contract',
+			'TH',
+			'Contract'
+		);
+		System.assert(results.size() > 0);
 	}
 
-	@isTest 
+	@isTest
 	static void getByTemplateAndMappingTypeTest(){
-		Test.startTest();
-		DocumentTemplateMappingMDTSelector selector = DocumentTemplateMappingMDTSelector.getInstance();
-		List<DocumentTemplateMapping__mdt> result = selector.getByTemplateAndMappingType(null);
-		Test.stopTest();
+		List<DocumentTemplateMapping__mdt> results = DocumentTemplateMappingMDTSelector.getInstance().getByTemplateAndMappingType('Contract');
+		System.assert(results.size() > 0);
 	}
 }

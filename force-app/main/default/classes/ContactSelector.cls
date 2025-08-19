@@ -1,4 +1,4 @@
-public with sharing class ContactSelector {
+public without sharing class ContactSelector {
     public static ContactSelector instance;
     public static ContactSelector getInstance() {
         if (instance == null) {

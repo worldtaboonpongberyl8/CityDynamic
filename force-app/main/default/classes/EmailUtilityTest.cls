@@ -285,7 +285,7 @@ private class EmailUtilityTest {
 		Messaging.sendEmail(tempEmails);
 		Database.rollback(savePoint);
 
-		Messaging.SingleEmailMessage result = EmailUtility.getInstance().getSingleEmailFromTempEmail(tempEmail);
+		Messaging.SingleEmailMessage result = EmailUtility.getInstance().getSingleEmailFromTempEmail(tempEmail,null);
 
 		System.assertEquals(tempEmail.getToAddresses(), result.getToAddresses());
 		// System.assertEquals(tempEmail.getHTMLBody(), result.getHTMLBody());

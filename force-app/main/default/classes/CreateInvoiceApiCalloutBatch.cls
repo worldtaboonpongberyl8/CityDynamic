@@ -17,6 +17,7 @@ public with sharing class CreateInvoiceApiCalloutBatch implements Database.Batch
                 LastIntegrationDateTime__c,
                 LastCreatedStatusInPojjaman__c,
                 LastGLStatusInPojjaman__c,
+				CoBuyerAccountCode__c,
                 (
                     SELECT
                         Id,

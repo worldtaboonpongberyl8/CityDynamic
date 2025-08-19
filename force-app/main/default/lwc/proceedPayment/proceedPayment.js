@@ -1,5 +1,6 @@
 import { LightningElement, api, wire } from "lwc";
 import ConfirmModal from "c/confirmModal";
+import { getRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { NavigationMixin } from "lightning/navigation";
 import { CloseActionScreenEvent } from "lightning/actions";
@@ -7,8 +8,11 @@ import getMakeAPaymentConfig from "@salesforce/apex/ProceedPaymentController.get
 import getPicklistValues from "@salesforce/apex/ProceedPaymentController.getPicklistValues";
 import getCompanyBanks from "@salesforce/apex/ProceedPaymentController.getCompanyBanks";
 import proceedPayment from "@salesforce/apex/ProceedPaymentController.proceedPayment";
+import proceedNovationPayment from "@salesforce/apex/ProceedPaymentController.proceedNovationPayment";
 import { publish, MessageContext } from "lightning/messageService";
 import afterProceedPaymentChannel from "@salesforce/messageChannel/afterProceedPaymentChannel__c";
+
+const FIELDS = ['Opportunity.NovationApprovedDate__c','Opportunity.OperationFeeNovation__c','Opportunity.IsPaidNovationFee__c'];
 
 export default class ProceedPayment extends NavigationMixin(LightningElement) {
     @api recordId;
@@ -17,53 +21,55 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
     paymentTypeMap = {};
     paymentMethodSections = [];
     isLoading;
+	actualOperationFee;
+	hasToPayNovationFee;
+	errorMessageAmountExceedNovationFee;
+	isRecurring = false;
 
-    totalReceivedAmount = 0;
+	// Phase 2
+	// Details: add getter setter to default novation fee
+	_totalReceivedAmount = 0
+	get totalReceivedAmount(){
+		if (this.hasToPayNovationFee){
+			return this.actualOperationFee
+		}
+		return this._totalReceivedAmount;
+	}
+	set totalReceivedAmount(value){
+		this._totalReceivedAmount = value
+	}
+
+	// Phase 2
+	// Details: add getter to display modal header
+	get headerText(){
+		if (this.hasToPayNovationFee){
+			return 'Make a Payment for Operation Fee (Novation)'
+		}
+		return 'Make a Payment'
+	}
+
+
+	// Phase 2
+	// Details: add method to get field value to check Novation Payment
+	@wire(getRecord, { recordId: '$recordId', fields: FIELDS })
+    wiredRecord({ error, data }) {
+        if (data) {
+			this.hasToPayNovationFee = 	data.fields.NovationApprovedDate__c.value != null &&
+										data.fields.OperationFeeNovation__c.value != 0 &&
+										!data.fields.IsPaidNovationFee__c.value
+			this.actualOperationFee = data.fields.OperationFeeNovation__c.value
+			this.getPaymentMethodAndConfig();
+        } else if (error) {
+            console.error('Error fetching record:', error);
+        }
+    }
 
     @wire(MessageContext)
     messageContext;
 
-    @wire(getMakeAPaymentConfig)
-    wiredConfig({ error, data }) {
-        if (data) {
-            const optionSet = new Set();
-            const activeConfigs = data.filter((config) => config.IsActive__c);
-            activeConfigs.forEach((config) => {
-                console.log("config: " + JSON.stringify(config));
-                optionSet.add(config.PaymentType__c);
-                if (!this.configMap[config.PaymentType__c]) {
-                    this.configMap[config.PaymentType__c] = [];
-                }
-                this.configMap[config.PaymentType__c].push({
-                    apiName: config.FieldAPI__c,
-                    label: config.FieldLabel__c,
-                    dataType: config.DataType__c,
-                    maxLength: config.MaxTextLength__c,
-                    maxDecimalDigits: config.DecimalStep__c,
-                    picklistValues: config.PicklistValues__c
-                        ? config.PicklistValues__c.split(";").map((each) => {
-                              return { label: each, value: each };
-                          })
-                        : [],
-                    sourceObjectAPI: config.SourceObjectAPI__c,
-                    sourceFieldAPI: config.SourceFieldAPI__c,
-                    order: config.Order__c,
-                    required: config.IsRequired__c,
-                    isCustomPicklist: config.IsCustomPicklist__c
-                });
-            });
 
-            this.paymentMethodOptions = Array.from(optionSet).map((option) => {
-                return { label: option, value: option };
-            });
-            this.sortConfig();
-        } else if (error) {
-            console.error("Error fetching custom metadata", error);
-        }
-    }
-
-    connectedCallback() {
-        this.setPaymentTypeMap();
+    async connectedCallback() {
+        await this.setPaymentTypeMap();
     }
 
     renderedCallback() {
@@ -117,71 +123,29 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
                                         field.picklistValues = values.map((each) => {
                                             return { label: each.label, value: each.value };
                                         });
-                                        // this.paymentMethodOptions = [...this.paymentMethodOptions];
                                     }
                                     if (config.isCustomPicklist && config.apiName === "CompanyBank__c") {
                                         const values = await getCompanyBanks({
                                             opportunityId: this.recordId
                                         });
-                                        console.log("values: " + JSON.stringify(values));
                                         field.picklistValues = values.map((each) => {
 											if (each.isDefault){
 												field.value = each.value
 											}
                                             return { label: each.label, value: each.value };
                                         });
-                                        // field.value = values.filter((each) => each.isDefault).map((item) => item.value);
-                                        // this.paymentMethodOptions = [...this.paymentMethodOptions];
                                     }
                                 } catch (error) {
                                     console.error("error: " + JSON.stringify(error));
                                 }
-                                // if (config.sourceObjectAPI && config.sourceFieldAPI) {
-                                //     getPicklistValues({
-                                //         objectName: config.sourceObjectAPI,
-                                //         fieldName: config.sourceFieldAPI
-                                //     })
-                                //         .then((values) => {
-                                //             field.picklistValues = values.map((each) => {
-                                //                 return { label: each.label, value: each.value };
-                                //             });
-                                //             this.paymentMethodOptions = [...this.paymentMethodOptions];
-                                //         })
-                                //         .catch((error) => {
-                                //             console.error(
-                                //                 'Error fetching picklist values: ' + JSON.stringify(error)
-                                //             );
-                                //         });
-                                // }
-                                // if (config.isCustomPicklist && config.apiName === 'CompanyBank__c') {
-                                // 	console.log('retrieve company banks')
-                                // 	getCompanyBanks({
-                                // 		opportunityId : this.recordId
-                                // 	}).then((values) => {
-                                // 		console.log('values: ' + JSON.stringify(values))
-                                // 		field.picklistValues = values.map((each) => {
-                                // 			return { label: each.label, value: each.value };
-                                // 		});
-                                // 		field.value = values.filter(each => each.isDefault).map(item => item.value)
-                                // 		this.paymentMethodOptions = [...this.paymentMethodOptions];
-                                // 		this.paymentMethodSections = [...this.paymentMethodSections]
-                                // 	}).catch((error) => {
-                                // 		console.error(
-                                // 			'Error fetching company banks: ' + JSON.stringify(error)
-                                // 		);
-                                // 	});
-                                // }
                             }
-                            console.log("field: " + JSON.stringify(field));
                             return field;
                         })
                     );
                 }
-                console.log("section: " + JSON.stringify(section));
                 return section;
             })
         );
-        // this.paymentMethodSections = [...this.paymentMethodSections]
     }
 
     handleInputChange(event) {
@@ -221,7 +185,10 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
     async handleConfirm() {
         if (!this.validateAllRequiredField()) {
             this.showToast("Error", "Please input all required fields", "error");
-        } else {
+        } else if (this.hasToPayNovationFee && !this.validateAmountNotExceedNovationFee()){
+			this.showToast("Error", this.errorMessageAmountExceedNovationFee , "error");
+		}
+		else {
             const isConfirm = await ConfirmModal.open({
                 size: "small",
                 description: "Confirm Action Modal",
@@ -239,21 +206,32 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
                         paymentMethod.PaymentType__c = this.paymentTypeMap[section.selectedPaymentMethod];
                         return paymentMethod;
                     });
-                    // console.log("paymentMethods: " + JSON.stringify(paymentMethods));
                     let paymentReceiptId;
-                    for (const paymentMethod of paymentMethods) {
-                        const savedResult = await proceedPayment({
-                            opportunityId: this.recordId,
-                            recievedAmount: paymentMethod.ReceivedAmount__c,
-                            paymentMethods: [paymentMethod],
-                            receiptId: paymentReceiptId
-                        });
-                        if (savedResult.PaymentReceipt__c) {
-                            paymentReceiptId = savedResult.PaymentReceipt__c[0].Id;
-                        } else {
-                            continue;
-                        }
-                    }
+					// Phase2
+					// Details: modify logic to proceed payment for Novation Fee
+					if (this.hasToPayNovationFee){
+						const savedResult = await proceedNovationPayment({
+							opportunityId: this.recordId,
+							recievedAmount: this.actualOperationFee,
+							paymentMethods: paymentMethods
+						})
+						paymentReceiptId = savedResult.PaymentReceipt__c[0].Id;
+					} else {
+						for (const paymentMethod of paymentMethods) {
+							const savedResult = await proceedPayment({
+								opportunityId: this.recordId,
+								recievedAmount: paymentMethod.ReceivedAmount__c,
+								paymentMethods: [paymentMethod],
+								receiptId: paymentReceiptId,
+								isRecurring: this.isRecurring
+							});
+							if (savedResult.PaymentReceipt__c) {
+								paymentReceiptId = savedResult.PaymentReceipt__c[0].Id;
+							} else {
+								continue;
+							}
+						}
+					}
                     this.showToast("Success", "Proceed Payment Successfully!", "success");
                     const message = {
                         messageText: "Invoke Refresh"
@@ -275,13 +253,19 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
     handleCancel() {
         this.dispatchEvent(new CloseActionScreenEvent());
     }
+
+	// Phase 2
+	// Details: add method to handler chaeckbox Recurring Payment
+	handleRecurringChange(event){
+		this.isRecurring = event.target.checked;
+	}
     // ----- End Handler -----
 
     // ----- Start Service -----
     injectStyle() {
         const inputAlign = document.createElement("style");
-        inputAlign.innerText = `.number-input input{ text-align: right!important; } 
-                                        .date-format-hide .slds-form-element__help{ display: none; } 
+        inputAlign.innerText = `.number-input input{ text-align: right!important; }
+                                        .date-format-hide .slds-form-element__help{ display: none; }
                                         .date-format-hide .slds-show{ display: block; }
                                         .slds-input[disabled], .slds-input.slds-is-disabled {color: #a49e9e !important; border-color : #a49e9e !important}
                                     `;
@@ -289,6 +273,11 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
     }
 
     calculateTotalReceivedAmount() {
+		// Phase 2
+		// Details: bypass calculating total received amount because Novation Fee is fixed amount
+		if (this.hasToPayNovationFee) {
+			return
+		}
         let receivedAmount = 0;
         this.paymentMethodSections.forEach((section) => {
             if (section.fields) {
@@ -348,7 +337,71 @@ export default class ProceedPayment extends NavigationMixin(LightningElement) {
         paymentTypePicklistValues.forEach((eachPicklist) => {
             this.paymentTypeMap[eachPicklist.label] = eachPicklist.value;
         });
-        // console.log('this.paymentTypeMap: ' + JSON.stringify(this.paymentTypeMap))
     }
+
+	// Phase 2
+	// Details: add method to get payment method and filter in case hasToPayNovationFee
+	async getPaymentMethodAndConfig(){
+		let data = await getMakeAPaymentConfig()
+		const optionSet = new Set();
+		let activeConfigs = data.filter((config) => config.IsActive__c);
+		console.log('getPaymentMethodAndConfig hasToPayNovationFee: ' + this.hasToPayNovationFee)
+		if (this.hasToPayNovationFee){
+			activeConfigs = activeConfigs.filter((config) => config.IsNovationPaymentAllowed__c)
+		}
+		activeConfigs.forEach((config) => {
+			optionSet.add(config.PaymentType__c);
+			if (!this.configMap[config.PaymentType__c]) {
+				this.configMap[config.PaymentType__c] = [];
+			}
+			this.configMap[config.PaymentType__c].push({
+				apiName: config.FieldAPI__c,
+				label: config.FieldLabel__c,
+				dataType: config.DataType__c,
+				maxLength: config.MaxTextLength__c,
+				maxDecimalDigits: config.DecimalStep__c,
+				picklistValues: config.PicklistValues__c
+					? config.PicklistValues__c.split(";").map((each) => {
+							return { label: each, value: each };
+						})
+					: [],
+				sourceObjectAPI: config.SourceObjectAPI__c,
+				sourceFieldAPI: config.SourceFieldAPI__c,
+				order: config.Order__c,
+				required: config.IsRequired__c,
+				isCustomPicklist: config.IsCustomPicklist__c
+			});
+		});
+
+		this.paymentMethodOptions = Array.from(optionSet).map((option) => {
+			return { label: option, value: option };
+		});
+		this.sortConfig();
+	}
+
+	// Phase 2
+	// Details: add method to validate if received amount exceed actual novation fee
+	validateAmountNotExceedNovationFee(){
+		let receivedAmount = 0;
+        this.paymentMethodSections.forEach((section) => {
+            if (section.fields) {
+                section.fields.forEach((field) => {
+                    if (field.apiName === "ReceivedAmount__c") {
+                        receivedAmount += parseFloat(field.value.toFixed(2));
+                    }
+                });
+            }
+        });
+		if (receivedAmount > this.actualOperationFee){
+			this.errorMessageAmountExceedNovationFee = "Sum of all received amount is exceed actual novation fee"
+			return false
+		} else if (receivedAmount < this.actualOperationFee) {
+			this.errorMessageAmountExceedNovationFee = "Sum of all received amount does not match the actual novation fee"
+			return false
+		}
+		return true
+	}
+
     // ----- End Service -----
+
 }

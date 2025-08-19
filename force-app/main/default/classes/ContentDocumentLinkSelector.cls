@@ -1,4 +1,4 @@
-public with sharing class ContentDocumentLinkSelector {
+public without sharing class ContentDocumentLinkSelector {
     public static ContentDocumentLinkSelector instance;
 
     public static ContentDocumentLinkSelector getInstance() {
@@ -29,6 +29,22 @@ public with sharing class ContentDocumentLinkSelector {
 			SELECT Id, LinkedEntityId, ContentDocumentId
 			FROM ContentDocumentLink
 			WHERE LinkedEntityId IN: linkEntityIdSet
+		];
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add logic to get content distribution
+	 */
+	public List<ContentDistribution> getContentDistributionByContentDocumentId(Set<Id> contentDocumentIds){
+		if(contentDocumentIds.isEmpty()){
+			return new List<ContentDistribution>();
+		}
+		return [
+			SELECT DistributionPublicUrl,ContentDownloadUrl
+			FROM ContentDistribution
+			WHERE ContentDocumentId IN: contentDocumentIds
 		];
 	}
 }

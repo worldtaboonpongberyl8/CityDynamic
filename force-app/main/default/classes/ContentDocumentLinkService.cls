@@ -1,4 +1,4 @@
-public with sharing class ContentDocumentLinkService {
+public without sharing class ContentDocumentLinkService {
 	public static ContentDocumentLinkService instance;
 
 	public static ContentDocumentLinkService getInstance() {

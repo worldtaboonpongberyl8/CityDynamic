@@ -23,7 +23,7 @@ public with sharing class ContractService {
                 Quote__c syncedQuote = syncedQuotes[0];
                 targetContract.AddressEN__c = syncedQuote.AddressEN__c;
                 targetContract.AddressTH__c = syncedQuote.AddressTH__c;
-            } 
+            }
             targetContracts.add(targetContract);
         }
         return targetContracts;
@@ -92,4 +92,45 @@ public with sharing class ContractService {
         }
         return updatedOpportunities;
     }
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add method to stamp field to Contract after Novation Process
+	 */
+	public List<Contract> getContractAfterNovationProcess(List<Contract> oldContracts){
+		for (Contract oldContract : oldContracts){
+			oldContract.Status = 'Cancel';
+			oldContract.CancelReason__c = GlobalConstants.OPP_LOST_REASON_NOVATION;
+		}
+		return oldContracts;
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add method to stamp field to Contract after Moving Process
+	 */
+	public List<Contract> getContractAfterMovingProcess(List<Contract> oldContracts, String action){
+		for (Contract oldContract : oldContracts){
+			oldContract.Status = 'Cancel';
+			oldContract.CancelReason__c = action == 'upgrade' ? GlobalConstants.OPP_LOST_REASON_UPGRADE :
+										action == 'downgrade' ? GlobalConstants.OPP_LOST_REASON_DOWNGRADE :
+										GlobalConstants.OPP_LOST_REASON_MOVEPAYMENT;
+		}
+		return oldContracts;
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add method to stamp field to Contract after Moving Process
+	 */
+	public List<Contract> getContractAfterRefundForfeitProcess(List<Contract> oldContracts, String cancelReason){
+		for (Contract oldContract : oldContracts){
+			oldContract.Status = 'Cancel';
+			oldContract.CancelReason__c = cancelReason;
+		}
+		return oldContracts;
+	}
 }

@@ -1,0 +1,39 @@
+<apex:page showHeader="false" sidebar="false" controller="PaymentPortalResultController" action="{!urlRedirection}">
+	<apex:outputPanel rendered="{!NOT(ISBLANK(redirectUrl))}">
+		<script>
+            // Countdown timer
+            var seconds = 3;
+            function updateCountdown() {
+                var countdownElement = document.getElementById('countdown');
+                if (countdownElement) {
+                    countdownElement.innerHTML = seconds;
+                    seconds--;
+                    if (seconds >= 0) {
+                        setTimeout(updateCountdown, 1000);
+                    }
+                }
+            }
+
+            // Start the countdown when page loads
+            window.onload = function() {
+                updateCountdown();
+                setTimeout(function() {
+                    window.location.href = '{!redirectUrl}';
+                }, 3000);
+            };
+        </script>
+	</apex:outputPanel>
+	<c:PaymentPortalHeader instanceCtrl=""/>
+	<div class = "detail-content" style="font-family: 'Arial Unicode MS' !important;">
+		<div style="text-align: center; margin-top: 50px;">
+			<h1 style="color: orange;">
+				⚠ Payment Cancelled
+			</h1>
+			<p>You have cancelled the transaction.</p>
+			<apex:outputPanel rendered="{!NOT(ISBLANK(redirectUrl))}">
+                <p>You will be redirected in <span id="countdown" style="font-weight: bold;">3</span> seconds...</p>
+            </apex:outputPanel>
+		</div>
+	</div>
+	<c:PaymentPortalFooter />
+</apex:page>

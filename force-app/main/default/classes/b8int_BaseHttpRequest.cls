@@ -22,7 +22,7 @@ public without sharing class b8int_BaseHttpRequest {
         }
         return true;
     }
-    
+
     public String getRequestBodyAsString() {
         if(this.requestBody == null) {
             return null;
@@ -30,10 +30,10 @@ public without sharing class b8int_BaseHttpRequest {
 
         if(this.requestBody instanceof String) {
             return (String)this.requestBody;
-        } 
+        }
 
         if(thisContentType == ContentType.JSON) {
-            return JSON.serialize(this.requestBody);
+            return JSON.serialize(this.requestBody,true);
         }
         return null;
     }

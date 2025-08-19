@@ -94,7 +94,6 @@ public abstract without sharing class b8int_BaseHttpCallout extends be8_Queueabl
                 this.processSuccessResponse();
                 this.logger.updateLogForSuccessIntegration(null);
             } catch(Exception e) {
-				System.debug('** test **: ' + e.getMessage() + ' ' + e.getStackTraceString());
                 this.logger.updateLogForSuccessIntegration(e);
                 try {
                     this.processFailedResponse();

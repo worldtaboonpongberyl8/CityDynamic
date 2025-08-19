@@ -212,7 +212,7 @@ public without sharing class WordContentController {
 	}
 
 	public static List<ZipFile__c> consolidateTemplateZipFile(String recordId, String objectApiName, Set<String> templateNameSet) {
-		List<ZipFile__c> zipFileMasters = ZipFileSelector.getByNameAndRecordType(templateNameSet, ZipUtility.getInstance().MASTER_DATA_RECORDTYPE);
+		List<ZipFile__c> zipFileMasters = ZipFileSelector.getInstance().getByNameAndRecordType(templateNameSet, ZipUtility.getInstance().MASTER_DATA_RECORDTYPE);
 
 		return consolidateTemplateZipFile(recordId, objectApiName, zipFileMasters);
 	}
@@ -250,7 +250,7 @@ public without sharing class WordContentController {
 
 
 			Set<String> zipFileIdSet = mapFileNameWithAttachment.keySet();
-			zipFileMerges = ZipFileSelector.getByIdSetAndRecType(zipFileIdSet, ZipUtility.getInstance().MERGE_DATA_RECORDTYPE);
+			zipFileMerges = ZipFileSelector.getInstance().getByIdSetAndRecType(zipFileIdSet, ZipUtility.getInstance().MERGE_DATA_RECORDTYPE);
 		}
 		return zipFileMerges;
 	}

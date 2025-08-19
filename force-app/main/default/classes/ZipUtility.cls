@@ -258,7 +258,7 @@ public without sharing class ZipUtility {
 
 	public void deleteZipRecord(Set<Id> recordIdSet){
 		// delete file after we are done generate file
-		List<ZipFile__c> targetZipFileList = ZipFileSelector.getByIdSet(recordIdSet);
+		List<ZipFile__c> targetZipFileList = ZipFileSelector.getInstance().getByIdSet(recordIdSet);
 		delete targetZipFileList;
 	}
 }

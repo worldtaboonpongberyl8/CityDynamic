@@ -1,0 +1,219 @@
+<template>
+    <template lwc:if={spinner}>
+        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+    </template>
+
+    <lightning-quick-action-panel header="Generate Novation Agreement">
+		<!-- Body Section -->
+		<div class="slds-p-around_medium">
+			<div class="slds-grid slds-gutters">
+				<div class="slds-col slds-size_1-of-3">
+					<p class="slds-text-title_bold">Current Owner Name</p>
+					<p>{currentAccountName}</p>
+				</div>
+				<!-- Arrow Column -->
+				<div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+					<lightning-icon
+						icon-name="utility:forward"
+						alternative-text="forward"
+						size="small"
+					></lightning-icon>
+				</div>
+				<div class="slds-col slds-size_1-of-3">
+					<p class="slds-text-title_bold">New Owner Name</p>
+					<p>{newAccountName}</p>
+				</div>
+			</div>
+			<!-- Separator -->
+			<hr class="slds-m-vertical_small" />
+			<div class="slds-grid slds-gutters">
+				<div class="slds-col slds-size_1-of-3">
+					<p class="slds-text-title_bold">Current Quota</p>
+					<p>{currentQuota}</p>
+				</div>
+				<!-- Arrow Column -->
+				<div class="slds-col slds-size_1-of-3 slds-align_absolute-center">
+					<lightning-icon
+						icon-name="utility:forward"
+						alternative-text="forward"
+						size="small"
+					></lightning-icon>
+				</div>
+				<div class="slds-col slds-size_1-of-3">
+					<p class="slds-text-title_bold">New Quota</p>
+					<p>{newQuota}</p>
+				</div>
+			</div>
+			<!-- If quota is changed to FQ-->
+			<template if:true={isQuotaChangedToFQ}>
+				<div class="slds-m-top_medium slds-text-align_center slds-text-color_error">
+					<p><strong>The quota will be changed as a result of this novation. Please review the details carefully before submitting.</strong></p>
+				</div>
+				<!-- Quota details in two-column layout -->
+				<div class="slds-grid slds-grid_align-end slds-m-top_small">
+					<div class="slds-box slds-theme_alert-texture slds-theme_warning">
+						<div class="slds-grid slds-wrap slds-p-around_small">
+							<!-- Row 1 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Total Area for Foreign Quota:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={totalFQArea}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 2 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Area Used as Foreign Quota:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={areaUsedAsFQ}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 3 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Current Area:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={currentArea}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 4 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								New Remaining Area for Foreign Quota:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={remainingFQArea}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 5 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								(
+								<lightning-formatted-number
+									value={remainingFQAreaPercent}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> %)
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+			<!-- If quota is changed to TQ-->
+			<template if:true={isQuotaChangedToTQ}>
+				<div class="slds-m-top_medium slds-text-color_success slds-text-align_center">
+					<p><strong>The quota will be changed as a result of this novation. Please review the details carefully before submitting.</strong></p>
+				</div>
+				<!-- Quota details in two-column layout -->
+				<div class="slds-grid slds-grid_align-end slds-m-top_small">
+					<div class="slds-box slds-theme_alert-texture slds-theme_warning">
+						<div class="slds-grid slds-wrap slds-p-around_small">
+							<!-- Row 1 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Total Area for Foreign Quota:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={totalFQArea}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 2 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Area Used as Foreign Quota:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={areaUsedAsFQ}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 3 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Current Area:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={currentArea}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 4 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								New Remaining Area for Foreign Quota:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={remainingFQArea}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> sq.m
+							</div>
+
+							<!-- Row 5 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								(
+								<lightning-formatted-number
+									value={remainingFQAreaPercent}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> %)
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+			<!-- If quota is NOT changed -->
+			<template if:true={isQuotaUnchanged}>
+				<div class="slds-m-top_medium slds-text-color_success slds-text-align_center">
+					<p><strong>The quota remains unchanged after processing this novation.</strong></p>
+				</div>
+			</template>
+		</div>
+		<!-- Footer Section -->
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                variant="neutral"
+                onclick={handleCancel}
+                class="slds-m-right_small"
+            ></lightning-button>
+            <lightning-button
+                label="Confirm"
+                variant="brand"
+                onclick={onGenerate}
+            ></lightning-button>
+        </div>
+        <template lwc:if={isGenerated}>
+            <c-word-generator current-record-id={recordId} selected-language={language} template-mapping-type={templateMappingType}>
+            </c-word-generator>
+        </template>
+    </lightning-quick-action-panel>
+</template>

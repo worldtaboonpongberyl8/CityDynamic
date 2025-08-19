@@ -9,15 +9,15 @@ private class ContentDocumentServiceTest {
 		insert testFloor;
 		UnitType__c unitType = dataMaker.createUnitType('Test Unit Type', testProject.Id);
 		insert unitType;
-		ContentVersion testContentVersion = dataMaker.createContentVersion('FileName','sample.jpg');
+		ContentVersion testContentVersion = dataMaker.createContentVersion('FileName', 'sample.jpg');
 		insert testContentVersion;
-		ContentVersion contentVersion = [SELECT Id , ContentDocumentId FROM ContentVersion WHERE Id =: testContentVersion.Id];
+		ContentVersion contentVersion = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id =: testContentVersion.Id];
 		Product2 testProduct = dataMaker.createUnit('TestProduct','PP01',testProject.Id,testFloor.Id,'Available',unitType.Id);
 		insert testProduct;
 		ContentDocumentLink contentDocLink = dataMaker.createContentDocumentLink(testProduct.Id,contentVersion.ContentDocumentId);
 		insert contentDocLink;
-		
 	}
+
 	@isTest
 	static void renameContentDocumentTitleTest() {
 		Test.startTest();
@@ -31,5 +31,33 @@ private class ContentDocumentServiceTest {
 		ContentDocument contentDoc = [SELECT Id, Title FROM ContentDocument WHERE Id =:contentDocLink.ContentDocumentId];
 		System.assertEquals('Layout-TestProduct', contentDoc.Title);
 		Test.stopTest();
+	}
+
+	@isTest
+	static void saveToExistingFileTest(){
+		DataMaker dataMaker = DataMaker.getInstance();
+		Product2 testProduct = [SELECT Id FROM Product2 WHERE ProductCode = 'PP01'];
+
+		ContentDocumentLink oldCtDocLink = [SELECT Id, ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId =: testProduct.Id LIMIT 1];
+		Product2 productForUpdate = new Product2(
+			Id = testProduct.Id,
+			ProductCode = oldCtDocLink.ContentDocumentId
+		);
+		update productForUpdate;
+
+		ContentVersion contentVer = dataMaker.createContentVersion('new FileName','sample.jpg');
+		insert contentVer;
+
+		ContentVersion contentVersion = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id =: contentVer.Id];
+		ContentDocumentLink ctDocLink = new ContentDocumentLink(
+			LinkedEntityId = testProduct.Id,
+			ContentDocumentId = contentVersion.ContentDocumentId
+		);
+		insert ctDocLink;
+
+		ContentDocumentService.getInstance().saveToExistingFile(testProduct.Id, ctDocLink, 'ProductCode');
+
+		Product2 result = [SELECT Id, ProductCode FROM Product2 LIMIT 1];
+		System.assertEquals(ctDocLink.ContentDocumentId, result.ProductCode);
 	}
 }

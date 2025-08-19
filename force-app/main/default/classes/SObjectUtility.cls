@@ -1,4 +1,4 @@
-public with sharing class SObjectUtility {
+public without sharing class SObjectUtility {
 	public static SObjectUtility instance;
 
 	public static SObjectUtility getInstance() {
@@ -41,7 +41,7 @@ public with sharing class SObjectUtility {
 		if(sObjectRecord == null){
 			return recordValue;
 		}
-		
+
 		if(field.contains('.')){
 			List<String> fieldSplits = field.split('\\.');
 			for (Integer i = 0; i < fieldSplits.size(); i++) {

@@ -2,17 +2,33 @@
     <template if:true={isLoading}>
         <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
     </template>
-    <lightning-quick-action-panel class="slds-is-relative" header="Make a Payment">
+    <lightning-quick-action-panel class="slds-is-relative" header={headerText}>
         <div class="content-container">
-            <div class="slds-p-around_medium">
-                <lightning-button
-                    label="Add Payment Method"
-                    onclick={handleAddSection}
-                    class="slds-m-bottom_medium"
-                    variant="brand"
-                ></lightning-button>
-
-                <template for:each={paymentMethodSections} for:item="section">
+            <div class="slds-grid slds-grid_align-space slds-p-vertical_medium">
+				<div class="body-flex">
+					<lightning-button
+						label="Add Payment Method"
+						onclick={handleAddSection}
+						class="slds-m-bottom_medium"
+						variant="brand"
+					></lightning-button>
+				</div>
+				<!-- Phase2: add checkbox to check if paid by Recurring -->
+				<template if:false={hasToPayNovationFee}>
+					<div style="display: flex;">
+						<lightning-input
+							type="checkbox"
+							variant="label-hidden"
+							label=""
+							checked={isRecurring}
+							onchange={handleRecurringChange}>
+						</lightning-input>
+						<strong class="slds-p-right_medium">Recurring Payment</strong>
+					</div>
+				</template>
+            </div>
+			<div class="slds-p-around_medium">
+				<template for:each={paymentMethodSections} for:item="section">
                     <!-- Payment method section -->
                     <div key={section.id} class="slds-card slds-m-bottom_medium">
                         <div class="slds-card__body slds-p-around_small">
@@ -125,30 +141,33 @@
                         <div class="slds-border_top slds-p-top_small"></div>
                     </div>
                 </template>
-            </div>
+			</div>
             <div class="slds-grid slds-grid_align-space slds-p-vertical_small">
-                <div class="body-flex">
-                    <strong class="slds-p-right_medium">Total Amount</strong>
-                    <div>
-                        <lightning-input
-                            class="number-input"
-                            label=""
-                            type="number"
-                            step="0.01"
-                            value={totalReceivedAmount}
-                            variant="label-hidden"
-                            disabled="true"
-                        >
-                        </lightning-input>
-                    </div>
-                </div>
-                <div>
-                    <lightning-button label="Apply Amount to Table" onclick={handleApplyAmount}> </lightning-button>
-                </div>
+				<div class="body-flex">
+					<strong class="slds-p-right_medium">Total Amount</strong>
+					<div>
+						<lightning-input
+							class="number-input"
+							label=""
+							type="number"
+							step="0.01"
+							value={totalReceivedAmount}
+							variant="label-hidden"
+							disabled="true"
+						>
+						</lightning-input>
+					</div>
+				</div>
+				<template if:false={hasToPayNovationFee}>
+					<div>
+						<lightning-button label="Apply Amount to Table" onclick={handleApplyAmount}> </lightning-button>
+					</div>
+				</template>
             </div>
-
-            <c-opportunity-payment-adjustment is-hide-header="true" record-id={recordId}>
-            </c-opportunity-payment-adjustment>
+			<template if:false={hasToPayNovationFee}>
+				<c-opportunity-payment-adjustment is-hide-header="true" record-id={recordId}>
+				</c-opportunity-payment-adjustment>
+			</template>
         </div>
     </lightning-quick-action-panel>
     <div class="slds-modal__footer">

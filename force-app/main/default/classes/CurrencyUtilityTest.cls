@@ -45,4 +45,28 @@ public with sharing class CurrencyUtilityTest {
 			System.assertEquals(expectedResult, actualResult);
 		}
 	}
+
+	@isTest
+	static void testGetTextDouble() {
+		string actualResult = CurrencyUtility.getInstance().getText(((Double) 1500010.08), 'EN');
+		System.assertEquals(actualResult, 'Baht One Million Five Hundred Thousand Ten And Eight Satang');
+	}
+
+	@isTest
+	static void testGetTextInteger() {
+		string actualResult = CurrencyUtility.getInstance().getText(((Integer) 1000000), 'EN');
+		System.assertEquals(actualResult, 'Baht One Million Only');
+	}
+
+	@isTest
+	static void testGetTextLong() {
+		string actualResult = CurrencyUtility.getInstance().getText(((long) 98721654231.00), 'EN');
+		System.assertEquals(actualResult, 'Baht Ninety Eight Billion Seven Hundred Twenty One Million Six Hundred Fifty Four Thousand Two Hundred Thirty One Only');
+	}
+
+	@isTest
+	static void testGetTextString() {
+		string actualResult = CurrencyUtility.getInstance().getText(('98721654231.00'), 'EN');
+		System.assertEquals(actualResult, 'Baht Ninety Eight Billion Seven Hundred Twenty One Million Six Hundred Fifty Four Thousand Two Hundred Thirty One Only');
+	}
 }

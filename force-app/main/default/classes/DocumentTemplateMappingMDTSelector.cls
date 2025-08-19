@@ -1,4 +1,4 @@
-public with sharing class DocumentTemplateMappingMDTSelector {
+public without sharing class DocumentTemplateMappingMDTSelector {
 	public static DocumentTemplateMappingMDTSelector instance;
 
 	public static DocumentTemplateMappingMDTSelector getInstance() {
@@ -14,12 +14,12 @@ public with sharing class DocumentTemplateMappingMDTSelector {
 		String templateMappingType
 	) {
 		return [
-			SELECT Id, DocumentTemplateName__c, IsActive__c, Language__c, ObjectName__c , TemplateMappingType__c, 
+			SELECT Id, DocumentTemplateName__c, IsActive__c, Language__c, ObjectName__c , TemplateMappingType__c,
 				IsSaveToExistingFile__c, FieldAPINameSaveToExistingFile__c, AdditionalCondition__c, AdditionalConditionFields__c
-			FROM DocumentTemplateMapping__mdt 
-			WHERE ObjectName__c =: objectApiName AND 
+			FROM DocumentTemplateMapping__mdt
+			WHERE ObjectName__c =: objectApiName AND
 				Language__c =: language AND
-				TemplateMappingType__c =: templateMappingType AND 
+				TemplateMappingType__c =: templateMappingType AND
 				IsActive__c = true
 		];
 	}
@@ -27,7 +27,7 @@ public with sharing class DocumentTemplateMappingMDTSelector {
 	public List<DocumentTemplateMapping__mdt> getByTemplateAndMappingType(String templateMappingType) {
 		return [
 			SELECT Language__c
-			FROM DocumentTemplateMapping__mdt 
+			FROM DocumentTemplateMapping__mdt
 			WHERE TemplateMappingType__c =: templateMappingType
 		];
 	}

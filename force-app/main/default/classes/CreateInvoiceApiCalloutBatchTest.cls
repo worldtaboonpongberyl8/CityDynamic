@@ -9,16 +9,16 @@ public with sharing class CreateInvoiceApiCalloutBatchTest {
 
     public class SuccessInvoiceMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateInvoiceApiCallout.RequestDataModel>.class);
-            List<CreateInvoiceApiCallout.RequestDataModel> requestData = ( List<CreateInvoiceApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 			// START MOCK RESPONSE
-            List<CreateInvoiceApiCallout.InvoiceResponse> responseInvoiceData = new List<CreateInvoiceApiCallout.InvoiceResponse>();
-			CreateInvoiceApiCallout.InvoiceResponse invoiceResponse = new CreateInvoiceApiCallout.InvoiceResponse();
-			invoiceResponse.DocLine = new List<CreateInvoiceApiCallout.InvoiceLineItemResponse>();
+            List<PojjamanDataModel.FNGLDocResponse> responseInvoiceData = new List<PojjamanDataModel.FNGLDocResponse>();
+			PojjamanDataModel.FNGLDocResponse invoiceResponse = new PojjamanDataModel.FNGLDocResponse();
+			invoiceResponse.DocLine = new List<PojjamanDataModel.FNGLDocLineItemResponse>();
 			invoiceResponse.SFDocId = succesDocId;
 			invoiceResponse.ResponseCode = 'SC';
 			invoiceResponse.Message = 'Success';
-			CreateInvoiceApiCallout.InvoiceLineItemResponse invoiceLineItemResponse = new CreateInvoiceApiCallout.InvoiceLineItemResponse();
+			PojjamanDataModel.FNGLDocLineItemResponse invoiceLineItemResponse = new PojjamanDataModel.FNGLDocLineItemResponse();
 			invoiceLineItemResponse.ResponseCode = 'SC';
 			invoiceLineItemResponse.SFDocLineId = succesDocLineId;
 			invoiceLineItemResponse.Message = 'Success';
@@ -114,27 +114,27 @@ public with sharing class CreateInvoiceApiCalloutBatchTest {
 
 	public class SuccessInvoiceRetryMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateInvoiceApiCallout.RequestDataModel>.class);
-            List<CreateInvoiceApiCallout.RequestDataModel> requestData = ( List<CreateInvoiceApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 			// START MOCK RESPONSE
-            List<CreateInvoiceApiCallout.InvoiceResponse> responseInvoiceData = new List<CreateInvoiceApiCallout.InvoiceResponse>();
-			CreateInvoiceApiCallout.InvoiceResponse invoiceResponse = new CreateInvoiceApiCallout.InvoiceResponse();
-			invoiceResponse.DocLine = new List<CreateInvoiceApiCallout.InvoiceLineItemResponse>();
+            List<PojjamanDataModel.FNGLDocResponse> responseInvoiceData = new List<PojjamanDataModel.FNGLDocResponse>();
+			PojjamanDataModel.FNGLDocResponse invoiceResponse = new PojjamanDataModel.FNGLDocResponse();
+			invoiceResponse.DocLine = new List<PojjamanDataModel.FNGLDocLineItemResponse>();
 			invoiceResponse.SFDocId = succesDocId;
 			invoiceResponse.ResponseCode = 'SC';
 			invoiceResponse.Message = 'Success';
-			CreateInvoiceApiCallout.InvoiceLineItemResponse invoiceLineItemResponse = new CreateInvoiceApiCallout.InvoiceLineItemResponse();
+			PojjamanDataModel.FNGLDocLineItemResponse invoiceLineItemResponse = new PojjamanDataModel.FNGLDocLineItemResponse();
 			invoiceLineItemResponse.ResponseCode = 'SC';
 			invoiceLineItemResponse.SFDocLineId = succesDocLineId;
 			invoiceLineItemResponse.Message = 'Success';
 			invoiceResponse.DocLine.add(invoiceLineItemResponse);
 
-			CreateInvoiceApiCallout.InvoiceResponse invoiceResponse2 = new CreateInvoiceApiCallout.InvoiceResponse();
-			invoiceResponse2.DocLine = new List<CreateInvoiceApiCallout.InvoiceLineItemResponse>();
+			PojjamanDataModel.FNGLDocResponse invoiceResponse2 = new PojjamanDataModel.FNGLDocResponse();
+			invoiceResponse2.DocLine = new List<PojjamanDataModel.FNGLDocLineItemResponse>();
 			invoiceResponse2.SFDocId = succesDocId2;
 			invoiceResponse2.ResponseCode = 'SC';
 			invoiceResponse2.Message = 'Success';
-			CreateInvoiceApiCallout.InvoiceLineItemResponse invoiceLineItemResponse2 = new CreateInvoiceApiCallout.InvoiceLineItemResponse();
+			PojjamanDataModel.FNGLDocLineItemResponse invoiceLineItemResponse2 = new PojjamanDataModel.FNGLDocLineItemResponse();
 			invoiceLineItemResponse2.ResponseCode = 'SC';
 			invoiceLineItemResponse2.SFDocLineId = succesDocLineId2;
 			invoiceLineItemResponse2.Message = 'Success';
@@ -247,10 +247,10 @@ public with sharing class CreateInvoiceApiCalloutBatchTest {
 
 	public class SystemFailInvoiceMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateInvoiceApiCallout.RequestDataModel>.class);
-            List<CreateInvoiceApiCallout.RequestDataModel> requestData = ( List<CreateInvoiceApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 			// START MOCK RESPONSE
-            List<CreateInvoiceApiCallout.InvoiceResponse> responseInvoiceData = new List<CreateInvoiceApiCallout.InvoiceResponse>();
+            List<PojjamanDataModel.FNGLDocResponse> responseInvoiceData = new List<PojjamanDataModel.FNGLDocResponse>();
 			// END MOCK RESPONSE
             HttpResponse res = new HttpResponse();
             res.setHeader('Content-Type', 'application/json');

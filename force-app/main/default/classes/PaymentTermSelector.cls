@@ -22,7 +22,7 @@ public with sharing class PaymentTermSelector {
                 Project__c,
                 Quota__c,
                 Type__c,
-                (SELECT Id, Amount__c, Percent__c, Term__c, Order__c, PaymentTermMaster__c FROM Payment_Term__r)
+                (SELECT Id, Amount__c, Percent__c, Term__c, Order__c, PaymentTermMaster__c,IsAllowedPaymentByGateway__c FROM Payment_Term__r)
             FROM PaymentTermMaster__c
             WHERE Id IN :paymentTermIds
         ]);

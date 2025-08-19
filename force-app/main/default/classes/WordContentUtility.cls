@@ -110,8 +110,8 @@ public without sharing class WordContentUtility {
 		recordId = documentDetail.RecordId;
 		objectApiName = documentDetail.ObjectAPIName;
 
-		List<ZipFile__c> masterZipFiles = ZipFileSelector.getByNameAndRecordType(new Set<String>{ documentDetail.DocumentName }, ZipUtility.getInstance().MASTER_DATA_RECORDTYPE);
-		List<ZipFile__c> mergeZipFiles = ZipFileSelector.getByIdSetAndRecType(new Set<String>{ documentDetail.DocumentId }, ZipUtility.getInstance().MERGE_DATA_RECORDTYPE);
+		List<ZipFile__c> masterZipFiles = ZipFileSelector.getInstance().getByNameAndRecordType(new Set<String>{ documentDetail.DocumentName }, ZipUtility.getInstance().MASTER_DATA_RECORDTYPE);
+		List<ZipFile__c> mergeZipFiles = ZipFileSelector.getInstance().getByIdSetAndRecType(new Set<String>{ documentDetail.DocumentId }, ZipUtility.getInstance().MERGE_DATA_RECORDTYPE);
 
 		Map<String, WordContentMaster__c> wordCtMastersMapByExtKey = new Map<String, WordContentMaster__c>();
 		Map<String, String> sObjFieldNameMapWithVal = new Map<String, String>();

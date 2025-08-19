@@ -51,6 +51,7 @@ public with sharing class InvoiceFormController {
 		public String companyTaxID {get; set;}
 		public String unitName {get; set;}
 		public String projectName {get; set;}
+		public String towerName {get; set;}
 		public String customerName {get; set;}
 		public String customerTaxID {get; set;}
 		public String customerContact {get; set;}
@@ -65,6 +66,12 @@ public with sharing class InvoiceFormController {
 			unitName = invoice.Opportunity__r.Unit__r.Name;
 			projectName = invoice.Opportunity__r.Project__r.Name;
 			customerName = invoice.Opportunity__r.CoBuyerName__c;
+			/**
+			 * Phase2
+			 * Details:
+			 * - Modify method to show Tower Name
+			 */
+			towerName =  invoice.Opportunity__r.Tower__c;
 			if(invoice.Opportunity__r.Account.TaxID__c != null){
 				customerTaxID = invoice.Opportunity__r.Account.TaxID__c;
 				isTaxId = true;
@@ -87,11 +94,17 @@ public with sharing class InvoiceFormController {
 		}
 	}
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - Modify wrapper to receive Invoice__c.CoBuyerName__c
+	 */
 	public class InvoiceHeaderWrapper{
 		public String invoiceNo {get; set;}
 		public String accountAddress {get; set;}
 		public String invoiceDate {get; set;}
 		public Boolean isCancelled {get; set;}
+		public String coBuyerName {get; set;}
 
 		public InvoiceHeaderWrapper(Invoice__c invoice){
 			DateUtility dateUtility = DateUtility.getInstance();
@@ -100,6 +113,7 @@ public with sharing class InvoiceFormController {
 			this.accountAddress = invoice.AccountAddress__c;
 			this.invoiceDate = dateUtility.toDateString('dd MMM yyyy', invoice.InvoiceDate__c);
 			this.isCancelled = invoice.IsCancel__c;
+			this.coBuyerName = invoice.CoBuyerName__c;
 		}
 	}
 

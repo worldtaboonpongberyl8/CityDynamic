@@ -17,9 +17,15 @@ public with sharing class InvoiceSelector {
 		];
 	}
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - Select more fields
+	 * 		- Opportunity__r.LossReason__c
+	 */
 	public List<Invoice__c> getByOppIdSet(Set<Id> oppIdSet) {
 		return [
-			SELECT Id, Opportunity__c
+			SELECT Id, Opportunity__c, Opportunity__r.LossReason__c
 			FROM Invoice__c
 			WHERE Opportunity__c IN: oppIdSet
 		];
@@ -41,7 +47,10 @@ public with sharing class InvoiceSelector {
 				Opportunity__r.Project__r.CompanyAccountNameForInvoice__c, Opportunity__r.Project__r.CompanyAccountNameForInvoice__r.Name,
 				Opportunity__r.Project__r.BankAccountNumberForInvoice__c, Opportunity__r.Project__r.CompanyBankNameForInvoice__c,
 				Opportunity__r.Project__r.BankBranchForInvoice__c, Opportunity__r.Project__r.BankAddressForInvoice__c,
-				Opportunity__r.Project__r.SWIFTCodeForInvoice__c
+				Opportunity__r.Project__r.SWIFTCodeForInvoice__c,
+				Opportunity__r.Tower__c,
+				CoBuyerName__c,
+				CoBuyerAccountCode__c
 			FROM Invoice__c
 			WHERE Id =: invoiceId
 		];
@@ -51,6 +60,7 @@ public with sharing class InvoiceSelector {
 		return new Map<Id,Invoice__c>([
 			SELECT
 				Id,
+				Opportunity__c,
 				Opportunity__r.Account.AccountCode__c,
 				Opportunity__r.Project__r.ProjectCode__c,
 				CreatedDate,
@@ -62,6 +72,7 @@ public with sharing class InvoiceSelector {
 				LastIntegrationDateTime__c,
 				LastCreatedStatusInPojjaman__c,
 				LastGLStatusInPojjaman__c,
+				CoBuyerAccountCode__c,
 				(
 					SELECT
 						Id,

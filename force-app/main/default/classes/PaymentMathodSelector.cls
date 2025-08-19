@@ -1,4 +1,4 @@
-public with sharing class PaymentMathodSelector {
+public without sharing class PaymentMathodSelector {
 	public static PaymentMathodSelector instance;
 	public static PaymentMathodSelector getInstance() {
 		if (instance == null) {
@@ -15,6 +15,7 @@ public with sharing class PaymentMathodSelector {
 				SELECT
 							Id,
 							PaymentReceipt__c,
+							PaymentReceipt__r.ReceiptType__c,
 							PaymentType__c,
 							ChequeNo__c,
 							BankName__c,

@@ -1,4 +1,4 @@
-public with sharing class NameFormattingMasterDataSelector {
+public without sharing class NameFormattingMasterDataSelector {
     public static NameFormattingMasterDataSelector instance;
 
     public static NameFormattingMasterDataSelector getInstance() {

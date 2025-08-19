@@ -69,9 +69,8 @@ public class CreateCustomerApiCalloutBatch implements Database.Batchable<SObject
     }
 
     public void finish(Database.BatchableContext bc) {
-        System.debug('Batch processing finished.');
         // execute next batch
-		CreateInvoiceApiCalloutBatch createInvoiceApiCalloutBatch = new CreateInvoiceApiCalloutBatch();
-        Database.executeBatch(createInvoiceApiCalloutBatch, 25);
+		GLChangeOwnerApiCalloutBatch glChangeOwnerApiCalloutBatch = new GLChangeOwnerApiCalloutBatch();
+        Database.executeBatch(glChangeOwnerApiCalloutBatch, 25);
     }
 }

@@ -28,6 +28,7 @@ private class PaymentSummaryFormControllerTest {
 		PricebookEntry testPricebookEntry1 = dataMaker.createPricebookEntries(testProduct.Id, 15000000, 20000000,10000000);
 		testPricebookEntry1.Pricebook2Id = pricebookId;
 		testPricebookEntry1.UseStandardPrice = false;
+		testPricebookEntry1.IsActive = true;
 		insert testPricebookEntry1;
 		// Creat Account
 		Id recordTypeId = Schema.getGlobalDescribe()

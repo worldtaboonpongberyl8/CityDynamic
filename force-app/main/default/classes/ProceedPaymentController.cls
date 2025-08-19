@@ -47,8 +47,13 @@ public with sharing class ProceedPaymentController {
 		}
 	}
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - modify logic to received isRecurring as new parameter
+	 */
     @AuraEnabled
-    public static Map<String,List<SObject>> proceedPayment(Id opportunityId, Decimal recievedAmount, List<PaymentMethod__c> paymentMethods , Id receiptId) {
+    public static Map<String,List<SObject>> proceedPayment(Id opportunityId, Decimal recievedAmount, List<PaymentMethod__c> paymentMethods , Id receiptId, Boolean isRecurring) {
         Savepoint sp = Database.setSavepoint();
         try{
             Map<String,List<SObject>> resultMap = new Map<String,List<SObject>>();
@@ -64,6 +69,10 @@ public with sharing class ProceedPaymentController {
                 PaymentReceipt__c paymentReceipt = paymentReceiptService.generatePaymentReceiptRelatedToOpportunity(opportunityId);
                 insert paymentReceipt;
                 PaymentReceipt__c paymentReceiptWithRunningNo = paymentReceiptService.generateRunningNo(paymentReceipt);
+				System.debug('paymentReceiptWithRunningNo: ' + paymentReceiptWithRunningNo);
+				System.debug('isRecurring: ' + isRecurring);
+				// Phase2: if isRecurring, then stamp ReceiptType__c as Recurring
+				paymentReceiptWithRunningNo.ReceiptType__c = isRecurring ? GlobalConstants.RECEIPT_TYPE_RECURRING : GlobalConstants.RECEIPT_TYPE_DEFAULT;
                 update paymentReceiptWithRunningNo;
                 receiptId = paymentReceiptWithRunningNo.Id;
                 resultMap.put('PaymentReceipt__c' , new List<PaymentReceipt__c>{paymentReceiptWithRunningNo});
@@ -84,4 +93,61 @@ public with sharing class ProceedPaymentController {
             throw new AuraHandledException(e.getMessage() + ' ' + e.getStackTraceString());
         }
     }
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add logic to proceed payment for Novation Fee
+	 */
+	@AuraEnabled
+	public static Map<String,List<SObject>> proceedNovationPayment(Id opportunityId, Decimal recievedAmount, List<PaymentMethod__c> paymentMethods) {
+        Savepoint sp = Database.setSavepoint();
+        try{
+            Map<String,List<SObject>> resultMap = new Map<String,List<SObject>>();
+			OpportunitySelector oppSelector = OpportunitySelector.getInstance();
+            PaymentReceiptService paymentReceiptService = PaymentReceiptService.getInstance();
+			PaymentReceipt__c paymentReceipt = paymentReceiptService.generateNovationPaymentReceiptRelatedToOpportunity(opportunityId);
+			insert paymentReceipt;
+			PaymentReceipt__c paymentReceiptWithRunningNo = paymentReceiptService.generateRunningNo(paymentReceipt);
+			update paymentReceiptWithRunningNo;
+			resultMap.put('PaymentReceipt__c' , new List<PaymentReceipt__c>{paymentReceiptWithRunningNo});
+            for (PaymentMethod__c paymentMethod : paymentMethods){
+                paymentMethod.PaymentReceipt__c = paymentReceiptWithRunningNo.Id;
+            }
+            insert paymentMethods;
+            resultMap.put('PaymentMethod__c', paymentMethods);
+            List<PaymentReceiptLineItem__c> paymentReceiptLineItems = paymentReceiptService.generateNovationPaymentReceiptLineItem(recievedAmount,paymentReceiptWithRunningNo.Id,paymentMethods[0].Id);
+            insert paymentReceiptLineItems;
+			Map<Id, Opportunity> opportunityMapById = oppSelector.getOpportunityMapById(new Set<Id>{opportunityId});
+			Opportunity targetOpportunity = opportunityMapById.get(opportunityId);
+			targetOpportunity.IsPaidNovationFee__c = true;
+			update targetOpportunity;
+            return resultMap;
+        } catch (Exception e) {
+            Database.rollback(sp);
+            System.debug('ERROR: ' + e.getMessage() + ' ' + e.getStackTraceString());
+            throw new AuraHandledException(e.getMessage() + ' ' + e.getStackTraceString());
+        }
+    }
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add logic to calculate Available FQ Quota
+	 */
+	@AuraEnabled
+	public static Map<String,Decimal> getAreaDetails(Id opportunityId){
+		try {
+			Map<String,Decimal> areaDetailMap = new Map<String,Decimal>();
+			OpportunitySelector oppSelector = OpportunitySelector.getInstance();
+			ProjectService projectService = ProjectService.getInstance();
+			Map<Id, Opportunity> oppMapById = oppSelector.getOpportunityMapById(new Set<Id>{opportunityId});
+			Opportunity targetOpp = oppMapById.get(opportunityId);
+			Map<Id,Decimal> areaOfBookedOrSoldFQQuotaMapByProjectId = projectService.calculateAreaBookedOrSoldAsFQQuota(new Set<Id>{targetOpp.Project__c});
+			areaDetailMap.put('areaBookedOrSoldAsFQQuota' , areaOfBookedOrSoldFQQuotaMapByProjectId.get(targetOpp.Project__c));
+			return areaDetailMap;
+		} catch (Exception e) {
+			throw new AuraHandledException(e.getMessage());
+		}
+	}
 }

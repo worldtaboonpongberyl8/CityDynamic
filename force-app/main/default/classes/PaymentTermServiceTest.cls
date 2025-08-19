@@ -11,6 +11,7 @@ public with sharing class PaymentTermServiceTest {
         wrapper1.amount = 100.00;
         wrapper1.percent = null;
         wrapper1.term = 'Contract';
+        wrapper1.isAllowedPayment = false;
         wrapper1.paymentTermMasterId = null;
         PaymentTermService.PaymentTermLineItemWrapper wrapper2 = new PaymentTermService.PaymentTermLineItemWrapper();
         wrapper2.id = null;
@@ -18,6 +19,7 @@ public with sharing class PaymentTermServiceTest {
         wrapper2.amount = null;
         wrapper2.percent = null;
         wrapper2.term = 'Transfer';
+        wrapper2.isAllowedPayment = false;
         wrapper2.paymentTermMasterId = null;
         paymentTermWrappers.add(wrapper1);
         paymentTermWrappers.add(wrapper2);

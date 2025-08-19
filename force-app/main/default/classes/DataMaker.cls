@@ -39,7 +39,7 @@ public with sharing class DataMaker {
 			Name = name,
 			Body = body,
 			ParentId = parentId
-			);
+		);
 	}
 	public User createUser(String name, String lastName, String email, String profileName) {
 		Profile userProfile = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
@@ -242,7 +242,8 @@ public with sharing class DataMaker {
 			Order__c = order,
 			Amount__c = amount,
 			Percent__c = percent,
-			Term__c = term
+			Term__c = term,
+			IsAllowedPaymentByGateway__c = false
 		);
 	}
 
@@ -265,7 +266,8 @@ public with sharing class DataMaker {
 			Product2Id = productId,
 			TQUnitPrice__c = tqPrice,
 			FQUnitPrice__c = fqPrice,
-			UnitPrice = unitPrice
+			UnitPrice = unitPrice,
+			IsActive = true
 		);
 	}
 	public ClientOffer__c createClientOffer(Id promotionMasterId, Id opportunityId, Decimal cost ){
@@ -280,7 +282,8 @@ public with sharing class DataMaker {
 		return new CoBuyer__c(
 			Customer__c = accountId,
 			Opportunity__c = opportunityId,
-			Priority__c = priorirty
+			Priority__c = priorirty,
+			Status__c = 'Active'
 		);
 	}
 
@@ -367,6 +370,16 @@ public with sharing class DataMaker {
 		return new InvoiceSetting__c(
 			DueDate__c = 5,
 			CancelReasonByOppCancel__c = 'Auto Cancelled by System'
+		);
+	}
+
+	public OpportunityAccountChangeLog__c createOpportunityAccountChangeLog(Id previousOpportunityId , Id currentOpportunityId, Id previousAccountId, Id currentAccountId){
+		return new OpportunityAccountChangeLog__c(
+			PreviousAccount__c = previousAccountId,
+			CurrentAccount__c = currentAccountId,
+			PreviousOpportunity__c = previousOpportunityId,
+			CurrentOpportunity__c = currentOpportunityId,
+			ChangedDatetime__c = Datetime.now()
 		);
 	}
 

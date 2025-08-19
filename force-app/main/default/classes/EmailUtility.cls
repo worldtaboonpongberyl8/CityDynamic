@@ -1,4 +1,4 @@
-public with sharing class EmailUtility {
+public without sharing class EmailUtility {
 	public static EmailUtility instance;
 	public static EmailUtility getInstance() {
 		if (instance == null) {
@@ -84,17 +84,18 @@ public with sharing class EmailUtility {
 
 	// ใช้คู่กับ fakeSendEmails() เพื่อทำการส่ง email จริงๆ แบบไม่ทำการ count soql เพิ่ม
 	// คำสั่ง renderStoredEmailTemplate(emailTemplateId, null, recordId); ไม่ต้อง setTargetObjectId() มันก็จะไม่ส่ง mail ไปหา Contact แต่จะมีการ count query เพิ่ม
-	public Messaging.SingleEmailMessage getSingleEmailFromTempEmail(Messaging.SingleEmailMessage tempEmail){
+	public Messaging.SingleEmailMessage getSingleEmailFromTempEmail(Messaging.SingleEmailMessage tempEmail,List<Id> ctVersionIds){
 		Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
 		email.setToAddresses(tempEmail.getToAddresses());
+		email.setCcAddresses(tempEmail.getCcAddresses());
 		email.setSubject(tempEmail.getSubject());
 		email.setOrgWideEmailAddressId(tempEmail.getOrgWideEmailAddressId());
 
 		if(String.isNotEmpty(tempEmail.getHTMLBody())){
-			tempEmail.setHTMLBody(tempEmail.getHTMLBody());
+			email.setHTMLBody(tempEmail.getHTMLBody());
 		}
-		else if(String.isNotEmpty(tempEmail.getPlainTextBody())){
-			tempEmail.setPlainTextBody(tempEmail.getPlainTextBody());
+		if(String.isNotEmpty(tempEmail.getPlainTextBody())){
+			email.setPlainTextBody(tempEmail.getPlainTextBody());
 		}
 
 		if(tempEmail.getFileAttachments() != null && !tempEmail.getFileAttachments().isEmpty()){
@@ -102,7 +103,7 @@ public with sharing class EmailUtility {
 		}
 		// email.setEntityAttachments(tempEmail.entityattachments); // คำสั่งนี้ count query เพิ่ม
 		// email.setEntityAttachments(tempEmail.getEntityAttachments()); // คำสั่งนี้ count query เพิ่ม
-
+		email.setEntityAttachments(ctVersionIds);
 		return email;
 	}
 }

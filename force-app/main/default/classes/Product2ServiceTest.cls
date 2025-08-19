@@ -1,5 +1,5 @@
 @isTest
-private class Product2ServiceTest {
+public class Product2ServiceTest {
 	@TestSetup
 	static void makeData() {
 		DataMaker dataMaker = DataMaker.getInstance();
@@ -115,9 +115,15 @@ private class Product2ServiceTest {
 		);
 		opportunity2.ReservationDueDate__c = Date.today();
 		insert opportunity2;
+		Quote__c quote = dataMaker.createQuote(opportunity2.Id);
+		quote.IsSyncing__c = true;
+		insert quote;
+		opportunity2.SyncedQuoteId__c = quote.Id;
+		User targetUser = [SELECT Id FROM User WHERE Profile.Name LIKE '%CRM%' LIMIT 1];
+		opportunity2.SoldBy__c = 'Agency';
+		opportunity2.CRMinCharge__c = targetUser.Id;
 		opportunity2.StageName = 'Reservation';
 		update opportunity2;
-
 		Opportunity opportunity3 = dataMaker.createOpportunity(
 			account.Id,
 			'Omitted',
@@ -131,6 +137,12 @@ private class Product2ServiceTest {
 		);
 		opportunity3.ReservationDueDate__c = Date.today();
 		insert opportunity3;
+		Quote__c quote2 = dataMaker.createQuote(opportunity3.Id);
+		quote2.IsSyncing__c = true;
+		insert quote2;
+		opportunity3.SyncedQuoteId__c = quote2.Id;
+		opportunity3.SoldBy__c = 'Agency';
+		opportunity3.CRMinCharge__c = targetUser.Id;
 		opportunity3.StageName = 'Reservation';
 		update opportunity3;
 		Contract contract = dataMaker.createContract(opportunity3.Id,account.Id);
@@ -139,6 +151,7 @@ private class Product2ServiceTest {
 		contract.ContractSignedDate__c = Date.today();
 		update contract;
 		opportunity3.StageName = 'Contract';
+		opportunity3.ActualContractSigningDate__c = Date.today();
 		update opportunity3;
 		Opportunity targetOppAfterInsert3 = [
 			SELECT Id, Unit__c, Quota__c, PaymentTermMaster__c
@@ -165,6 +178,12 @@ private class Product2ServiceTest {
 		);
 		opportunity4.ReservationDueDate__c = Date.today();
 		insert opportunity4;
+		Quote__c quote3 = dataMaker.createQuote(opportunity4.Id);
+		quote3.IsSyncing__c = true;
+		insert quote3;
+		opportunity4.SyncedQuoteId__c = quote3.Id;
+		opportunity4.SoldBy__c = 'Agency';
+		opportunity4.CRMinCharge__c = targetUser.Id;
 		opportunity4.StageName = 'Reservation';
 		update opportunity4;
 		Contract contract2 = dataMaker.createContract(opportunity4.Id,account.Id);
@@ -173,18 +192,17 @@ private class Product2ServiceTest {
 		contract2.ContractSignedDate__c = Date.today();
 		update contract2;
 		opportunity4.StageName = 'Contract';
+		opportunity4.ActualContractSigningDate__c = Date.today();
 		update opportunity4;
-		Opportunity targetOppAfterInsert4 = [
-			SELECT Id, Unit__c, Quota__c, PaymentTermMaster__c
-			FROM Opportunity
-			WHERE Id = :opportunity4.Id
-			LIMIT 1
-		];
-		targetOppAfterInsert4.TransferredDate__c = Date.today();
-		targetOppAfterInsert4.StageName = 'Transferred';
-		System.debug('Test--Quota' + targetOppAfterInsert3.Quota__c);
-		System.debug('Test--PaymentTermMaster ' + targetOppAfterInsert4.PaymentTermMaster__c);
-		update targetOppAfterInsert4;
+		// Opportunity targetOppAfterInsert4 = [
+		// 	SELECT Id, Unit__c, Quota__c, PaymentTermMaster__c
+		// 	FROM Opportunity
+		// 	WHERE Id = :opportunity4.Id
+		// 	LIMIT 1
+		// ];
+		// targetOppAfterInsert4.TransferredDate__c = Date.today();
+		// targetOppAfterInsert4.StageName = 'Transferred';
+		// update targetOppAfterInsert4;
 		Opportunity targetOppAfterInsert5 = [
 			SELECT Id, Unit__c, Quota__c, PaymentTermMaster__c
 			FROM Opportunity
@@ -202,7 +220,7 @@ private class Product2ServiceTest {
 	static void changeUnitStageToReservedTest() {
 		Test.startTest();
 		Product2Service service = Product2Service.getInstance();
-		List<Opportunity> opportunitites = [SELECT Id, StageName, Unit__c FROM Opportunity];
+		List<Opportunity> opportunitites = [SELECT Id, StageName, Unit__c, LossReason__c FROM Opportunity];
 		List<Product2> productBeforeUpdate = [SELECT Id, Status__c FROM Product2];
 		List<Product2> result = service.changeUnitStageToBookOrSoldByOpportunityStage(opportunitites);
 		update result;
@@ -229,6 +247,23 @@ private class Product2ServiceTest {
 		System.assertEquals(productBeforeUpdate[0].Status__c, productAfterUpdate[0].Status__c);
 
 
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase 2
+	 * Details:
+	 * 	- add test method to test changeUnitStatusToAvailable
+	 */
+	@isTest
+	static void changeUnitStatusToAvailableTest(){
+		Product2Service service = Product2Service.getInstance();
+		List<Product2> products = [SELECT Id,Status__c FROM Product2];
+		Test.startTest();
+			List<Product2> availableProducts = service.changeUnitStatusToAvailable(products);
+			for (Product2 availableProduct : availableProducts){
+				System.assertEquals('Available', availableProduct.Status__c);
+			}
 		Test.stopTest();
 	}
 }

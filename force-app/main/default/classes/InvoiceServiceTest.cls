@@ -754,4 +754,44 @@ public with sharing class InvoiceServiceTest {
 			System.assertEquals(invoiceMapById.get(invoiceResult.Id).InvoiceNo__c, invoiceResult.InvoiceNo__c);
 		}
 	}
+
+	@isTest
+	static void createInvoiceAndLineItemTest(){
+		// Get Opportunity 1 (linked to 'Test Product')
+        Opportunity opp = [
+            SELECT Id
+            FROM Opportunity
+            WHERE Unit__r.Name = 'Test Product'
+            LIMIT 1
+        ];
+
+        Test.startTest();
+        InvoiceService service = InvoiceService.getInstance();
+        service.createInvoiceAndLineItem(
+            opp.Id,
+            Date.today(),
+            Date.today().addDays(30),
+            'Reservation' // Term exists and has remaining > 0
+        );
+        Test.stopTest();
+
+        // ✅ Assertions
+
+        List<Invoice__c> invoices = [
+            SELECT Id, Opportunity__c, InvoiceDate__c, DueDate__c
+            FROM Invoice__c
+            WHERE Opportunity__c = :opp.Id
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        System.assertEquals(1, invoices.size(), 'Should create 1 Invoice');
+
+        List<InvoiceLineItem__c> lineItems = [
+            SELECT Id, Invoice__c, OpportunityPayment__c, Amount__c, DueDate__c
+            FROM InvoiceLineItem__c
+            WHERE Invoice__c = :invoices[0].Id
+        ];
+        System.assertEquals(1, lineItems.size(), 'Should create 1 InvoiceLineItem');
+        System.assertEquals(50000, lineItems[0].Amount__c, 'Amount__c should match the Reservation payment amount');
+	}
 }

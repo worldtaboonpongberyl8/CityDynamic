@@ -1,5 +1,7 @@
 import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { CloseActionScreenEvent } from 'lightning/actions';
 import getLanguagesByMappingType from '@salesforce/apex/DocumentGeneratorController.getLanguages';
 
 export default class ReservationGenerator extends LightningElement {

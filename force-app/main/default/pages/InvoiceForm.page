@@ -1,0 +1,34 @@
+<apex:page renderAs="pdf" applyHtmlTag="false" applyBodyTag="false" showHeader="false" standardStylesheets="false" controller="InvoiceFormController">
+    <header>
+		<apex:stylesheet value="{!$Resource.formStyle}" />
+        <apex:stylesheet value="{!$Resource.invoiceFormStyle}" />
+    </header>
+
+	<!-- variable -->
+	<apex:variable var="ctrl" value="{!instanceCtrl}" />
+	<apex:variable var="invoice" value="{!ctrl.invoice}" />
+	<apex:variable var="oppDetail" value="{!invoice.oppDetail}" />
+
+    <body style="font-family: 'Arial Unicode MS' !important;">
+		<!-- header -->
+		<!-- header -->
+		<c:HeaderAndFooterInPDFForm type="header">
+			<img src="{!oppDetail.projectLogoUrl}" height="120px" />
+		</c:HeaderAndFooterInPDFForm>
+
+		<!-- footer -->
+        <c:HeaderAndFooterInPDFForm type="footer">
+            <div class="footer-data">
+                <p class="footer-company-name">{!oppDetail.companyName}</p>
+                <p>{!oppDetail.companyAddress}</p>
+                <p>Tel: {!oppDetail.companyPhone} | Tax Id No. {!oppDetail.companyTaxID}</p>
+            </div>
+        </c:HeaderAndFooterInPDFForm>
+
+		<!-- content -->
+        <c:InvoiceHeader instanceCtrl="{!ctrl}" />
+        <c:InvoiceDetail instanceCtrl="{!ctrl}" />
+        <c:InvoiceDeveloperAccount instanceCtrl="{!ctrl}" />
+        <c:InvoiceFooter instanceCtrl="{!ctrl}" />
+    </body>
+</apex:page>

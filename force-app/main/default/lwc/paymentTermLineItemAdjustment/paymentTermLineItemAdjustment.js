@@ -140,7 +140,20 @@ export default class PaymentTermLineItemAdjustment extends LightningElement {
 
         this.paymentTermLineItemData = [...this.paymentTermLineItemData];
     }
-
+    /* */
+    handleCheckboxChange(event) {
+        const term = event.target.dataset.id;
+        const isChecked = event.target.checked;
+        this.paymentTermLineItemData = this.paymentTermLineItemData.map((item) => {
+            if (item.term === term) {
+                return { ...item, isAllowedPayment: isChecked };
+            }
+            return item;
+        });
+        
+        this.paymentTermLineItemData = [...this.paymentTermLineItemData];
+    }
+    /* */
     handleFetchData(){
         if (this.isNewPaymentTerm){
             this.generatePaymentTermLineItemDataWrapper()
@@ -187,6 +200,7 @@ export default class PaymentTermLineItemAdjustment extends LightningElement {
                 term: eachItem.Term__c,
                 amount: eachItem.Amount__c,
                 percent: eachItem.Percent__c,
+                isAllowedPayment: eachItem.IsAllowedPaymentByGateway__c,
                 paymentTermMasterId : eachItem.PaymentTermMaster__c,
                 isNew: false
             };
@@ -218,6 +232,7 @@ export default class PaymentTermLineItemAdjustment extends LightningElement {
             isNew: true,
             isTransfer: false,
             isInstallment: false,
+            isAllowedPayment: false,
             paymentTermMasterId : this.paymentTermRecord.Id
         });
         // add Installment term (if any)
@@ -231,6 +246,7 @@ export default class PaymentTermLineItemAdjustment extends LightningElement {
                 isNew: true,
                 isTransfer: false,
                 isInstallment: true,
+                isAllowedPayment: false,
                 paymentTermMasterId : this.paymentTermRecord.Id
             });
         }
@@ -244,6 +260,7 @@ export default class PaymentTermLineItemAdjustment extends LightningElement {
             isNew: true,
             isTransfer: true,
             isInstallment: false,
+            isAllowedPayment: false,
             paymentTermMasterId : this.paymentTermRecord.Id
         });
         this.paymentTermLineItemData = [...targetLineItemData];

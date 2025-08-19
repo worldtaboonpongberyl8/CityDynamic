@@ -1,0 +1,110 @@
+<template>
+	<template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+	<!-- 1️⃣ Centered Action Picker (initial state) -->
+	<template if:false={isActionSelected}>
+		<div class="slds-align_absolute-center" style="height: 70vh;">
+			<div class="custom-combobox">
+				<p class="slds-m-bottom_small" style="font-size: x-large;">What would you like to do?</p>
+				<lightning-combobox
+					name="action"
+					value={selectedAction}
+					placeholder="Select Action"
+					options={actionOptions}
+					onchange={handleActionChange}>
+				</lightning-combobox>
+			</div>
+		</div>
+	</template>
+
+	<!-- 2️⃣ Top-right Action Picker (after selection) -->
+	<template if:true={isActionSelected}>
+		<lightning-layout class="slds-m-bottom_small">
+			<!-- Left: Label -->
+			<lightning-layout-item class="slds-text-title_bold" style="min-width: auto;">
+				<label class="slds-form-element__label slds-truncate">Action: </label>
+			</lightning-layout-item>
+			<!-- Right: Combobox -->
+			<lightning-layout-item style="min-width: 160px;" class="custom-combobox">
+				<lightning-combobox
+					name="action"
+					value={selectedAction}
+					placeholder="Select Action"
+					options={actionOptions}
+					variant="label-hidden"
+					onchange={handleActionChange}>
+				</lightning-combobox>
+			</lightning-layout-item>
+		</lightning-layout>
+	</template>
+
+    <template if:true={isActionSelected}>
+		<template if:true={showCard}>
+			<lightning-card title={sectionName} class="fade-in outter-fade-wrapper slds-p-around_medium">
+				<!-- Select Account -->
+				<lightning-layout class="slds-p-around_small">
+					<!-- Left: Label -->
+					<lightning-layout-item class="slds-text-title_bold" style="min-width: auto;">
+						<label class="slds-form-element__label slds-truncate">Select Account: </label>
+					</lightning-layout-item>
+					<!-- Right: Record Picker -->
+					<lightning-layout-item style="min-width: 500px;" class="custom-picker">
+						<lightning-record-picker
+							label="Account"
+							variant="label-hidden"
+							placeholder="Select Account"
+							object-api-name="Account"
+							display-info={accountDisplayInfo}
+							onchange={handleAccountChange}
+							data-id="accountPicker">
+						</lightning-record-picker>
+					</lightning-layout-item>
+				</lightning-layout>
+
+				<!-- Child Detail -->
+				<template if:true={showChildren}>
+					<div class="slds-grid slds-wrap fade-in fade-wrapper">
+						<!-- Left: Current Opportunity -->
+						<div class="slds-col slds-size_1-of-2 slds-p-around_small">
+							<c-source-opportunity-to-be-moved
+								account-id={accountId}
+								selected-action={selectedAction}>
+							</c-source-opportunity-to-be-moved>
+						</div>
+						<!-- Right: New Opportunity -->
+						<div class="slds-col slds-size_1-of-2 slds-p-around_small">
+							<c-target-opportunity-to-move-to
+								account-id={accountId}
+								selected-action={selectedAction}>
+							</c-target-opportunity-to-move-to>
+						</div>
+					</div>
+
+					<div class="slds-align_absolute-center slds-m-vertical_medium">
+						<lightning-button
+							label="Cancel"
+							variant="neutral"
+							class="slds-m-right_small"
+							onclick={handleCancel}>
+						</lightning-button>
+						<lightning-button
+							label={actionButtonLabel}
+							variant="brand"
+							onclick={handleActionComplete}>
+						</lightning-button>
+					</div>
+					<template if:true={hasValidationErrors}>
+						<div class="slds-box slds-theme_error slds-m-around_medium">
+							<ul class="slds-list_dotted">
+								<template for:each={validationErrors} for:item="err">
+									<li key={err}>{err}</li>
+								</template>
+							</ul>
+						</div>
+					</template>
+				</template>
+			</lightning-card>
+		</template>
+    </template>
+</template>

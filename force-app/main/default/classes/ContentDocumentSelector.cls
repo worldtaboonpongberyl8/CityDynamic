@@ -1,4 +1,4 @@
-public with sharing class ContentDocumentSelector {
+public without sharing class ContentDocumentSelector {
 	public ContentDocumentSelector() {
 
 	}
@@ -10,11 +10,11 @@ public with sharing class ContentDocumentSelector {
 		}
 		return instance;
 	}
-	
+
 	public List<ContentDocument> getByIdSet(Set<Id> contentDocumentIdSet) {
 		return [
 			SELECT Id
-			FROM ContentDocument 
+			FROM ContentDocument
 			WHERE Id IN: contentDocumentIdSet
 		];
 	}

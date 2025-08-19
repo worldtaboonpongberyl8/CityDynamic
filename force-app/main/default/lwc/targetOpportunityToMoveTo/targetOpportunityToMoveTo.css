@@ -1,0 +1,69 @@
+.section-header {
+    background-color: #f3f2f2;
+    border-radius: 0.25rem;
+}
+
+.section-header {
+	color: black;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.custom-hr {
+    width: 95%; /* adjust as needed */
+    margin: 0 auto; /* center it horizontally */
+}
+
+.bold-line {
+    border: none;
+    border-top: 2px solid #000000; /* black, and bold (2px) */
+    width: 100%; /* or set a custom width if needed */
+}
+
+.green-bullets {
+    color: #2e844a; /* SLDS green */
+}
+
+.fade-in {
+	animation: fadeInScale 0.4s ease-in-out forwards;
+	opacity: 0;
+	transform: translateY(10px);
+}
+
+.fade-out {
+	animation: fadeOutScale 0.4s ease-in-out forwards;
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@keyframes fadeInScale {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeOutScale {
+	to {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+}
+
+.custom-input-wrapper {
+	display: flex;
+    align-items: center;
+	justify-content: end;
+}
+
+.with-icon input {
+    padding-right: 1.5rem;
+}
+
+.promotion-summary-list > div::before {
+	content: '•';
+	color: #444;
+	display: inline-block;
+	width: 1em;
+	margin-left: -1em;
+}

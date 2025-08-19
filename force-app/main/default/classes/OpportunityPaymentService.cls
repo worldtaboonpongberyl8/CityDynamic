@@ -1,4 +1,4 @@
-public with sharing class OpportunityPaymentService {
+public class OpportunityPaymentService {
 	public static OpportunityPaymentService instance;
 
 	public static OpportunityPaymentService getInstance() {
@@ -201,6 +201,7 @@ public with sharing class OpportunityPaymentService {
 			oppPayment.Amount__c = wrapper.amount;
 			oppPayment.DueDate__c = wrapper.dueDate;
 			oppPayment.Term__c = wrapper.term;
+			oppPayment.IsAllowedPaymentByGateway__c = wrapper.isAllowedPayment;
 			oppPayment.IsMasterData__c = true;
 			oppPayment.Name = String.valueOf(wrapper.order);
 			if (wrapper.isNewRecord) {
@@ -417,6 +418,54 @@ public with sharing class OpportunityPaymentService {
 		return oppPaymentsMapByOppId;
 	}
 
+	/**
+	 * Phase2
+	* Details:
+	* - add method to check outstanding payment for wach Opp
+	*/
+	public List<Map<Boolean, OpportunityPayment__c>> adjustOpportunityPaymentForPortal(List<OpportunityPayment__c> oppPayments) {
+		List<Map<Boolean, OpportunityPayment__c>> oppPaymentsMapList = new List<Map<Boolean, OpportunityPayment__c>>();
+		Boolean unpaidFound = false;
+
+		for (OpportunityPayment__c oppPayment : oppPayments) {
+			if (oppPayment.IsAllowedPaymentByGateway__c) {
+				String status = oppPayment.PaymentStatus__c != null ? oppPayment.PaymentStatus__c.trim().toLowerCase() : '';
+				Map<Boolean, OpportunityPayment__c> paymentMap = new Map<Boolean, OpportunityPayment__c>();
+
+				if (unpaidFound) {
+					paymentMap.put(false, oppPayment);
+				} else if (status == 'fully paid') {
+					paymentMap.put(false, oppPayment);
+				} else {
+					paymentMap.put(true, oppPayment);
+					unpaidFound = true;
+				}
+
+				oppPaymentsMapList.add(paymentMap);
+			}
+		}
+		return oppPaymentsMapList;
+	}
+
+	public Map<Id, Map<String,String>> getOppPaymentStatusMapByOppId(List<Opportunity> opportunities){
+		OpportunityPaymentSelector selector = OpportunityPaymentSelector.getInstance();
+		Map<Id, Map<String,String>> oppPaymentStatusMapByOppId = new Map<Id, Map<String,String>>();
+        Set<Id> oppIds = new Set<Id>();
+        for (Opportunity opportunity : opportunities){
+            oppIds.add(opportunity.Id);
+        }
+        Map<Id, List<OpportunityPayment__c>> opportunityPaymentMapById = selector.getOpportunityPaymentsMapByOppId(oppIds);
+        for(Opportunity opportunity : opportunities){
+            List<OpportunityPayment__c> oppPaymentForCheckStatus = opportunityPaymentMapById.get(opportunity.Id) == null ? new List<OpportunityPayment__c>() : opportunityPaymentMapById.get(opportunity.Id);
+			Map<String,String> oppPaymentStatusMapById = new Map<String,String>();
+            for(OpportunityPayment__c oppPayment : oppPaymentForCheckStatus){
+                oppPaymentStatusMapById.put(oppPayment.Term__c, oppPayment.PaymentStatus__c);
+            }
+			oppPaymentStatusMapByOppId.put(opportunity.Id,oppPaymentStatusMapById);
+        }
+        return oppPaymentStatusMapByOppId;
+	}
+
 	// ----- Start Private Service -----
 	private List<OpportunityPayment__c> calculateReservationAmount(
 		List<OpportunityPayment__c> reservationOppPayments,
@@ -429,7 +478,35 @@ public with sharing class OpportunityPaymentService {
 		}
 		return adjustReservationAmountList;
 	}
+/**
+	 * Phase2
+	* Details:
+	* - หา Remaining Amount จาก OpportunityPayment
+	*/
+	public Map<Id, Decimal> findOpportunityPaymentRemainingAmountMap(Set<Id> opportunityIds) {
+		Map<Id, Decimal> remainingAmountMap = new Map<Id, Decimal>();
+		if (opportunityIds == null || opportunityIds.isEmpty()) {
+			return remainingAmountMap;
+		}
+		Map<Id, List<OpportunityPayment__c>> oppPaymentsMapByOppId =
+			OpportunityPaymentSelector.getInstance().getOpportunityPaymentsMapByOppId(opportunityIds);
+		for (Id oppId : opportunityIds) {
+			Decimal remainingAmount = 0;
+			List<OpportunityPayment__c> oppPayments = oppPaymentsMapByOppId.get(oppId);
 
+			if (oppPayments != null) {
+				for (OpportunityPayment__c oppPayment : oppPayments) {
+					String status = oppPayment.PaymentStatus__c != null ? oppPayment.PaymentStatus__c.trim().toLowerCase() : '';
+
+					if (status != 'fully paid' && (status == 'overdue' || status == 'partially paid')) {
+						remainingAmount += oppPayment.Remaining__c != null ? oppPayment.Remaining__c : 0;
+					}
+				}
+			}
+			remainingAmountMap.put(oppId, remainingAmount);
+		}
+		return remainingAmountMap;
+	}
 	/**
 	 * Phase: 1
 	* UAT Issue: DF-UAT-027
@@ -521,6 +598,7 @@ public with sharing class OpportunityPaymentService {
 			// Unit
 			// Project
 			IsMasterData__c = true,
+			IsAllowedPaymentByGateway__c = true,
 			PaymentTermMaster__c = paymentTermMasterId
 		);
 		oppPayments.add(oppFirstRecord);
@@ -534,6 +612,7 @@ public with sharing class OpportunityPaymentService {
 			oppPayment.ProjectName__c = targetOpp.Project__r.Name;
 			oppPayment.IsMasterData__c = true;
 			oppPayment.PaymentTermMaster__c = paymentTermMasterId;
+			oppPayment.IsAllowedPaymentByGateway__c = payment.IsAllowedPaymentByGateway__c;
 			// Unit
 			// Project
 			oppPayments.add(oppPayment);
@@ -550,6 +629,7 @@ public with sharing class OpportunityPaymentService {
 		public String term;
 		public String id;
 		public String oppId;
+		public Boolean isAllowedPayment;
 		public Boolean isNewRecord;
 	}
 	// ----- End Wrapper Class -----

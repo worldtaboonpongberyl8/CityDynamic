@@ -243,4 +243,27 @@ public with sharing class OpportunityPaymentServiceTest {
 		System.assertEquals(0, resultOppPaymentsCancel[0].ReceivedAmount__c);
 		Test.stopTest();
 	}
+	@isTest
+	static void adjustOpportunityPaymentForPortalTest(){
+		Test.startTest();
+		Product2 product = [SELECT Id,Name FROM Product2 WHERE ProductCode = 'PP01'];
+		Opportunity opp = [SELECT Id FROM Opportunity WHERE Unit__c =: product.Id];
+		List<Opportunity> results = [SELECT Id , UnitPrice__c , NetPrice__c,Unit__c,ReservationDueDate__c,PaymentTermMaster__c,Project__c FROM Opportunity WHERE Id =: opp.Id];
+		System.debug('Result: ' + results);
+		OpportunityPaymentService serviceOppPayment = OpportunityPaymentService.getInstance();
+		List<OpportunityPayment__c> oppPayments = serviceOppPayment.createOpportunityPayments(results);
+		List<Map<Boolean, OpportunityPayment__c>> oppPaymentsAdjustment = serviceOppPayment.adjustOpportunityPaymentForPortal(oppPayments);
+		Test.stopTest();
+	}
+	@isTest
+	static void findOpportunityPaymentRemainingAmountMapTest(){
+		Test.startTest();
+		Product2 product = [SELECT Id,Name FROM Product2 WHERE ProductCode = 'PP01'];
+		Opportunity opp = [SELECT Id FROM Opportunity WHERE Unit__c =: product.Id];
+		List<Opportunity> results = [SELECT Id , UnitPrice__c , NetPrice__c,Unit__c,ReservationDueDate__c,PaymentTermMaster__c,Project__c FROM Opportunity WHERE Id =: opp.Id];
+		System.debug('Result: ' + results);
+		OpportunityPaymentService serviceOppPayment = OpportunityPaymentService.getInstance();
+		Map<Id, Decimal> oppPaymentsAdjustment = serviceOppPayment.findOpportunityPaymentRemainingAmountMap(new Set<Id>{opp.Id});
+		Test.stopTest();
+	}
 }

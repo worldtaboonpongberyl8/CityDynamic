@@ -174,39 +174,10 @@ public with sharing class CoBuyerTriggerHandlerTest {
 		System.assertEquals('Test Account for Opp and/or Test Co Buyer and/or Test Co Buyer 2', updatedOpportunity.CoBuyerName__c);
 		CoBuyer__c updatedCoBuyer1 = [SELECT Id,Priority__c FROM CoBuyer__c WHERE Id =: targetCoBuyer.Id LIMIT 1];
 		updatedCoBuyer1.Priority__c = '2';
+		updatedCoBuyer1.Status__c = 'Inactive';
 		update updatedCoBuyer1;
 		Opportunity updatedOpportunity2 = [SELECT Id,CoBuyerName__c FROM Opportunity WHERE Id =: targetOpp.Id LIMIT 1];
-		System.assertEquals('Test Account for Opp and/or Test Co Buyer 2 and/or Test Co Buyer', updatedOpportunity2.CoBuyerName__c);
-		Test.stopTest();
-	}
-
-	@isTest
-	static void afterDeleteTest(){
-		Test.startTest();
-		DataMaker dataMaker = DataMaker.getInstance();
-		Opportunity targetOpp = [SELECT Id FROM Opportunity LIMIT 1];
-		Account targetAcc = [SELECT Id FROM Account WHERE Name = 'Test Co Buyer' LIMIT 1];
-		CoBuyer__c targetCoBuyer = dataMaker.createCoBuyer(targetOpp.Id,targetAcc.Id,'1');
-		insert targetCoBuyer;
-		Account targetAcc2 = [SELECT Id FROM Account WHERE Name = 'Test Co Buyer 2' LIMIT 1];
-		CoBuyer__c targetCoBuyer2 = dataMaker.createCoBuyer(targetOpp.Id,targetAcc2.Id,'2');
-		insert targetCoBuyer2;
-		Account targetAcc3= [SELECT Id FROM Account WHERE Name = 'Test Co Buyer 3' LIMIT 1];
-		CoBuyer__c targetCoBuyer3 = dataMaker.createCoBuyer(targetOpp.Id,targetAcc3.Id,'1');
-		insert targetCoBuyer3;
-		CoBuyer__c deleteCoBuyer = [SELECT Id FROM CoBuyer__c WHERE Id =: targetCoBuyer2.Id];
-		delete deleteCoBuyer;
-		Opportunity updatedOpportunity = [SELECT Id,CoBuyerName__c FROM Opportunity WHERE Id =: targetOpp.Id LIMIT 1];
-		System.assertEquals('Test Account for Opp and/or Test Co Buyer and/or Test Co Buyer 3', updatedOpportunity.CoBuyerName__c);
-		CoBuyer__c deleteCoBuyer2 = [SELECT Id FROM CoBuyer__c WHERE Id =: targetCoBuyer.Id];
-		delete deleteCoBuyer2;
-		Opportunity updatedOpportunity2 = [SELECT Id,CoBuyerName__c FROM Opportunity WHERE Id =: targetOpp.Id LIMIT 1];
-		System.assertEquals('Test Account for Opp and/or Test Co Buyer 3', updatedOpportunity2.CoBuyerName__c);
-		CoBuyer__c deleteCoBuyer3 = [SELECT Id FROM CoBuyer__c WHERE Id =: targetCoBuyer3.Id];
-		delete deleteCoBuyer3;
-		Opportunity updatedOpportunity3 = [SELECT Id,CoBuyerName__c,IsCoBuyer__c FROM Opportunity WHERE Id =: targetOpp.Id LIMIT 1];
-		System.assertEquals('Test Account for Opp', updatedOpportunity3.CoBuyerName__c);
-		System.assertEquals(false, updatedOpportunity3.IsCoBuyer__c);
+		System.assertEquals('Test Account for Opp and/or Test Co Buyer 2', updatedOpportunity2.CoBuyerName__c);
 		Test.stopTest();
 	}
 

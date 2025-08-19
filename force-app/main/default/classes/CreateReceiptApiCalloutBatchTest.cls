@@ -6,19 +6,19 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
 
 	public class SuccessReceiptMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateReceiptApiCallout.RequestDataModel>.class);
-            List<CreateReceiptApiCallout.RequestDataModel> requestData = ( List<CreateReceiptApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 
-            List<CreateReceiptApiCallout.ReceiptLineItemResponse> responseReceiptLineItemData = new List<CreateReceiptApiCallout.ReceiptLineItemResponse>();
-			CreateReceiptApiCallout.ReceiptLineItemResponse responseReceiptLineItem = new CreateReceiptApiCallout.ReceiptLineItemResponse();
+            List<PojjamanDataModel.FNGLDocLineItemResponse> responseReceiptLineItemData = new List<PojjamanDataModel.FNGLDocLineItemResponse>();
+			PojjamanDataModel.FNGLDocLineItemResponse responseReceiptLineItem = new PojjamanDataModel.FNGLDocLineItemResponse();
             responseReceiptLineItem.Message = 'Success';
             responseReceiptLineItem.ResponseCode = 'SC';
             responseReceiptLineItem.SFDocLineId = targetSuccessReceiptLienItemId;
             responseReceiptLineItem.Timestamp = System.now();
             responseReceiptLineItemData.add(responseReceiptLineItem);
 
-            List<CreateReceiptApiCallout.PaymentMethodResponse> responsePaymentMethodData = new List<CreateReceiptApiCallout.PaymentMethodResponse>();
-			CreateReceiptApiCallout.PaymentMethodResponse responsePaymentMethod = new CreateReceiptApiCallout.PaymentMethodResponse();
+            List<PojjamanDataModel.FNGLPaymentMethodResponse> responsePaymentMethodData = new List<PojjamanDataModel.FNGLPaymentMethodResponse>();
+			PojjamanDataModel.FNGLPaymentMethodResponse responsePaymentMethod = new PojjamanDataModel.FNGLPaymentMethodResponse();
             responsePaymentMethod.Message = 'Success';
             responsePaymentMethod.ResponseCode = 'SC';
             responsePaymentMethod.ResponseId = 123456;
@@ -27,8 +27,8 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
             responsePaymentMethodData.add(responsePaymentMethod);
 
             // START MOCK RECEIPT RESPONSE
-            List<CreateReceiptApiCallout.ReceiptResponse> responseReceiptData = new List<CreateReceiptApiCallout.ReceiptResponse>();
-			CreateReceiptApiCallout.ReceiptResponse receiptResponse = new CreateReceiptApiCallout.ReceiptResponse();
+            List<PojjamanDataModel.FNGLDocResponse> responseReceiptData = new List<PojjamanDataModel.FNGLDocResponse>();
+			PojjamanDataModel.FNGLDocResponse receiptResponse = new PojjamanDataModel.FNGLDocResponse();
             receiptResponse.SFDocId = targetSuccessReceiptId;
             receiptResponse.ResponseId = 123456;
             receiptResponse.ResponseCode = 'SC';
@@ -166,29 +166,29 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
 		PaymentMethod__c targetPaymentMethod = [SELECT Id,ResponseMessage__c,ResponseCode__c FROM PaymentMethod__c WHERE Id =: receiptMethod.Id LIMIT 1];
 		System.assertEquals('Success', targetPaymentReceipt.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentReceipt.ResponseCode__c);
-       
+
         System.assertEquals('Success', targetPaymentReceiptLineItem.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentReceiptLineItem.ResponseCode__c);
-       
+
         System.assertEquals('Success', targetPaymentMethod.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentMethod.ResponseCode__c);
-       
+
     }
 	public class SuccessReceiptCancelMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateReceiptApiCallout.RequestDataModel>.class);
-            List<CreateReceiptApiCallout.RequestDataModel> requestData = ( List<CreateReceiptApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 
-            List<CreateReceiptApiCallout.ReceiptLineItemResponse> responseReceiptLineItemData = new List<CreateReceiptApiCallout.ReceiptLineItemResponse>();
-			CreateReceiptApiCallout.ReceiptLineItemResponse responseReceiptLineItem = new CreateReceiptApiCallout.ReceiptLineItemResponse();
+            List<PojjamanDataModel.FNGLDocLineItemResponse> responseReceiptLineItemData = new List<PojjamanDataModel.FNGLDocLineItemResponse>();
+			PojjamanDataModel.FNGLDocLineItemResponse responseReceiptLineItem = new PojjamanDataModel.FNGLDocLineItemResponse();
             responseReceiptLineItem.Message = 'Success';
             responseReceiptLineItem.ResponseCode = 'SC';
             responseReceiptLineItem.SFDocLineId = targetSuccessReceiptLienItemId;
             responseReceiptLineItem.Timestamp = System.now();
             responseReceiptLineItemData.add(responseReceiptLineItem);
 
-            List<CreateReceiptApiCallout.PaymentMethodResponse> responsePaymentMethodData = new List<CreateReceiptApiCallout.PaymentMethodResponse>();
-			CreateReceiptApiCallout.PaymentMethodResponse responsePaymentMethod = new CreateReceiptApiCallout.PaymentMethodResponse();
+            List<PojjamanDataModel.FNGLPaymentMethodResponse> responsePaymentMethodData = new List<PojjamanDataModel.FNGLPaymentMethodResponse>();
+			PojjamanDataModel.FNGLPaymentMethodResponse responsePaymentMethod = new PojjamanDataModel.FNGLPaymentMethodResponse();
             responsePaymentMethod.Message = 'Success';
             responsePaymentMethod.ResponseCode = 'SC';
             responsePaymentMethod.ResponseId = 123456;
@@ -197,8 +197,8 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
             responsePaymentMethodData.add(responsePaymentMethod);
 
             // START MOCK RECEIPT RESPONSE
-            List<CreateReceiptApiCallout.ReceiptResponse> responseReceiptData = new List<CreateReceiptApiCallout.ReceiptResponse>();
-			CreateReceiptApiCallout.ReceiptResponse receiptResponse = new CreateReceiptApiCallout.ReceiptResponse();
+            List<PojjamanDataModel.FNGLDocResponse> responseReceiptData = new List<PojjamanDataModel.FNGLDocResponse>();
+			PojjamanDataModel.FNGLDocResponse receiptResponse = new PojjamanDataModel.FNGLDocResponse();
             receiptResponse.SFDocId = targetSuccessReceiptId;
             receiptResponse.ResponseId = 123456;
             receiptResponse.ResponseCode = 'SC';
@@ -338,29 +338,29 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
 		PaymentMethod__c targetPaymentMethod = [SELECT Id,ResponseMessage__c,ResponseCode__c FROM PaymentMethod__c WHERE Id =: receiptMethod.Id LIMIT 1];
 		System.assertEquals('Success', targetPaymentReceipt.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentReceipt.ResponseCode__c);
-       
+
         System.assertEquals('Success', targetPaymentReceiptLineItem.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentReceiptLineItem.ResponseCode__c);
-       
+
         System.assertEquals('Success', targetPaymentMethod.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentMethod.ResponseCode__c);
-       
+
     }
 	public class SuccessReceiptCancelStatusInPojjamanFailMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateReceiptApiCallout.RequestDataModel>.class);
-            List<CreateReceiptApiCallout.RequestDataModel> requestData = ( List<CreateReceiptApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 
-            List<CreateReceiptApiCallout.ReceiptLineItemResponse> responseReceiptLineItemData = new List<CreateReceiptApiCallout.ReceiptLineItemResponse>();
-			CreateReceiptApiCallout.ReceiptLineItemResponse responseReceiptLineItem = new CreateReceiptApiCallout.ReceiptLineItemResponse();
+            List<PojjamanDataModel.FNGLDocLineItemResponse> responseReceiptLineItemData = new List<PojjamanDataModel.FNGLDocLineItemResponse>();
+			PojjamanDataModel.FNGLDocLineItemResponse responseReceiptLineItem = new PojjamanDataModel.FNGLDocLineItemResponse();
             responseReceiptLineItem.Message = 'Success';
             responseReceiptLineItem.ResponseCode = 'SC';
             responseReceiptLineItem.SFDocLineId = targetSuccessReceiptLienItemId;
             responseReceiptLineItem.Timestamp = System.now();
             responseReceiptLineItemData.add(responseReceiptLineItem);
 
-            List<CreateReceiptApiCallout.PaymentMethodResponse> responsePaymentMethodData = new List<CreateReceiptApiCallout.PaymentMethodResponse>();
-			CreateReceiptApiCallout.PaymentMethodResponse responsePaymentMethod = new CreateReceiptApiCallout.PaymentMethodResponse();
+            List<PojjamanDataModel.FNGLPaymentMethodResponse> responsePaymentMethodData = new List<PojjamanDataModel.FNGLPaymentMethodResponse>();
+			PojjamanDataModel.FNGLPaymentMethodResponse responsePaymentMethod = new PojjamanDataModel.FNGLPaymentMethodResponse();
             responsePaymentMethod.Message = 'Success';
             responsePaymentMethod.ResponseCode = 'SC';
             responsePaymentMethod.ResponseId = 123456;
@@ -369,8 +369,8 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
             responsePaymentMethodData.add(responsePaymentMethod);
 
             // START MOCK RECEIPT RESPONSE
-            List<CreateReceiptApiCallout.ReceiptResponse> responseReceiptData = new List<CreateReceiptApiCallout.ReceiptResponse>();
-			CreateReceiptApiCallout.ReceiptResponse receiptResponse = new CreateReceiptApiCallout.ReceiptResponse();
+            List<PojjamanDataModel.FNGLDocResponse> responseReceiptData = new List<PojjamanDataModel.FNGLDocResponse>();
+			PojjamanDataModel.FNGLDocResponse receiptResponse = new PojjamanDataModel.FNGLDocResponse();
             receiptResponse.SFDocId = targetSuccessReceiptId;
             receiptResponse.ResponseId = 123456;
             receiptResponse.ResponseCode = 'SC';
@@ -512,23 +512,23 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
 		PaymentMethod__c targetPaymentMethod = [SELECT Id,ResponseMessage__c,ResponseCode__c FROM PaymentMethod__c WHERE Id =: receiptMethod.Id LIMIT 1];
 		System.assertEquals('Success', targetPaymentReceipt.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentReceipt.ResponseCode__c);
-       
+
         System.assertEquals('Success', targetPaymentReceiptLineItem.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentReceiptLineItem.ResponseCode__c);
-       
+
         System.assertEquals('Success', targetPaymentMethod.ResponseMessage__c);
 		System.assertEquals('SC', targetPaymentMethod.ResponseCode__c);
-       
+
     }
     ////////////////////////////////////////////////////////////////
     public class FailReceiptMockResp implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
-            Object requestDataObj = JSON.deserialize(req.getBody(), List<CreateReceiptApiCallout.RequestDataModel>.class);
-            List<CreateReceiptApiCallout.RequestDataModel> requestData = ( List<CreateReceiptApiCallout.RequestDataModel>)requestDataObj;
+            Object requestDataObj = JSON.deserialize(req.getBody(), List<PojjamanDataModel.FNGLDocRequest>.class);
+            List<PojjamanDataModel.FNGLDocRequest> requestData = ( List<PojjamanDataModel.FNGLDocRequest>)requestDataObj;
 
             // START MOCK RECEIPT RESPONSE
-            List<CreateReceiptApiCallout.ReceiptResponse> responseReceiptData = new List<CreateReceiptApiCallout.ReceiptResponse>();
-			
+            List<PojjamanDataModel.FNGLDocResponse> responseReceiptData = new List<PojjamanDataModel.FNGLDocResponse>();
+
 			// END MOCK RESPONSE
             HttpResponse res = new HttpResponse();
             res.setHeader('Content-Type', 'application/json');
@@ -659,8 +659,8 @@ public with sharing class CreateReceiptApiCalloutBatchTest {
         System.assertEquals('ERR', targetPaymentReceipt.ResponseCode__c);
         System.assertEquals('ERR', targetPaymentReceiptLineItem.ResponseCode__c);
         System.assertEquals('ERR', targetPaymentMethod.ResponseCode__c);
-        
-        
+
+
     }
 
 }

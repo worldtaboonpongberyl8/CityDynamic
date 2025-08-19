@@ -2,7 +2,7 @@
 public with sharing class WordContentControllerTest {
     @isTest
     public static void validateRecordIdtoGetDocumentTemplateTest() {
-        DataMaker dataMaker = DataMaker.getInstance();
+        // DataMaker dataMaker = DataMaker.getInstance();
 
         String sampleContractZipFileName = 'Sample Contract.docx';
 

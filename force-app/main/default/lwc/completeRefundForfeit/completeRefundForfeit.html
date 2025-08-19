@@ -1,0 +1,90 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+	<lightning-quick-action-panel header={headerLabel}>
+		<!-- Body Section -->
+		<div class="slds-p-around_medium">
+			<!-- If all detail is completed-->
+			<template if:true={isDetailComplete}>
+				<div class="slds-m-top_medium slds-text-align_center slds-text-color_error">
+					<p><strong>Please review the details before confirming this action</strong></p>
+				</div>
+				<!-- Quota details in two-column layout -->
+				<div class="slds-grid slds-grid_align-end slds-m-top_small">
+					<div class="slds-box slds-theme_alert-texture slds-theme_warning">
+						<div class="slds-grid slds-wrap slds-p-around_small">
+							<!-- Row 1 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Total Paid Amount:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={totalPaidAmount}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> ฿
+							</div>
+
+							<!-- Row 2 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Total Operation Fee:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={totalOperationFee}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> ฿
+							</div>
+
+							<!-- Row 3 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								Net Agreed Forfeit Amount:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={netAgreedForfeitAmount}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> ฿
+							</div>
+
+							<!-- Row 4 -->
+							<div class="slds-col slds-size_3-of-5 slds-text-title_bold">
+								New Agreed Refund Amount:
+							</div>
+							<div class="slds-col slds-size_2-of-5 slds-text-align_right">
+								<lightning-formatted-number
+									value={netAgreedRefundAmount}
+									minimum-fraction-digits="2"
+									maximum-fraction-digits="2">
+								</lightning-formatted-number> ฿
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+			<!-- If all detail is not completed-->
+			<template if:false={isDetailComplete}>
+				<div class="slds-m-top_medium slds-text-align_center slds-text-color_error">
+					<p><strong>{warningMessage}</strong></p>
+				</div>
+			</template>
+		</div>
+		<!-- Footer Section -->
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                variant="neutral"
+                onclick={handleCancel}
+                class="slds-m-right_small"
+            ></lightning-button>
+            <lightning-button
+                label="Confirm"
+                variant="brand"
+                onclick={handleConfirm}
+            ></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

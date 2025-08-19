@@ -7,9 +7,14 @@ public with sharing class GLApiCalloutBatch implements Database.Batchable<SObjec
 				SELECT
 					Id,
 					LastGLStatusInPojjaman__c,
+					TotalOperationFee__c,
+					NetAgreedRefundAmount__c,
+					NetAgreedForfeitAmount__c,
 					(
 						SELECT Id, LastGLStatusInPojjaman__c
 						FROM Invoices__r
+						WHERE (LastGLStatusInPojjaman__c = null OR
+						LastGLStatusInPojjaman__c = 'Fail')
 						ORDER BY CreatedDate ASC
 					),
 					(
@@ -18,11 +23,21 @@ public with sharing class GLApiCalloutBatch implements Database.Batchable<SObjec
 						CancelReason__c, LastGLStatusInPojjaman__c
 						FROM PaymentReceipt__r
 						WHERE
-						CancelReason__c = 'Closed Lost'
+						(CancelReason__c =: GlobalConstants.RECEIPT_LOST_REASON_CANCELREFUND OR
+						CancelReason__c =: GlobalConstants.RECEIPT_LOST_REASON_CANCELFORFEIT OR
+						CancelReason__c =: GlobalConstants.RECEIPT_LOST_REASON_TERMINATIONREFUND OR
+						CancelReason__c =: GlobalConstants.RECEIPT_LOST_REASON_TERMINATIONFORFEIT) AND
+						(LastGLStatusInPojjaman__c = null OR
+						LastGLStatusInPojjaman__c = 'Fail')
 						ORDER BY CreatedDate ASC
 					)
 				FROM Opportunity
-				WHERE ((LastModifiedDate = TODAY AND StageName = 'Closed Lost') OR LastGLStatusInPojjaman__c = 'Fail')
+				WHERE StageName =: GlobalConstants.OPP_STAGENAME_CLOSED_LOST AND
+				(LastGLStatusInPojjaman__c = 'Fail' OR LastGLStatusInPojjaman__c = null) AND
+				(LossReason__c =: GlobalConstants.OPP_LOST_REASON_CANCELFORFEIT OR
+				LossReason__c =: GlobalConstants.OPP_LOST_REASON_TERMINATIONFORFEIT OR
+				LossReason__c =: GlobalConstants.OPP_LOST_REASON_CANCELREFUND OR
+				LossReason__c =: GlobalConstants.OPP_LOST_REASON_TERMINATIONREFUND )
 				ORDER BY LastModifiedDate ASC
 			]
 		);
@@ -34,7 +49,6 @@ public with sharing class GLApiCalloutBatch implements Database.Batchable<SObjec
 	}
 
 	public void finish(Database.BatchableContext bc) {
-		System.debug('Batch processing finished.');
 		// execute next batch
 	}
 }

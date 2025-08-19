@@ -11,14 +11,19 @@ public with sharing class InvoiceService {
 	private final String PDF_FORM_INVOICE = 'InvoiceForm';
 	private final String PDF_FORM_PAYMENT_SUMMARY = 'PaymentSummaryForm';
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - Modify logic to use OpportunitySelector to get Opportunity with CoBuyer
+	 */
 	public void insertInvoiceAndRelatedRecords(List<OpportunityPayment__c> oppPayments, Date dueDate, Date invoiceDate) {
 		Map<Id, List<OpportunityPayment__c>> oppPaymentMapByOppId = getOppPaymentsMapByOppId(oppPayments);
 
 		if (oppPaymentMapByOppId.isEmpty()) {
 			return;
 		}
-
-		Map<Id, Opportunity> opportunityMapById = OpportunitySelector.getInstance().getOpportunityMapById(oppPaymentMapByOppId.keySet());
+		// Phase2: change selector to get related CoBuyer
+		Map<Id, Opportunity> opportunityMapById = OpportunitySelector.getInstance().getOpportunityWithCoBuyerMapById(oppPaymentMapByOppId.keySet());
 		Map<Id, Invoice__c> invoiceMapByOppId = getInvoiceMapByOppId(opportunityMapById, dueDate, invoiceDate);
 		insertInvoices(invoiceMapByOppId.values());
 		updateInvoiceNo(invoiceMapByOppId.values());
@@ -126,7 +131,8 @@ public with sharing class InvoiceService {
 
 			List<Messaging.SingleEmailMessage> actualEmails = new List<Messaging.SingleEmailMessage>();
 			for (Messaging.SingleEmailMessage tempEmail : tempEmails) {
-				Messaging.SingleEmailMessage actualEmail = emailUtility.getSingleEmailFromTempEmail(tempEmail);
+				Id recordId = tempEmail.getWhatId();
+				Messaging.SingleEmailMessage actualEmail = emailUtility.getSingleEmailFromTempEmail(tempEmail,recordContentVerIdsMapByRecordId.get(recordId));
 				actualEmails.add(actualEmail);
 			}
 
@@ -156,22 +162,98 @@ public with sharing class InvoiceService {
 		return updateResults;
 	}
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - Modify logic to stamp CancelReason__c from Opportunity.LossReason__c
+	 */
 	public List<Invoice__c> getCancelInvoiceByOppIdSet(Set<Id> oppIdSet){
 		List<Invoice__c> invoiceForCancels = new List<Invoice__c>();
-
 		List<Invoice__c> invoices = InvoiceSelector.getInstance().getByOppIdSet(oppIdSet);
 		for (Invoice__c invoice : invoices) {
+			String oppLostReason = invoice.Opportunity__r.LossReason__c;
+			String invoiceLostReason = GlobalConstants.INVOICE_RECEIPT_LOST_REASON_MAP_BY_OPP_LOST_REASON.get(oppLostReason);
 			invoiceForCancels.add(
 				new Invoice__c(
 					Id = invoice.Id,
 					IsCancel__c = true,
-					CancelReason__c = 'Closed Lost'
+					CancelReason__c = invoiceLostReason == null ? 'Closed Lost' : invoiceLostReason
 				)
 			);
 		}
 
 		return invoiceForCancels;
 	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add logic to create Invoice__c and InvoiceLineItem__c
+	 */
+	public void createInvoiceAndLineItem(Id opportunityId, Date invoiceDate, Date dueDate, String term) {
+        if (opportunityId == null || invoiceDate == null || dueDate == null || String.isBlank(term)) {
+            System.debug('Missing required inputs.');
+            return;
+        }
+
+        Savepoint sp = Database.setSavepoint();
+        try {
+			CoBuyerService coBuyerService = CoBuyerService.getInstance();
+			OpportunitySelector selector = OpportunitySelector.getInstance();
+			Map<Id, Opportunity> targetOppMapById = selector.getOpportunityWithCoBuyerMapById(new Set<Id>{opportunityId});
+			Opportunity targetOpp = targetOppMapById.get(opportunityId);
+			List<CoBuyer__c> coBuyers = targetOpp.Co_Borrowers__r;
+			String coBuyerAccountCodeString = coBuyerService.getStringCoBuyerAccountCode(coBuyers);
+			Integer randomNum = Math.round(Math.random() * 899999) + 100000;
+            String runningNumber = '0001'; // You can adjust this logic if needed
+            // 🔹 Step 1: Create Invoice
+            Invoice__c invoice = new Invoice__c(
+                Opportunity__c = opportunityId,
+                InvoiceDate__c = invoiceDate,
+                DueDate__c = dueDate,
+				CoBuyerAccountCode__c = coBuyerAccountCodeString,
+				InvoiceNo__c = 'IV-' + runningNumber + '-' + randomNum
+            );
+            insert invoice;
+
+            // 🔹 Step 2: Get OpportunityPayment__c by term
+            List<OpportunityPayment__c> oppPayments = [
+                SELECT
+                    Id,
+                    Remaining__c,
+                    DueDate__c,
+                    Term__c
+                FROM OpportunityPayment__c
+                WHERE Opportunity__c = :opportunityId
+                    AND IsMasterData__c = TRUE
+                    AND Term__c = :term
+                LIMIT 1
+            ];
+
+            if (!oppPayments.isEmpty()) {
+                OpportunityPayment__c oppPayment = oppPayments[0];
+                if (oppPayment.Remaining__c != null && oppPayment.Remaining__c > 0) {
+                    // 🔹 Step 3: Create InvoiceLineItem
+                    InvoiceLineItem__c invoiceLineItem = new InvoiceLineItem__c(
+                        LineNumber__c = 1,
+                        Invoice__c = invoice.Id,
+                        OpportunityPayment__c = oppPayment.Id,
+                        DueDate__c = oppPayment.DueDate__c,
+                        Amount__c = oppPayment.Remaining__c
+                    );
+                    insert invoiceLineItem;
+                } else {
+                    System.debug('No remaining amount for the specified term.');
+                }
+            } else {
+                System.debug('No OpportunityPayment__c found for the specified term.');
+            }
+
+        } catch (Exception e) {
+			System.debug('Failed to create invoice and line item: ' + e.getMessage() + e.getStackTraceString());
+            Database.rollback(sp);
+        }
+    }
 
 	// ----- Start Private Service -----
 	@TestVisible
@@ -189,11 +271,20 @@ public with sharing class InvoiceService {
 		return oppPaymentsMapByOppId;
 	}
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - Modify logic to stamp CoBuyerName__c and CoBuyerAccountCode__c to Invoice
+	 */
 	@TestVisible
 	private Map<Id, Invoice__c> getInvoiceMapByOppId(Map<Id, Opportunity> opportunityMapById, Date dueDate, Date invoiceDate) {
+		CoBuyerService coBuyerService = CoBuyerService.getInstance();
 		Map<Id, Invoice__c> invoiceMapByOppId = new Map<Id, Invoice__c>();
 		for (Id oppId : opportunityMapById.keySet()) {
 			Opportunity opportunity = opportunityMapById.get(oppId);
+			// Phase2: call service to get string of Account Code
+			List<CoBuyer__c> coBuyers = opportunity.Co_Borrowers__r;
+			String coBuyerAccountCodeString = coBuyerService.getStringCoBuyerAccountCode(coBuyers);
 			invoiceMapByOppId.put(
 				oppId,
 				new Invoice__c(
@@ -201,7 +292,9 @@ public with sharing class InvoiceService {
 					InvoiceDate__c = invoiceDate,
 					DueDate__c = dueDate,
 					DoNotSendInvoice__c = opportunity.DoNotSendInvoice__c,
-					AccountAddress__c = opportunity.Account.AddressEN__c
+					AccountAddress__c = opportunity.Account.AddressEN__c,
+					CoBuyerName__c = opportunity.CoBuyerName__c,
+					CoBuyerAccountCode__c = coBuyerAccountCodeString
 				)
 			);
 		}

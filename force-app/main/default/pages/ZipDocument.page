@@ -1,0 +1,43 @@
+<apex:page standardController="ZipFile__c" extensions="ZipDocumentController" >
+<apex:slds />
+	<apex:form id="form">
+		<apex:actionFunction name="receiveZip" action="{!receiveZipFile}" rerender="form">
+			<apex:param name="zipdata" assignTo="{!zipFileData}" value="0"/>
+		</apex:actionFunction>
+		<apex:pageblock title="Generating Zip File">
+			<apex:pageMessages />
+			
+			<c:zipfile name="someZipfile" state="{!ZipFile__c.Id}" oncomplete="receiveZip(data);"
+				getzipfileentry="{!$RemoteAction.ZipDocumentController.getZipFileEntry}" targetFileName="{!targetFileName}">
+				<apex:repeat value="{!paths}" var="path">
+					<c:zipentry path="{!path}" base64="true"/>
+				</apex:repeat>
+			</c:zipfile>
+			<script>
+				// Start zip file generation
+				someZipfileGenerate();
+			</script>
+			<style>
+				#myProgress {
+				  width: 100%;
+				  background-color: #ddd;
+				  border-radius: 5px;
+				}
+
+				#myBar {
+				  width: 1%;
+				  height: 30px;
+				  border-radius: 5px;
+				  background-color: #04AA6D;
+				}   
+			</style>
+		</apex:pageblock>
+	</apex:form>
+	<p id="displayText" style="text-align: center;font-size: 24px;"></p>
+	<div class="slds-modal__container">
+		<div id="myProgress">
+			
+			<div id="myBar"><p id="displayPercentage" style="text-align: center;font-size: 18px;"></p></div>
+		</div>
+	</div>
+</apex:page>

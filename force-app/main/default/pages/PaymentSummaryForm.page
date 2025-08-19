@@ -1,0 +1,32 @@
+<apex:page renderAs="pdf" applyHtmlTag="false" applyBodyTag="false" showHeader="false" standardStylesheets="false" controller="PaymentSummaryFormController">
+    <header>
+		<apex:stylesheet value="{!$Resource.formStyle}" />
+        <apex:stylesheet value="{!$Resource.paymentSummaryFormStyle}" />
+    </header>
+
+	<!-- variable -->
+	<apex:variable var="ctrl" value="{!instanceCtrl}" />
+	<apex:variable var="paymentSummary" value="{!instanceCtrl.paymentSummary}" />
+	<apex:variable var="oppDetail" value="{!paymentSummary.oppDetail}" />
+
+    <body style="font-family: 'Arial Unicode MS' !important;">
+		<!-- header -->
+		<c:HeaderAndFooterInPDFForm type="header">
+			<img src="{!oppDetail.projectLogoUrl}" height="120px" />
+		</c:HeaderAndFooterInPDFForm>
+
+		<!-- footer -->
+		<c:HeaderAndFooterInPDFForm type="footer">
+			<div class="footer-data">
+				<p class="footer-company-name">{!oppDetail.companyName}</p>
+				<p>{!oppDetail.companyAddress}</p>
+				<p>Tel: {!oppDetail.companyPhone} | Tax Id No. {!oppDetail.companyTaxID}</p>
+			</div>
+		</c:HeaderAndFooterInPDFForm>
+
+        <c:PaymentSummaryHeader instanceCtrl="{!ctrl}" />
+        <c:PaymentSummaryCustomer instanceCtrl="{!ctrl}" />
+        <c:PaymentSummaryDetail instanceCtrl="{!ctrl}" />
+        <c:PaymentSummaryFooter instanceCtrl="{!ctrl}" />
+    </body>
+</apex:page>

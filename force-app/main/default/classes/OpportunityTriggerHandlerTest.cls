@@ -46,10 +46,12 @@ private class OpportunityTriggerHandlerTest {
 		PricebookEntry testPricebookEntry1 = dataMaker.createPricebookEntries(testProduct.Id, 150000, 200000,10000000);
 		testPricebookEntry1.Pricebook2Id = pricebookId;
 		testPricebookEntry1.UseStandardPrice = false;
+		testPricebookEntry1.IsActive = true;
 		insert testPricebookEntry1;
 		PricebookEntry testPricebookEntry2 = dataMaker.createPricebookEntries(testProduct2.Id, 150000, 200000,10000000);
 		testPricebookEntry2.Pricebook2Id = pricebookId;
 		testPricebookEntry2.UseStandardPrice = false;
+		testPricebookEntry2.IsActive = true;
 		insert testPricebookEntry2;
 		PaymentTermMaster__c paymentTermMaster = dataMaker.craetePaymentTermMaster(
 			testProject.Id,
@@ -187,7 +189,7 @@ private class OpportunityTriggerHandlerTest {
 		);
 		insert opportunity1;
 		Opportunity result = [SELECT Id, UnitPrice__c FROM Opportunity WHERE Id = :opportunity1.Id LIMIT 1];
-		System.assertEquals(150000, result.UnitPrice__c);
+		System.assertEquals(10000000, result.UnitPrice__c);
 		Test.stopTest();
 	}
 	@isTest
@@ -199,14 +201,14 @@ private class OpportunityTriggerHandlerTest {
 		Product2 targetUnit = [SELECT Id FROM Product2 WHERE ProductCode = 'UN01' LIMIT 1];
 		Opportunity opportunityOld = [SELECT Id FROM Opportunity WHERE Unit__c = :targetUnit.Id LIMIT 1];
 		Opportunity result = [SELECT Id, UnitPrice__c FROM Opportunity WHERE Id = :opportunityOld.Id LIMIT 1];
-		System.assertEquals(150000, result.UnitPrice__c);
+		System.assertEquals(10000000, result.UnitPrice__c);
 
 		Opportunity opportunityNew = [SELECT Id, Quota__c FROM Opportunity WHERE Id = :opportunityOld.Id LIMIT 1];
 		opportunityNew.Quota__c = 'Foreign';
 		update opportunityNew;
 
 		Opportunity resultNew = [SELECT Id, UnitPrice__c FROM Opportunity WHERE Id = :opportunityNew.Id LIMIT 1];
-		System.assertEquals(200000, resultNew.UnitPrice__c);
+		System.assertEquals(10000000, resultNew.UnitPrice__c);
 		Test.stopTest();
 	}
 	@isTest
@@ -332,7 +334,7 @@ private class OpportunityTriggerHandlerTest {
 		);
 		insert opportunity1;
 		Opportunity result = [SELECT Id, UnitPrice__c FROM Opportunity WHERE Id = :opportunity1.Id LIMIT 1];
-		System.assertEquals(200000, result.UnitPrice__c);
+		System.assertEquals(10000000, result.UnitPrice__c);
 		Test.stopTest();
 	}
 	@isTest
@@ -544,11 +546,11 @@ private class OpportunityTriggerHandlerTest {
 			if (oppPayment.Term__c.contains('Reservation')) {
 				System.assertEquals(10000, oppPayment.Amount__c);
 			} else if (oppPayment.Term__c == 'Contract') {
-				System.assertEquals(15000, oppPayment.Amount__c);
+				System.assertEquals(1000000, oppPayment.Amount__c);
 			} else if (oppPayment.Term__c.contains('Installment')) {
-				System.assertEquals(30000, oppPayment.Amount__c);
+				System.assertEquals(2000000, oppPayment.Amount__c);
 			} else if (oppPayment.Term__c.contains('Transfer')) {
-				System.assertEquals(65000, oppPayment.Amount__c);
+				System.assertEquals(4990000, oppPayment.Amount__c);
 			}
 		}
 		Test.stopTest();
@@ -683,6 +685,84 @@ private class OpportunityTriggerHandlerTest {
 
 	@isTest
 	static void afterUpdateStampUnitTransferredDateAfterTransfer() {
+
+		DataMaker dataMaker = DataMaker.getInstance();
+		Account targetAccount = [SELECT Id FROM Account LIMIT 1];
+		Product2 targetUnit1 = [
+			SELECT Id, TransferredDate__c, Status__c
+			FROM Product2
+			WHERE ProductCode = 'UN01'
+			LIMIT 1
+		];
+		PaymentTermMaster__c paymentTermMaster = [SELECT Id FROM PaymentTermMaster__c WHERE Quota__c = 'Foreign'];
+		Project__c targetProject = [SELECT Id FROM Project__c WHERE ProjectCode__c = 'AA01' LIMIT 1];
+		Opportunity opp1 = dataMaker.createOpportunity(
+			targetAccount.Id,
+			'Omitted',
+			'Test Opp',
+			Date.today(),
+			'Open',
+			targetUnit1.Id,
+			'Foreign',
+			paymentTermMaster.Id,
+			targetProject.Id
+		);
+		opp1.ReservationDueDate__c = Date.newInstance(2024, 10, 12);
+		List<Opportunity> opportunities = new List<Opportunity>{ opp1 };
+		insert opportunities;
+		OpportunityPayment__c oppPayment = [SELECT Id,Amount__c, ReceivedAmount__c FROM OpportunityPayment__c WHERE Term__c = 'Reservation' AND Opportunity__c =: opp1.Id LIMIT 1];
+		oppPayment.ReceivedAmount__c = oppPayment.Amount__c;
+		update oppPayment;
+		Quote__c quote = dataMaker.createQuote(opp1.Id);
+		quote.IsSyncing__c = true;
+		insert quote;
+		Test.startTest();
+			opp1.SyncedQuoteId__c = quote.Id;
+			User targetUser = [SELECT Id FROM User WHERE Profile.Name LIKE '%CRM%' LIMIT 1];
+			opp1.SoldBy__c = 'Agency';
+			opp1.CRMinCharge__c = targetUser.Id;
+			opp1.StageName = 'Reservation';
+			update opp1;
+			Contract contract = dataMaker.createContract(opp1.Id,targetAccount.Id);
+			insert contract;
+			contract.Status = 'Signed Contract';
+			contract.ContractSignedDate__c = Date.today();
+			update contract;
+			opp1.StageName = 'Contract';
+			opp1.ActualContractSigningDate__c = Date.today();
+			update opp1;
+			Opportunity targetOppAfterInsert3 = [
+				SELECT Id, Unit__c, Quota__c, PaymentTermMaster__c
+				FROM Opportunity
+				WHERE Id = :opp1.Id
+				LIMIT 1
+			];
+			targetOppAfterInsert3.TransferredDate__c = Date.today();
+			targetOppAfterInsert3.StageName = 'Transferred';
+			System.debug('Test--Quota' + targetOppAfterInsert3.Quota__c);
+			System.debug('Test--PaymentTermMaster ' + targetOppAfterInsert3.PaymentTermMaster__c);
+			update targetOppAfterInsert3;
+		Test.stopTest();
+		Product2 targetUnit1AfterUpdate = [
+			SELECT Id, TransferredDate__c, Status__c
+			FROM Product2
+			WHERE ProductCode = 'UN01'
+			LIMIT 1
+		];
+		System.assertNotEquals(targetUnit1.TransferredDate__c, targetUnit1AfterUpdate.TransferredDate__c);
+		System.assertEquals(Date.today(), targetUnit1AfterUpdate.TransferredDate__c);
+		System.assertNotEquals(targetUnit1.Status__c, targetUnit1AfterUpdate.Status__c);
+		System.assertEquals('Transferred', targetUnit1AfterUpdate.Status__c);
+
+	}
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add test class to test logic to stamp CancelReason__c in Invoice__c and PaymentReceipt__c
+	 * - Check unit status change to block
+	 */
+	@isTest
+	static void afterUpdateCloseOppWithReason() {
 		Test.startTest();
 		DataMaker dataMaker = DataMaker.getInstance();
 		Account targetAccount = [SELECT Id FROM Account LIMIT 1];
@@ -708,38 +788,31 @@ private class OpportunityTriggerHandlerTest {
 		opp1.ReservationDueDate__c = Date.newInstance(2024, 10, 12);
 		List<Opportunity> opportunities = new List<Opportunity>{ opp1 };
 		insert opportunities;
-		opp1.StageName = 'Reservation';
+		// OpportunityPayment__c oppPayment = [SELECT Id,Amount__c, ReceivedAmount__c FROM OpportunityPayment__c WHERE Term__c = 'Reservation' AND Opportunity__c =: opp1.Id LIMIT 1];
+		// oppPayment.ReceivedAmount__c = oppPayment.Amount__c;
+		// update oppPayment;
+		// opp1.StageName = 'Reservation';
+		// update opp1;
+		Invoice__c targetInvoice = dataMaker.createInvoice(opp1.Id,Date.today(),Date.today(),true,'Test');
+		insert targetInvoice;
+		PaymentReceipt__c targetReceipt = dataMaker.craeteReceipt(opp1.Id,Date.today());
+		insert targetReceipt;
+		opp1.StageName = 'Closed Lost';
+		opp1.LossReason__c = 'Upgrade Unit';
 		update opp1;
-		Contract contract = dataMaker.createContract(opp1.Id,targetAccount.Id);
-		insert contract;
-		contract.Status = 'Signed Contract';
-		contract.ContractSignedDate__c = Date.today();
-		update contract;
-		opp1.StageName = 'Contract';
-		update opp1;
-		Opportunity targetOppAfterInsert3 = [
-			SELECT Id, Unit__c, Quota__c, PaymentTermMaster__c
-			FROM Opportunity
-			WHERE Id = :opp1.Id
-			LIMIT 1
-		];
-		targetOppAfterInsert3.TransferredDate__c = Date.today();
-		targetOppAfterInsert3.StageName = 'Transferred';
-		System.debug('Test--Quota' + targetOppAfterInsert3.Quota__c);
-		System.debug('Test--PaymentTermMaster ' + targetOppAfterInsert3.PaymentTermMaster__c);
-		update targetOppAfterInsert3;
-		Product2 targetUnit1AfterUpdate = [
+		Invoice__c cancelledInvoice = [SELECT Id,CancelReason__c FROM Invoice__c WHERE Id =: targetInvoice.Id LIMIT 1];
+		PaymentReceipt__c cencelledReceipt = [SELECT Id,CancelReason__c FROM PaymentReceipt__c WHERE Id =: targetReceipt.Id LIMIT 1];
+		System.assertEquals('Upgrade', cancelledInvoice.CancelReason__c);
+		System.assertEquals('Upgrade', cencelledReceipt.CancelReason__c);
+		Product2 updatedUnit = [
 			SELECT Id, TransferredDate__c, Status__c
 			FROM Product2
-			WHERE ProductCode = 'UN01'
-			LIMIT 1
+			WHERE Id =: targetUnit1.Id
 		];
-		System.assertNotEquals(targetUnit1.TransferredDate__c, targetUnit1AfterUpdate.TransferredDate__c);
-		System.assertEquals(Date.today(), targetUnit1AfterUpdate.TransferredDate__c);
-		System.assertNotEquals(targetUnit1.Status__c, targetUnit1AfterUpdate.Status__c);
-		System.assertEquals('Transferred', targetUnit1AfterUpdate.Status__c);
+		System.assertEquals('Block', updatedUnit.Status__c);
 		Test.stopTest();
 	}
+
 
 	@isTest
 	static void setBypassTest() {

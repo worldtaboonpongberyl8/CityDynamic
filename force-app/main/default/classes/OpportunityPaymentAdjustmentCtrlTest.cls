@@ -107,6 +107,7 @@ public with sharing class OpportunityPaymentAdjustmentCtrlTest {
 			reservationPaymentWrapper.dueDate = oppPayment.DueDate__c;
 			reservationPaymentWrapper.order = oppPayment.Order__c;
 			reservationPaymentWrapper.term = oppPayment.Term__c;
+			reservationPaymentWrapper.isAllowedPayment = true;
 			reservationPaymentWrapper.id = oppPayment.Id;
 			reservationPaymentWrapper.oppId = oppPayment.Opportunity__c;
 			reservationPaymentWrapper.isNewRecord = false;
@@ -154,6 +155,7 @@ public with sharing class OpportunityPaymentAdjustmentCtrlTest {
 			reservationPaymentWrapper.dueDate = oppPayment.DueDate__c;
 			reservationPaymentWrapper.order = oppPayment.Order__c;
 			reservationPaymentWrapper.term = oppPayment.Term__c;
+			reservationPaymentWrapper.isAllowedPayment = true;
 			reservationPaymentWrapper.id = oppPayment.Id;
 			reservationPaymentWrapper.oppId = oppPayment.Opportunity__c;
 			reservationPaymentWrapper.isNewRecord = false;

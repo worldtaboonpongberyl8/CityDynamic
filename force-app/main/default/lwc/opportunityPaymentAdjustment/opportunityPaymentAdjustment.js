@@ -178,7 +178,8 @@ export default class OpportunityPaymentAdjustment extends LightningElement {
                 term: `Contract ${contractTerms.length + 1}`,
                 oppId: this.recordId,
                 isNewRecord: true,
-                canDeleteSplittedContract: true
+                canDeleteSplittedContract: true,
+				isAllowedPayment : false
             };
             console.log("newContract: " + JSON.stringify(newContract));
             contractTerms.push(newContract);
@@ -335,7 +336,8 @@ export default class OpportunityPaymentAdjustment extends LightningElement {
                 remaining: eachItem.Remaining__c,
                 status: eachItem.PaymentStatus__c,
                 oppId: eachItem.Opportunity__c,
-                isNewRecord: false
+                isNewRecord: false,
+				isAllowedPayment : eachItem.IsAllowedPaymentByGateway__c
             };
             wrapper.isDisabled =
                 eachItem.PaymentStatus__c === "Partially Paid" ||

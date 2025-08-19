@@ -1,0 +1,73 @@
+<!--
+/**
+ * Copyright (c) 2012, FinancialForce.com, inc
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, 
+ *   are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice, 
+ *      this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice, 
+ *      this list of conditions and the following disclaimer in the documentation 
+ *      and/or other materials provided with the distribution.
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
+ *      may be used to endorse or promote products derived from this software without 
+ *      specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**/ 
+ -->
+ <apex:page controller="UnzipDocumentController" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" showHeader="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="x-ua-compatible" content="ie=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Unzip Document</title>
+      <apex:slds />
+    </head>
+    <body style="background-color: white;">
+    
+        <apex:form id="form">
+            <div class="slds-scope"> 
+                <div class="targetApp" id="divIdtargetApp" style="padding: 15px;">
+                    <div class="slds-page-header">
+                        <div class="slds-media">
+                          <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-custom-67" title="">
+                              <svg class="slds-icon" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS, '/assets/icons/custom-sprite/svg/symbols.svg#custom67')}"></use>
+                              </svg>
+                            </span>
+                          </div>
+                          <div class="slds-media__body">
+                            <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="">Unzip Document</h1>
+                            <p class="slds-text-body_small slds-line-height_reset">  </p>
+                          </div>
+                        </div>
+                    </div>
+                    <apex:actionFunction name="unzipped" action="{!unzipped}" rerender="form">
+                        <apex:param name="state" assignTo="{!unzippedState}" value=""/>
+                    </apex:actionFunction>
+                    <BR/>
+                    <apex:pageblock title="Select a Document File">
+                        <apex:pageMessages />
+                        <apex:pageblocksection >
+                            <c:unzipfile name="somezipfile" oncomplete="unzipped(state);"
+                                onreceive="{!$RemoteAction.UnzipDocumentController.receiveZipFileEntry}" />
+                        </apex:pageblocksection>
+                    </apex:pageblock>
+                </div>
+            </div>
+        </apex:form>
+    </body>
+    </html>
+    </apex:page>

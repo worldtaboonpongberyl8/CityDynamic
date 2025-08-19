@@ -91,7 +91,7 @@ public with sharing class OpportunitySelectorTest {
 		Test.stopTest();
 	}
 
-	@isTest 
+	@isTest
 	static void getByIdTest(){
 		Test.startTest();
 		OpportunitySelector selector = OpportunitySelector.getInstance();
@@ -111,7 +111,7 @@ public with sharing class OpportunitySelectorTest {
 		Test.stopTest();
 	}
 
-	@isTest 
+	@isTest
 	static void getOpportunityWithSyncedQuotedMapByIdTest(){
 		Test.startTest();
 		OpportunitySelector selector = OpportunitySelector.getInstance();
@@ -121,13 +121,41 @@ public with sharing class OpportunitySelectorTest {
 		Test.stopTest();
 	}
 
-	@isTest 
+	@isTest
 	static void getOpportunityWithClientOfferMapByIdTest(){
 		Test.startTest();
 		OpportunitySelector selector = OpportunitySelector.getInstance();
 		Map<Id,Opportunity> oppMapById = new Map<Id,Opportunity>([SELECT Id FROM Opportunity]);
 		Map<Id,Opportunity> result = selector.getOpportunityWithClientOfferMapById(oppMapById.keySet());
 		System.assertEquals(oppMapById.values().size(), result.values().size());
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add test class to test method getOpportuntiyWithRelatedRecordForNovationMapById
+	 */
+	@isTest
+	static void getOpportuntiyWithRelatedRecordForNovationMapByIdTest(){
+		Test.startTest();
+		OpportunitySelector selector = OpportunitySelector.getInstance();
+		Map<Id,Opportunity> oppMapById = new Map<Id,Opportunity>([SELECT Id FROM Opportunity]);
+		Map<Id,Opportunity> result = selector.getOpportuntiyWithRelatedRecordForNovationMapById(oppMapById.keySet());
+		System.assertEquals(oppMapById.values().size(), result.values().size());
+		Test.stopTest();
+	}
+	/**
+	 * Phase2
+	 * Details:
+	 * -Test Class query Opportunity by oppId and field set
+	 */
+	@isTest
+	static void getOpportunityFieldsetByIdsTest(){
+		Test.startTest();
+		OpportunitySelector selector = OpportunitySelector.getInstance();
+		Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+		Map<Id, Opportunity> result = selector.getOpportunityFieldsetByIds(new Set<Id>{opp.Id});
 		Test.stopTest();
 	}
 }

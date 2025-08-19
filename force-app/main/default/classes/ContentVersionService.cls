@@ -1,4 +1,4 @@
-public with sharing class ContentVersionService {
+public without sharing class ContentVersionService {
 	public static ContentVersionService instance;
 
 	public static ContentVersionService getInstance() {
@@ -10,17 +10,23 @@ public with sharing class ContentVersionService {
 
 	public Database.SaveResult[] insertContentVersions(List<ContentVersion> contentVersions) {
 		Database.SaveResult[] insertContentVerResults;
-
 		if (!contentVersions.isEmpty()) {
 			insertContentVerResults = Database.insert(contentVersions, false);
+			for (Integer i = 0; i < insertContentVerResults.size(); i++) {
+				Database.SaveResult result = insertContentVerResults[i];
+				if (!result.isSuccess()) {
+					for (Database.Error err : result.getErrors()) {
+						System.debug('Failed to insert record at index ' + i + ': ' + err.getMessage());
+					}
+				}
+			}
 		}
-
 		return insertContentVerResults;
 	}
 
-    public Set<Id> getContentVerIdSet(Map<Id, ContentVersion> contentVerMapByInvoiceId) {
+    public Set<Id> getContentVerIdSet(Map<Id, ContentVersion> contentVerMapByRecordId) {
         Set<Id> contentVerIdSet = new Set<Id>();
-        for (ContentVersion contentVersion : contentVerMapByInvoiceId.values()) {
+        for (ContentVersion contentVersion : contentVerMapByRecordId.values()) {
             if (contentVersion.Id == null) {
                 continue;
             }
@@ -36,6 +42,8 @@ public with sharing class ContentVersionService {
 		Map<Id, String> paymentSummaryNameMapWithInvoiceId
 	){
 		List<ContentDocumentLink> ctDocLinks = ContentDocumentLinkSelector.getInstance().getByLinkEntityIdSet(invoiceIdAndOppIdset);
+		System.debug('invoiceIdAndOppIdset: '  + invoiceIdAndOppIdset);
+		System.debug('ctDocLinks: '  + ctDocLinks);
 		Map<Id, Id> contentDocIdMapByRecordId = new Map<Id, Id>();
 		for (ContentDocumentLink ctDocLink : ctDocLinks) {
 			contentDocIdMapByRecordId.put(ctDocLink.ContentDocumentId, ctDocLink.LinkedEntityId);
@@ -49,7 +57,7 @@ public with sharing class ContentVersionService {
 		List<ContentVersion> contentVersions = ContentVersionSelector.getInstance().getForSendEmailBatches(
 			contentDocIdMapByRecordId.keySet(), fileNameSet, fileExtensionSet
 		);
-
+		System.debug('contentVersions: '  + contentVersions);
 		Map<Id, ContentVersion> contentVerMapByContentDocId = new Map<Id, ContentVersion>();
 		for (ContentVersion contentVersion : contentVersions) {
 			contentVerMapByContentDocId.put( contentVersion.ContentDocumentId, contentVersion );

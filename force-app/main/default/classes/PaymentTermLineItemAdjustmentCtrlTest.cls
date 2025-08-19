@@ -29,6 +29,7 @@ public with sharing class PaymentTermLineItemAdjustmentCtrlTest {
 		wrapper1.amount = 100.00;
 		wrapper1.percent = null;
 		wrapper1.term = 'Contract';
+		wrapper1.isAllowedPayment = true;
 		wrapper1.paymentTermMasterId = paymentTermMaster.Id;
 		PaymentTermService.PaymentTermLineItemWrapper wrapper2 = new PaymentTermService.PaymentTermLineItemWrapper();
 		wrapper2.id = null;
@@ -36,6 +37,7 @@ public with sharing class PaymentTermLineItemAdjustmentCtrlTest {
 		wrapper2.amount = null;
 		wrapper2.percent = null;
 		wrapper2.term = 'Transfer';
+		wrapper2.isAllowedPayment = false;
 		wrapper2.paymentTermMasterId = paymentTermMaster.Id;
 		paymentTermWrappers.add(wrapper1);
 		paymentTermWrappers.add(wrapper2);

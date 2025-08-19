@@ -1,4 +1,4 @@
-public with sharing class ContentVersionSelector {
+public without sharing class ContentVersionSelector {
 	public static ContentVersionSelector instance;
 
 	public static ContentVersionSelector getInstance() {
@@ -31,7 +31,7 @@ public with sharing class ContentVersionSelector {
 			SELECT Id, ContentDocumentId
 			FROM ContentVersion
 			WHERE Id IN: recordIdSet
-				AND IsLatest = true
+				// AND IsLatest = true
 		];
 	}
 

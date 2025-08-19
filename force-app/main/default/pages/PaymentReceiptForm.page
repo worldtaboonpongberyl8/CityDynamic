@@ -1,0 +1,34 @@
+<apex:page renderAs="pdf" applyHtmlTag="false" applyBodyTag="false" showHeader="false" sidebar="false" standardStylesheets="false"
+ controller="PaymentReceiptFormController" contentType="application/pdf; charset=UTF-8">
+	<!-- variable -->
+	<apex:variable var="paymentReceipt" value="{!instanceCtrl.paymentReceipt}" />
+
+	<header>
+		<apex:stylesheet value="{!$Resource.formStyle}" />
+		<apex:stylesheet value="{!$Resource.paymentReceiptFormStyle}" />
+	</header>
+
+	<body style="font-family: 'Arial Unicode MS' !important;">
+		<!-- header -->
+		<c:HeaderAndFooterInPDFForm type="header">
+			<img src="{!paymentReceipt.paymentReceiptHeader.imageUrl}" height="120px" />
+		</c:HeaderAndFooterInPDFForm>
+
+		<!-- footer -->
+		<c:HeaderAndFooterInPDFForm type="footer">
+			<div class="footer-data">
+				<p class="footer-company-name">{!paymentReceipt.oppWrapper.companyName}</p>
+				<p>{!paymentReceipt.oppWrapper.companyAddress}</p>
+				<p>Tel: {!paymentReceipt.oppWrapper.companyPhone} | Tax Id No. {!paymentReceipt.oppWrapper.companyTaxID}</p>
+			</div>
+		</c:HeaderAndFooterInPDFForm>
+		<apex:image value="{!$Resource.cancellationWaterMask}" width="70%" height="70%" styleClass="water-mask" rendered="{!paymentReceipt.paymentReceiptHeader.isCancelled}"
+		/>
+
+		<!-- content -->
+		<c:PaymentReceiptHeader instanceCtrl="{!instanceCtrl}" />
+		<c:PaymentReceiptTable instanceCtrl="{!instanceCtrl}" />
+		<c:PaymentReceiptDetail instanceCtrl="{!instanceCtrl}" />
+		<c:PaymentReceiptFooter instanceCtrl="{!instanceCtrl}" />
+	</body>
+</apex:page>

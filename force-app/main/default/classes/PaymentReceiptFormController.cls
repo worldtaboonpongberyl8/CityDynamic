@@ -1,4 +1,4 @@
-public with sharing class PaymentReceiptFormController {
+public without sharing class PaymentReceiptFormController {
 	private final Id paymentReceiptId;
 
 
@@ -11,7 +11,7 @@ public with sharing class PaymentReceiptFormController {
 		return instance;
 	}
 	public PaymentReceiptFormController() {
-		paymentReceiptId = ApexPages.currentPage().getParameters().get('id');
+		paymentReceiptId = ApexPages.currentPage().getParameters().get('Id');
 
 	}
 	public PaymentReceiptWrapper getPaymentReceipt(){
@@ -20,17 +20,18 @@ public with sharing class PaymentReceiptFormController {
 			Map<Id, List<PaymentMethod__c>> paymentMethodMapById = PaymentMathodSelector.getInstance().getPaymentMethodMapByPaymentReceiptId(new Set<Id>{paymentReceiptId});
 			List<PaymentMethod__c> paymentMethods = paymentMethodMapById.get(paymentReceiptId);
 			PaymentReceipt__c paymentReceipt = paymentReceiptMapById.get(paymentReceiptId);
-			System.debug('PaymentReceipt : '+paymentReceipt);
 			Opportunity opportunity = OpportunitySelector.getInstance().getById(paymentReceipt.Opportunity__c);
 			Map<Id,Project__c> projectMapById = ProjectSelector.getInstance().getProjectById(new Set<Id>{opportunity.Project__c});
 			Project__c getProject = projectMapById.get(opportunity.Project__c);
-			String imageUrl = PDFUtility.getInstance().getImageSrc(getProject.ProjectLogo__c);
+			// String imageUrl = PDFUtility.getInstance().getImageSrc(getProject.ProjectLogo__c);
+			String imageUrl = getProject.ProjectLogoPublicURL__c;
 			List<PaymentReceiptLineItem__c> paymentReceiptLineItems = paymentReceipt.Payment_Transactions__r;
 			List<PaymentReceiptLineItem__c> updatePaymentReceiptLineItems = PaymentReceiptService.getInstance().aggregatePaymentReceiptLineItems(paymentReceiptLineItems);
 			paymentReceiptInstance = new PaymentReceiptWrapper(paymentReceipt,opportunity,updatePaymentReceiptLineItems,paymentMethods,imageUrl);
 		}
 		return paymentReceiptInstance;
 	}
+
 	public class PaymentReceiptWrapper{
 		public Boolean isCash {get; set;}
 		public Boolean isCreditCard {get; set;}
@@ -39,6 +40,10 @@ public with sharing class PaymentReceiptFormController {
 		public Boolean isBankTransferLocal {get; set;}
 		public Boolean isBankTransferInter {get; set;}
 		public Boolean isBankDraft {get; set;}
+		// Phase2: add new variable
+		public Boolean isUpgrade {get; set;}
+		public Boolean isDowngrade {get; set;}
+		public Boolean isMovePayment {get; set;}
 		public PaymentReceiptHeaderWrapper paymentReceiptHeader {get; set;}
 		public OpportunityWrapper oppWrapper {get; set;}
 		public List<PaymentReceiptLineItemWrapper> paymentReceiptLineItemWrapper {get; set;}
@@ -46,14 +51,24 @@ public with sharing class PaymentReceiptFormController {
 		public PaymentReceiptWrapper(){
 
 		}
+		/**
+		 * Phase2
+		 * Details:
+		 * - Modify logic to send PaymentReceipt__c.CoBuyerName__c to constructor
+		 */
 		public PaymentReceiptWrapper(PaymentReceipt__c paymentReceipt, Opportunity opportunity,List<PaymentReceiptLineItem__c> paymentReceiptLineItems,  List<PaymentMethod__c> paymentMethods, String imgUrl){
-			setPaymentReceiptHeader(paymentReceipt.ReceiptNo__c, paymentReceipt.AccountAddress__c, paymentReceiptLineItems[0].PaymentReceipt__r.TotalReceiveAmount__c, imgUrl, paymentReceipt.IsCancel__c);
+			setPaymentReceiptHeader(paymentReceipt.ReceiptNo__c, paymentReceipt.AccountAddress__c, paymentReceiptLineItems[0].PaymentReceipt__r.TotalReceiveAmount__c, imgUrl, paymentReceipt.IsCancel__c , paymentReceipt.CoBuyerName__c);
 			setOpportunity(opportunity);
 			setPaymentReceiptLineItem(paymentReceiptLineItems);
 			setPaymentMethod(paymentMethods);
 		}
-		public void setPaymentReceiptHeader(String receiptNo, String accountAddress, Decimal totalReceiveAmount,String imageUrl , Boolean isCancelled){
-			paymentReceiptHeader = new PaymentReceiptHeaderWrapper(receiptNo,accountAddress,totalReceiveAmount,imageUrl,isCancelled);
+		/**
+		 * Phase2
+		 * Details:
+		 * - Modify logic to send PaymentReceipt__c.CoBuyerName__c to constructor
+		 */
+		public void setPaymentReceiptHeader(String receiptNo, String accountAddress, Decimal totalReceiveAmount,String imageUrl , Boolean isCancelled , String coBuyerName){
+			paymentReceiptHeader = new PaymentReceiptHeaderWrapper(receiptNo,accountAddress,totalReceiveAmount,imageUrl,isCancelled,coBuyerName);
 		}
 		public void setOpportunity(Opportunity opportunity){
 			oppWrapper = new OpportunityWrapper(opportunity);
@@ -67,6 +82,11 @@ public with sharing class PaymentReceiptFormController {
 				count++;
 			}
 		}
+		/**
+		 * Phase2
+		 * Details:
+		 * - Modify logic to mapping new PaymentType__c
+		 */
 		public void setPaymentMethod(List<PaymentMethod__c> paymentMethods){
 			paymentMethodWrapperMap = new Map<String, PaymentMethodWrapper>();
 
@@ -87,6 +107,9 @@ public with sharing class PaymentReceiptFormController {
 			isBankTransferLocal = paymentMethodWrapperMap.get('Bank Transfer (Local)') != null;
 			isBankTransferInter = paymentMethodWrapperMap.get('Bank Transfer (International)') != null;
 			isBankDraft = paymentMethodWrapperMap.get('Bank Draft') != null;
+			isUpgrade = paymentMethodWrapperMap.get('Upgrade') != null;
+			isDowngrade = paymentMethodWrapperMap.get('Downgrade') != null;
+			isMovePayment = paymentMethodWrapperMap.get('Move Payment') != null;
 		}
 
 	}
@@ -96,6 +119,7 @@ public with sharing class PaymentReceiptFormController {
 		public String companyPhone{get; set;}
 		public String companyTaxID{get; set;}
 		public String unitName{get; set;}
+		public String towerName{get; set;}
 		public String projectName{get; set;}
 		public String coBuyerName{get; set;}
 		public String accountTaxID{get; set;}
@@ -111,6 +135,12 @@ public with sharing class PaymentReceiptFormController {
 			unitName = opportunity.Unit__r.Name;
 			projectName = opportunity.Project__r.Name;
 			coBuyerName = opportunity.CoBuyerName__c;
+			/**
+			 * Phase2
+			 * Details:
+			 * - Modify method to show Tower Name
+			 */
+			towerName = opportunity.Tower__c;
 			if(opportunity.Account.TaxID__c != null){
 				accountTaxID = opportunity.Account.TaxID__c;
 				isTaxId = true;
@@ -131,6 +161,8 @@ public with sharing class PaymentReceiptFormController {
 			}
 		}
 	}
+
+
 	public class PaymentReceiptLineItemWrapper {
 		public String order{get;set;}
 		public String oppPaymentTerm{get; set;}
@@ -142,14 +174,21 @@ public with sharing class PaymentReceiptFormController {
 		public PaymentReceiptLineItemWrapper(){
 
 		}
+
+		/**
+		 * Phase2
+		 * Details:
+		 * - Modify method to show detail for Novation Receipt
+		 */
 		public PaymentReceiptLineItemWrapper(PaymentReceiptLineItem__c paymentReceiptLineItem,Integer orderInt){
 			DateUtility dateUtility = DateUtility.getInstance();
 			NumberUtility numberUtility = NumberUtility.getInstance();
+			Boolean isNovatedReceipt = paymentReceiptLineItem.PaymentReceipt__r.ReceiptType__c == GlobalConstants.RECEIPT_TYPE_NOVATION;
 			order = String.valueOf(orderInt);
-			oppPaymentTerm = paymentReceiptLineItem.OpportunityPayment__r.Term__c;
-			oppPaymentDueDate = dateUtility.toDateString('dd MMM yyyy', paymentReceiptLineItem.OpportunityPayment__r.DueDate__c);
+			oppPaymentTerm =  isNovatedReceipt ? GlobalConstants.RECEIPT_TYPE_NOVATION : paymentReceiptLineItem.OpportunityPayment__r.Term__c;
+			oppPaymentDueDate = isNovatedReceipt ? dateUtility.toDateString('dd MMM yyyy', paymentReceiptLineItem.PaymentReceipt__r.NovationDate__c) : dateUtility.toDateString('dd MMM yyyy', paymentReceiptLineItem.OpportunityPayment__r.DueDate__c);
 			oppPaymentRemainingAmount = numberUtility.setDecToFormatCommaTwoDigits(paymentReceiptLineItem.RemainingAmount__c);
-			status = paymentReceiptLineItem.Status__c;
+			status = isNovatedReceipt? GlobalConstants.OPP_PAYMENT_STATUS_FULLYPAID : paymentReceiptLineItem.Status__c;
 			oppPaymentReceiptAmount = numberUtility.setDecToFormatCommaTwoDigits(paymentReceiptLineItem.ReceivedAmount__c);
 
 		}
@@ -189,7 +228,7 @@ public with sharing class PaymentReceiptFormController {
 			receiedAmount = numberUtility.setDecToFormatCommaTwoDigits(paymentMethod.ReceivedAmount__c);
 			paymentType = paymentMethod.PaymentType__c;
 			creditCardNo =  String.valueOf(paymentMethod.CreditCardNo__c);
-			bankName = paymentMethod.BankName__c;
+			bankName = paymentMethod.PaymentReceipt__r.ReceiptType__c == GlobalConstants.RECEIPT_TYPE_PAYMENTGATEWAY ? 'Payment Gateway' : paymentMethod.BankName__c;
 			intelBankName = paymentMethod.InternationalBankName__c;
 			debitCardNo = String.valueOf(paymentMethod.DebitCardNo__c);
 			chequeNo = String.valueOf(paymentMethod.ChequeNo__c);
@@ -199,7 +238,15 @@ public with sharing class PaymentReceiptFormController {
 			bankDraftNo = String.valueOf(paymentMethod.BankDraftNo__c);
 		}
 	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Modify wrapper to receive PaymentReceipt__c.CoBuyerName__c
+	 */
 	public class PaymentReceiptHeaderWrapper{
+
+		public String coBuyerName {get; set;}
 		public String receiptNo {get; set;}
 		public String accountAddress {get; set;}
 		public String dateReceipt {get; set;}
@@ -207,9 +254,10 @@ public with sharing class PaymentReceiptFormController {
 		public String imageUrl {get; set;}
 		public Boolean isCancelled {get; set;}
 
-		public PaymentReceiptHeaderWrapper(String receiptNo, String accountAddress, Decimal totalReceiveAmount,String imageUrl , Boolean isCancelled){
+		public PaymentReceiptHeaderWrapper(String receiptNo, String accountAddress, Decimal totalReceiveAmount,String imageUrl , Boolean isCancelled , String coBuyerName){
 			DateUtility dateUtility = DateUtility.getInstance();
 			NumberUtility numberUtility = NumberUtility.getInstance();
+			this.coBuyerName = coBuyerName;
 			this.receiptNo = receiptNo;
 			this.accountAddress = accountAddress;
 			this.dateReceipt = dateUtility.toDateString('dd MMM yyyy', System.today());

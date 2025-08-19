@@ -21,4 +21,16 @@ private class ProjectSelectorTest {
 		Map<String,Project__c> projectMap = ProjectSelector.getInstance().getProjectMapByProjectCode(new Set<String>{testProject.ProjectCode__c});
 		System.assertEquals(testProject, projectMap.get(testProject.ProjectCode__c));
 	}
+		/**
+	 * Phase2
+	 * Details:
+	 * - Test Class Add method to query Project__c and Opportunity with related Unit__c
+	 */
+	@IsTest
+	static void getProjectWithOppMapByIdTest() {
+		Project__c testProject = [SELECT Id,Name,ProjectCode__c FROM Project__c WHERE ProjectCode__c ='AA01']; 
+		Map<Id, Project__c> result = ProjectSelector.getInstance().getProjectWithOppMapById(new Set<Id>{testProject.Id});
+	}
+
+
 }

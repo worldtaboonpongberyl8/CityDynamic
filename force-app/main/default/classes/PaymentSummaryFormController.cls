@@ -52,6 +52,7 @@ public with sharing class PaymentSummaryFormController {
 		public String companyTaxId {get; set;}
 		public String printDate {get; set;}
 		public String unitName {get; set;}
+		public String towerName {get; set;}
 		public String projectName {get; set;}
 		public String paymentSummaryDate {get; set;}
 
@@ -72,7 +73,12 @@ public with sharing class PaymentSummaryFormController {
 			printDate = DateUtility.getInstance().toDateString('d MMM yyyy', System.today());
 			unitName = opportunity.Unit__r.Name;
 			projectName = opportunity.Project__r.Name;
-
+			/**
+			 * Phase2
+			 * Details:
+			 * - Modify method to show Tower Name
+			 */
+			towerName = opportunity.Tower__c;
 			customerName = opportunity.CoBuyerName__c;
 			customerAddress = opportunity.Account.AddressEN__c;
 			netPrice = NumberUtility.getInstance().setDecToFormatCommaTwoDigits(opportunity.NetPrice__c);
@@ -94,6 +100,11 @@ public with sharing class PaymentSummaryFormController {
 		}
 	}
 
+	/**
+	 * Phase2
+	 * Details:
+	 * - Modify method to sum sumReceiveAmount in case receiptLines == null to support Novated Opp
+	 */
 	public class PaymentItemWrapper {
 		public String totalReceiveAmount {get; set;}
 		public String totalReceivePercent {get; set;}
@@ -117,6 +128,8 @@ public with sharing class PaymentSummaryFormController {
 
 				if(receiptLines == null){
 					paymentItemDetails.add(new PaymentItemDetailWrapper(oppPayment, lineNumber));
+					// Phase2 : sum sumReceiveAmount by oppPayment.ReceivedAmount__c
+					sumReceiveAmount += oppPayment.ReceivedAmount__c == null ? 0 : oppPayment.ReceivedAmount__c;
 				}
 				else{
 					for (Integer i = 0; i < receiptLines.size(); i++) {

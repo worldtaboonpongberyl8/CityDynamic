@@ -85,10 +85,14 @@ public with sharing class CoBuyerServiceTest {
 			.get('Co-Owner - Corporate')
 			.getRecordTypeId();
 		Account account = dataMaker.createAccount(recordTypeId, 'Test Account');
+		account.AccountCode__c = '1111';
 		Account account2 = dataMaker.createAccount(recordTypeId, 'Test Co Buyer');
+		account2.AccountCode__c = '2222';
 		Account account3 = dataMaker.createAccount(recordTypeId, 'Test Co Buyer 2');
 		Account account4 = dataMaker.createAccount(recordTypeId, 'Test Co Buyer 3');
+		account4.AccountCode__c = '9999';
 		Account account5 = dataMaker.createAccount(recordTypeId, 'Test Account for Opp');
+		account5.AccountCode__c = '1234';
 		List<Account> accounts = new List<Account>{account,account2,account3,account4,account5};
 		insert accounts;
 		// Create Opportunity
@@ -132,7 +136,9 @@ public with sharing class CoBuyerServiceTest {
 		oppTriggerHandler.clearBypass();
 		// insert Co buyer
 		CoBuyer__c targetCoBuyer = dataMaker.createCoBuyer(opportunity1.Id,account.Id,'1');
-		insert targetCoBuyer;
+		CoBuyer__c targetCoBuyer2 = dataMaker.createCoBuyer(opportunity1.Id,account2.Id,'2');
+		List<CoBuyer__c> targetCobuyers = new List<CoBuyer__c>{targetCoBuyer,targetCoBuyer2};
+		insert targetCobuyers;
 	}
 
 	@isTest
@@ -142,7 +148,22 @@ public with sharing class CoBuyerServiceTest {
 		List<CoBuyer__c> coBuyers = [SELECT Id,Opportunity__c FROM CoBuyer__c];
 		List<Opportunity> opportunities = service.stampOppCoBuyerNameAndFlag(coBuyers);
 		System.assertEquals(1, opportunities.size());
-		System.assertEquals('Test Account for Opp and/or Test Account', opportunities[0].CoBuyerName__c);
+		System.assertEquals('Test Account for Opp and/or Test Account and/or Test Co Buyer', opportunities[0].CoBuyerName__c);
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - add test method for getStringCoBuyerAccountCode
+	 */
+	@isTest
+	static void getStringCoBuyerAccountCodeTest(){
+		Test.startTest();
+		CoBuyerService service = CoBuyerService.getInstance();
+		List<CoBuyer__c> coBuyers = [SELECT Id,Opportunity__c,Customer__r.AccountCode__c FROM CoBuyer__c];
+		String accountCodeString = service.getStringCoBuyerAccountCode(coBuyers);
+		System.assertEquals('1111,2222', accountCodeString);
 		Test.stopTest();
 	}
 }

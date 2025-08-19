@@ -11,7 +11,23 @@ public with sharing class Product2Selector {
 	}
 	public Map<Id, Product2> getProduct2ById(Set<Id> product2Ids) {
 		return new Map<Id, Product2>(
-			[SELECT Id, Name, ReservationPrice__c, Project__c, Status__c FROM Product2 WHERE Id IN :product2Ids]
+			[
+				SELECT
+					Id,
+					Name,
+					Floor__c,
+					Floor__r.Name,
+					ReservationPrice__c,
+					Project__c,
+					Status__c,
+					ProductCode,
+					UnitType__c,
+					UnitType__r.Name
+				FROM
+					Product2
+				WHERE
+					Id IN :product2Ids
+			]
 		);
 	}
 }

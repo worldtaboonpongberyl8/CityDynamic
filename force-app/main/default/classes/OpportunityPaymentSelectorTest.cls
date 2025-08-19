@@ -189,4 +189,42 @@ public with sharing class OpportunityPaymentSelectorTest {
 		}
 		Test.stopTest();
 	}
+	@isTest
+	static void getOpportunityPaymentsWithInvoiceLineItemMapByOppIdTest(){
+		Test.startTest();
+		OpportunityPaymentSelector selector = OpportunityPaymentSelector.getInstance();
+		List<OpportunityPayment__c> oppPayments = [
+			SELECT Id, Opportunity__c, Amount__c, DueDate__c, Order__c, Term__c
+			FROM OpportunityPayment__c
+		];
+		Set<Id> oppPaymentIds = new Set<Id>();
+		for (OpportunityPayment__c oppPayment : oppPayments) {
+			oppPaymentIds.add(oppPayment.Id);
+		}
+		Map<Id, List<OpportunityPayment__c>> opportunityPaymentMapById = selector.getOpportunityPaymentsWithInvoiceLineItemMapByOppId(
+			oppPaymentIds
+		);
+		Test.stopTest();
+	}
+	@isTest
+	static void getForPaymentSummaryFormTest(){
+		Test.startTest();
+		OpportunityPaymentSelector selector = OpportunityPaymentSelector.getInstance();
+		Opportunity opp = [SELECT id FROM Opportunity LIMIT 1]; 
+		List<OpportunityPayment__c> opportunityPaymentMapById = selector.getForPaymentSummaryForm(
+			opp.Id
+		);
+		Test.stopTest();
+	}
+	@isTest
+	static void getForInvoiceFormTest(){
+		Test.startTest();
+		OpportunityPaymentSelector selector = OpportunityPaymentSelector.getInstance();
+		Opportunity opp = [SELECT id FROM Opportunity LIMIT 1]; 
+		Date dateToday = date.today();
+		List<OpportunityPayment__c> opportunityPaymentMapById = selector.getForInvoiceForm(
+			opp.Id, dateToday
+		);
+		Test.stopTest();
+	}
 }

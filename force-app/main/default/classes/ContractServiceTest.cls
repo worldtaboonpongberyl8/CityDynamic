@@ -213,8 +213,50 @@ public with sharing class ContractServiceTest {
 		};
 		insert oppPayments;
 		ContractService service = ContractService.getInstance();
-		Map<Id,Boolean> result = service.checkFullyPaidStatusForCompleteContract(contracts);	
+		Map<Id,Boolean> result = service.checkFullyPaidStatusForCompleteContract(contracts);
 		System.assertEquals(False,result.get(contracts[0].Id));
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add test method to test getContractAfterNovationProcess
+	 */
+	@isTest
+	static void getContractAfterNovationProcessTest() {
+		Test.startTest();
+		List<Contract> contracts = [SELECT Id, Opportunity__c, CancelReason__c FROM Contract];
+		ContractService service = ContractService.getInstance();
+		List<Contract> updatedContracts = service.getContractAfterNovationProcess(contracts);
+		for (Contract contract : updatedContracts) {
+			System.assertEquals(GlobalConstants.OPP_LOST_REASON_NOVATION, contract.CancelReason__c);
+		}
+		Test.stopTest();
+	}
+
+	/**
+	 * Phase2
+	 * Details:
+	 * - Add test method to test getContractAfterMovingProcess
+	 */
+	@isTest
+	static void getContractAfterMovingProcessTest() {
+		Test.startTest();
+		List<Contract> contracts = [SELECT Id, Opportunity__c, CancelReason__c FROM Contract];
+		ContractService service = ContractService.getInstance();
+		List<Contract> updatedContractsWithUpgrade = service.getContractAfterMovingProcess(contracts,'upgrade');
+		for (Contract contract : updatedContractsWithUpgrade) {
+			System.assertEquals(GlobalConstants.OPP_LOST_REASON_UPGRADE, contract.CancelReason__c);
+		}
+		List<Contract> updatedContractsWithDowngrade = service.getContractAfterMovingProcess(contracts,'downgrade');
+		for (Contract contract : updatedContractsWithDowngrade) {
+			System.assertEquals(GlobalConstants.OPP_LOST_REASON_DOWNGRADE, contract.CancelReason__c);
+		}
+		List<Contract> updatedContractsWithMovePayment = service.getContractAfterMovingProcess(contracts,'move_payment');
+		for (Contract contract : updatedContractsWithMovePayment) {
+			System.assertEquals(GlobalConstants.OPP_LOST_REASON_MOVEPAYMENT, contract.CancelReason__c);
+		}
 		Test.stopTest();
 	}
 }

@@ -1,4 +1,4 @@
-public with sharing class OpportunityPaymentSelector {
+public class OpportunityPaymentSelector {
 	public static OpportunityPaymentSelector instance;
 	public OpportunityPaymentSelector() {
 	}
@@ -23,7 +23,8 @@ public with sharing class OpportunityPaymentSelector {
 					Term__c,
 					Opportunity__r.PaymentTermMaster__c,
 					Remaining__c,
-					PaymentStatus__c
+					PaymentStatus__c,
+					IsAllowedPaymentByGateway__c
 				FROM OpportunityPayment__c
 				WHERE Id IN :oppPaymentIds
 				ORDER BY Order__c
@@ -45,6 +46,7 @@ public with sharing class OpportunityPaymentSelector {
 					Opportunity__r.PaymentTermMaster__c,
 					Remaining__c,
 					PaymentStatus__c,
+					IsAllowedPaymentByGateway__c,
 					(
 						SELECT Id, Invoice__c, Status__c, PaymentReceiptLineItem__c
 						FROM InvoiceLineItems__r
@@ -71,6 +73,7 @@ public with sharing class OpportunityPaymentSelector {
 					Opportunity__r.PaymentTermMaster__c,
 					Remaining__c,
 					PaymentStatus__c,
+					IsAllowedPaymentByGateway__c,
 					(
 						SELECT
 							Id,
@@ -103,7 +106,8 @@ public with sharing class OpportunityPaymentSelector {
 				Term__c,
 				Opportunity__r.PaymentTermMaster__c,
 				Remaining__c,
-				PaymentStatus__c
+				PaymentStatus__c,
+				IsAllowedPaymentByGateway__c
 			FROM OpportunityPayment__c
 			WHERE Opportunity__c IN :oppIds AND IsMasterData__c = true
 			ORDER BY Order__c
@@ -132,6 +136,7 @@ public with sharing class OpportunityPaymentSelector {
 				Opportunity__r.PaymentTermMaster__c,
 				Remaining__c,
 				PaymentStatus__c,
+				IsAllowedPaymentByGateway__c,
 				(SELECT Id, Invoice__c, Status__c, PaymentReceiptLineItem__c FROM InvoiceLineItems__r)
 			FROM OpportunityPayment__c
 			WHERE Opportunity__c IN :oppIds AND IsMasterData__c = true
@@ -158,7 +163,8 @@ public with sharing class OpportunityPaymentSelector {
 				ReceivedDate__c,
 				ReceivedAmount__c,
 				Remaining__c,
-				PaymentStatus__c
+				PaymentStatus__c,
+				IsAllowedPaymentByGateway__c
 			FROM OpportunityPayment__c
 			WHERE Opportunity__c = :oppId
 				AND IsMasterData__c = true

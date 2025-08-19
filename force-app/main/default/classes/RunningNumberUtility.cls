@@ -1,6 +1,6 @@
-public with sharing class RunningNumberUtility {
+public without sharing class RunningNumberUtility {
 	private final String TYPE_RUNNING_NUMBER = 'Running Number';
-	
+
 	private final String PURPOSE_OBJECT = 'Object';
 	private final String PRINTDATETIME = 'PRINTDATETIME';
 	private final String FORMATDATE = ':FORMATDATE:';

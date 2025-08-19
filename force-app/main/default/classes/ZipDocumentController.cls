@@ -33,7 +33,7 @@ global without sharing class ZipDocumentController {
 			this.remainingFieldAPISaveToExistingList = ApexPages.currentPage().getParameters().get('remainingFieldAPISaveToExistingList');
 			List<String> docNameList = this.remainingDocNameList.split(',');
 			List<String> remaingFieldExistingFileList = this.remainingFieldAPISaveToExistingList.split(',');
-			ZipFile__c targetZipFile = ZipFileSelector.getById(controller.getId());
+			ZipFile__c targetZipFile = ZipFileSelector.getInstance().getById(controller.getId());
 			this.targetFileName = this.fileName(docNameList[0]);
 
 			if(this.targetFileName.contains('[COMMA]')){
@@ -97,7 +97,7 @@ global without sharing class ZipDocumentController {
 		if(Test.isRunningTest()) {
 			zipFileData = 'Unit Test';
 		}
-		ZipFile__c zipFile = ZipFileSelector.getById(controller.getId());
+		ZipFile__c zipFile = ZipFileSelector.getInstance().getById(controller.getId());
 		zipFileIdSet.add(zipFile.Id);
 		ContentVersion ContVerFile = new ContentVersion();
 		ContVerFile.VersionData = EncodingUtil.base64Decode(zipFileData);

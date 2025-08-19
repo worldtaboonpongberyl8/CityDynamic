@@ -135,6 +135,7 @@
                         <td>Term</td>
                         <td>Amount</td>
                         <td>Percent</td>
+                        <td>Is Allowed Payment By Gateway</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,7 +144,7 @@
                             <td>{item.order}</td>
                             <td>{item.term}</td>
                             <template if:true={item.isTransfer}>
-                                <td colspan="2" style="background-color: #f0f0f0;">System Generated</td>
+                                <td colspan="3" style="background-color: #f0f0f0;">System Generated</td>
                             </template>
                             <template if:false={item.isTransfer}>
                                 <td>
@@ -171,6 +172,15 @@
                                         formatter="percent-fixed"
                                         variant="label-hidden"
                                         class="number-input"
+                                    ></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input
+                                        type="checkbox"
+                                        checked={item.isAllowedPayment}
+                                        onchange={handleCheckboxChange}
+                                        data-id={item.term}
+                                        name="isAllowedPayment"
                                     ></lightning-input>
                                 </td>
                             </template>
